@@ -50,10 +50,10 @@
     if (agents && agents.length && !$('#pAgentPrinter').value) { const star = agents[0].printers?.find(n => /star|tsp/i.test(n)); if (star) $('#pAgentPrinter').value = star; }
   }
   async function loadAgentToken() {
-    try { const r = await api('/admin/print/agent-token'); $('#pToken').textContent = r.token || '—'; renderAgents(r.agents); } catch {}
+    try { const r = await api('/admin/print/agent-token'); $('#pToken').textContent = r.token || '-'; renderAgents(r.agents); } catch {}
   }
   $('#pTokenNew').addEventListener('click', async () => {
-    if ($('#pToken').textContent !== '—' && !(await confirmDialog(t('settings.agentTokenConfirm'), { danger: true }))) return;
+    if ($('#pToken').textContent !== '-' && !(await confirmDialog(t('settings.agentTokenConfirm'), { danger: true }))) return;
     try { const r = await api('/admin/print/agent-token', { method: 'POST' }); $('#pToken').textContent = r.token; toast(t('settings.agentTokenDone'), 'ok'); } catch (e) { toast(e.message, 'err'); }
   });
   $('#pTokenCopy').addEventListener('click', () => { navigator.clipboard?.writeText($('#pToken').textContent).then(() => toast(t('settings.copied'), 'ok')).catch(() => {}); });
@@ -114,10 +114,36 @@
     const mv = window.currentMenuVersion;
     $('#devTable tbody').innerHTML = devs.length ? devs.map(d => `<tr><td><b>${esc(d.name || d.id)}</b><br><span class="muted" style="font-size:12px">${esc(d.id)}${d.app_version ? ' · v' + esc(d.app_version) : ''}</span></td>
       <td class="${d.online ? 'online' : 'offline'}">${d.online ? '● ' + t('devices.online') : '○ ' + t('devices.offline')}</td>
-      <td>${d.menu_version ?? '—'} ${mv && d.menu_version && d.menu_version < mv ? `<span class="pill warn">${t('devices.outdated')}</span>` : ''}</td>
-      <td>${d.last_seen ? fmtDateTime(d.last_seen) : '—'}</td></tr>`).join('') : `<tr><td colspan="4" class="muted">${t('devices.none')}</td></tr>`;
+      <td>${d.menu_version ?? '-'} ${mv && d.menu_version && d.menu_version < mv ? `<span class="pill warn">${t('devices.outdated')}</span>` : ''}</td>
+      <td>${d.last_seen ? fmtDateTime(d.last_seen) : '-'}</td></tr>`).join('') : `<tr><td colspan="4" class="muted">${t('devices.none')}</td></tr>`;
   }
+  // ---- tablet app (APK) : upload once, then tablets install it from /app (link + QR code)
+  async function loadApk() {
+    try {
+      const r = await api('/app/info');
+      const info = r.app; const url = r.url;
+      $('#apkDownload').classList.toggle('hidden', !info); $('#apkPage').classList.toggle('hidden', !info); $('#apkPage').href = url;
+      $('#apkInfo').textContent = info ? t('devices.appInfo', { v: info.version || '-', s: (info.size / 1048576).toFixed(1), d: fmtDateTime(info.uploaded_at), n: info.name }) : t('devices.appNone');
+      const qr = $('#apkQr'); qr.innerHTML = '';
+      if (info && window.qrcode) {
+        const q = qrcode(0, 'M'); q.addData(url); q.make();
+        qr.innerHTML = `<div style="background:#fff;padding:8px;border:1px solid var(--line);border-radius:12px">${q.createSvgTag({ cellSize: 4, margin: 0 })}</div><div><div class="muted" style="font-size:13px">${t('devices.appScan')}</div><div class="url-big small">${esc(url)}</div></div>`;
+      }
+    } catch (e) { $('#apkInfo').textContent = e.message; }
+  }
+  $('#apkUpload').addEventListener('click', () => { $('#apkFile').onchange = () => {
+    const f = $('#apkFile').files[0]; if (!f) return;
+    const version = prompt(t('devices.appVersionPrompt'), (f.name.match(/\d+(\.\d+)+/) || [''])[0]) ?? ''; 
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', `/api/admin/app/apk?version=${encodeURIComponent(version)}&name=${encodeURIComponent(f.name)}`);
+    xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+    const prog = $('#apkProgress'); prog.classList.remove('hidden');
+    xhr.upload.onprogress = e => { if (e.lengthComputable) prog.textContent = t('devices.appUploading', { p: Math.round(e.loaded / e.total * 100) }); };
+    xhr.onload = () => { prog.classList.add('hidden'); if (xhr.status === 200) { toast(t('devices.appUploaded'), 'ok'); loadApk(); } else { let m = xhr.statusText; try { m = JSON.parse(xhr.responseText).error; } catch {} toast(m, 'err'); } };
+    xhr.onerror = () => { prog.classList.add('hidden'); toast(t('common.error'), 'err'); };
+    xhr.send(f); $('#apkFile').value = '';
+  }; $('#apkFile').click(); });
   $('#devRefresh').addEventListener('click', loadDevices);
   document.addEventListener('ws', e => { if (e.detail.type === 'devices' && currentView() === 'devices') renderDevices(e.detail.devices); if (e.detail.type === 'menu_updated') window.currentMenuVersion = e.detail.version; if (e.detail.type === 'welcome') window.currentMenuVersion = e.detail.menu_version; });
-  document.addEventListener('view', e => { if (e.detail === 'settings') loadSettings(); if (e.detail === 'devices') loadDevices(); });
+  document.addEventListener('view', e => { if (e.detail === 'settings') loadSettings(); if (e.detail === 'devices') { loadDevices(); loadApk(); } });
 })();

@@ -8,12 +8,13 @@ import java.util.UUID
 class Prefs(context: Context) {
     private val sp: SharedPreferences = context.getSharedPreferences("lartisan", Context.MODE_PRIVATE)
 
+    /** Server used out of the box: a fresh install connects to the café's online server with no setup screen. */
     var serverUrl: String
-        get() = sp.getString("server_url", "") ?: ""
+        get() = sp.getString("server_url", null)?.takeIf { it.isNotBlank() } ?: DEFAULT_SERVER_URL
         set(v) = sp.edit().putString("server_url", normalizeUrl(v)).apply()
 
     var deviceName: String
-        get() = sp.getString("device_name", "Tablette 1") ?: "Tablette 1"
+        get() = sp.getString("device_name", null) ?: (android.os.Build.MODEL?.takeIf { it.isNotBlank() }?.let { "Tablette $it" } ?: "Tablette 1")
         set(v) = sp.edit().putString("device_name", v.trim().ifBlank { "Tablette" }).apply()
 
     val deviceId: String
@@ -37,6 +38,7 @@ class Prefs(context: Context) {
         set(v) = sp.edit().putInt("menu_version", v).apply()
 
     companion object {
+        const val DEFAULT_SERVER_URL = "https://fusionlartisan-production.up.railway.app"
         fun normalizeUrl(raw: String): String {
             var u = raw.trim().removeSuffix("/")
             if (u.isEmpty()) return ""

@@ -20,7 +20,7 @@ import { createOnlineOrder, confirmStripePayment, refundIfPaid, siteState, featu
 import { getReviews } from './google.js';
 import { verifyWebhook } from './stripe.js';
 import { expireUnpaidOrders, updateOrderFields } from './orders.js';
-import { kvGet } from './db.js';
+import { kvGet, kvSet } from './db.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC = path.resolve(__dirname, '..', 'public');
@@ -54,6 +54,29 @@ app.post('/api/stripe/webhook', express.raw({ type: '*/*', limit: '1mb' }), wrap
   }
   res.json({ received: true });
 }));
+// ---------------------------------------------------------------- tablet app (APK uploaded by the admin, stored on the data volume)
+const APP_DIR = path.join(DATA_DIR, 'app'); fs.mkdirSync(APP_DIR, { recursive: true });
+const APK_PATH = path.join(APP_DIR, 'lartisan.apk');
+function apkInfo() { const m = kvGet('apk_meta')?.value; if (!m || !fs.existsSync(APK_PATH)) return null; return { ...m, size: fs.statSync(APK_PATH).size }; }
+app.get('/api/app/info', (req, res) => ok(res, { app: apkInfo(), url: `${baseUrlOf(req)}/app` }));
+app.get(['/api/app/lartisan.apk', '/app/lartisan.apk'], (req, res) => {
+  const info = apkInfo(); if (!info) return fail(res, 404, "Aucune application n'a encore été publiée");
+  res.setHeader('Content-Type', 'application/vnd.android.package-archive');
+  res.setHeader('Content-Disposition', `attachment; filename="LArtisan-${(info.version || 'app').replace(/[^\w.-]/g, '')}.apk"`);
+  res.sendFile(APK_PATH);
+});
+app.get('/app', (req, res) => res.sendFile(path.join(PUBLIC, 'site', 'app.html')));
+app.post('/api/admin/app/apk', express.raw({ type: () => true, limit: '120mb' }), (req, res) => {
+  if (!isValid(tokenFromRequest(req))) return fail(res, 401, 'Unauthorized');
+  const buf = req.body;
+  if (!Buffer.isBuffer(buf) || buf.length < 1000 || buf.readUInt32LE(0) !== 0x04034b50) return fail(res, 400, 'Fichier APK invalide');
+  fs.writeFileSync(APK_PATH, buf);
+  const meta = { version: String(req.query.version || '').slice(0, 30), name: String(req.query.name || 'app.apk').slice(0, 80), uploaded_at: new Date().toISOString() };
+  kvSet('apk_meta', meta);
+  audit('app.apk.uploaded', `${meta.name} ${meta.version} (${(buf.length / 1048576).toFixed(1)} Mo)`);
+  ok(res, { app: apkInfo() });
+});
+
 app.use(express.json({ limit: '6mb' }));
 app.use((req, res, next) => { res.setHeader('Cache-Control', 'no-store'); next(); });
 

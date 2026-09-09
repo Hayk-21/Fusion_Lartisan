@@ -83,6 +83,9 @@ Les commandes du site apparaissent dans *Commandes en direct* avec le badge **�
 
 ## 5. Tablettes
 
+Le panneau fonctionne aussi sur un téléphone ou une tablette (menu ☰ en haut à gauche). La carte **Application tablette** permet de téléverser l'APK une fois, puis de l'installer sur les tablettes via l'adresse `/app` ou le code QR (voir [TABLETTES.md](TABLETTES.md)).
+
+
 - L'**adresse du serveur** à saisir dans l'app (ou à ouvrir dans Chrome pour la version web).
 - La liste des tablettes qui se sont connectées : en ligne / hors ligne, version du menu qu'elles ont (un badge *menu obsolète* signale qu'une tablette n'a pas encore reçu la dernière version — elle la prendra à sa prochaine connexion), dernier contact.
 

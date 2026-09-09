@@ -44,7 +44,7 @@
   // ---------------------------------------------------------------- rendering
   function lineHtml(l) {
     const opts = l.options.map(o => esc(o.name) + (o.price ? ` <span class="muted">(+${money(o.price)})</span>` : '')).join(', ');
-    return `<li><span class="q">${l.qty}×</span> <b>${esc(l.name)}</b>${l.variant_name ? ' — ' + esc(l.variant_name) : ''} <span class="muted">${money(l.line_total)}</span>
+    return `<li><span class="q">${l.qty}×</span> <b>${esc(l.name)}</b>${l.variant_name ? ' · ' + esc(l.variant_name) : ''} <span class="muted">${money(l.line_total)}</span>
       ${opts ? `<div class="opts">${opts}</div>` : ''}${l.note ? `<div class="lnote">✎ ${esc(l.note)}</div>` : ''}</li>`;
   }
   function ageOf(o) {
@@ -74,7 +74,7 @@
     </div>`;
   }
   const ageMinutes = o => Math.floor((Date.now() - new Date(o.created_at)) / 60000);
-  function fmtPickup(hhmm) { if (!hhmm) return '—'; const [h, m] = hhmm.split(':').map(Number); return getLang() === 'en' ? `${((h + 11) % 12) + 1}:${String(m).padStart(2, '0')} ${h < 12 ? 'am' : 'pm'}` : `${h} h ${String(m).padStart(2, '0')}`; }
+  function fmtPickup(hhmm) { if (!hhmm) return '-'; const [h, m] = hhmm.split(':').map(Number); return getLang() === 'en' ? `${((h + 11) % 12) + 1}:${String(m).padStart(2, '0')} ${h < 12 ? 'am' : 'pm'}` : `${h} h ${String(m).padStart(2, '0')}`; }
   window.fmtPickup = fmtPickup;
 
   // Incremental rendering: a card is (re)built only when its order changed; otherwise only the
@@ -113,7 +113,7 @@
     const n = orders.size;
     $('#liveBadge').textContent = cols.new.length; $('#liveBadge').classList.toggle('zero', !cols.new.length);
     $('#liveSummary').textContent = t('live.summary', { n, t: todayCount, d: devicesOnline });
-    document.title = (cols.new.length ? `(${cols.new.length}) ` : '') + ($('#brandName').textContent || "L'Artisan") + ' — Admin';
+    document.title = (cols.new.length ? `(${cols.new.length}) ` : '') + ($('#brandName').textContent || "L'Artisan") + ' · Admin';
   }
   // language change must rebuild all cards
   document.addEventListener('langchange', () => { cardEls.clear(); $$('#kanban .cards').forEach(c => c.innerHTML = ''); render(); });
@@ -174,7 +174,7 @@
     const rows = await api(`/admin/orders?from=${from}&to=${to}${status ? '&status=' + status : ''}&limit=1000`).catch(() => []);
     const tb = $('#histTable tbody');
     tb.innerHTML = rows.length ? rows.map(o => `<tr data-id="${o.id}">
-      <td><b>#${o.number}</b></td><td>${fmtDateTime(o.created_at)}</td><td>${esc(o.customer_name || '—')}</td>
+      <td><b>#${o.number}</b></td><td>${fmtDateTime(o.created_at)}</td><td>${esc(o.customer_name || '-')}</td>
       <td>${o.source === 'online' ? '🌐 ' + t('live.online') + (o.pickup_time ? ' · ' + esc(fmtPickup(o.pickup_time)) : '') + (o.payment_status === 'paid' ? ' · ✓' : '') : (o.service_type === 'takeout' ? t('live.takeout') : t('live.dineIn'))}</td>
       <td>${o.lines.map(l => `${l.qty}× ${esc(l.name)}`).join(', ')}</td><td><b>${money(o.total)}</b></td>
       <td><span class="status-tag ${o.status}">${t('st.' + o.status)}</span></td>
@@ -183,7 +183,7 @@
     tb.onclick = async e => {
       const b = e.target.closest('[data-view-order]'); if (!b) return;
       const o = rows.find(x => x.id === Number(b.dataset.viewOrder));
-      modal(`<h2>#${o.number} — ${esc(o.customer_name || t('live.noName'))}</h2>
+      modal(`<h2>#${o.number} · ${esc(o.customer_name || t('live.noName'))}</h2>
         <p class="muted">${fmtDateTime(o.created_at)} · ${o.service_type === 'takeout' ? t('live.takeout') : t('live.dineIn')} · ${o.source === 'online' ? '🌐 ' + t('live.online') : esc(o.device_name || '')} · <span class="status-tag ${o.status}">${t('st.' + o.status)}</span></p>
         ${o.source === 'online' ? `<p>🕒 ${t('live.pickup')} <b>${esc(fmtPickup(o.pickup_time))}</b> · ${o.payment_status === 'paid' ? t('live.paid') + (o.payment_method ? ' (' + esc(o.payment_method) + ')' : '') : t('live.unpaid')}${o.customer_phone ? ` · 📞 ${esc(o.customer_phone)}` : ''}${o.customer_email ? ` · ✉️ ${esc(o.customer_email)}` : ''}</p>` : ''}
         <ul class="order-lines">${o.lines.map(lineHtml).join('')}</ul>${o.note ? `<div class="order-note">✎ ${esc(o.note)}</div>` : ''}

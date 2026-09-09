@@ -27,7 +27,16 @@ gradlew.bat assembleDebug        (Windows)
 ./gradlew assembleDebug          (macOS)
 ```
 
-## 2. Installer sur les tablettes (installation manuelle)
+## 2. Installer sur les tablettes depuis le panneau (recommandé)
+
+1. Compilez l'APK une fois (section 1). Le fichier est `android-app/app/build/outputs/apk/debug/app-debug.apk`.
+2. Panneau d'administration → **Tablettes** → carte **📲 Application tablette** → **Téléverser un APK** → choisissez ce fichier, indiquez le numéro de version. Il est conservé sur le serveur (volume de données).
+3. Sur chaque tablette ou téléphone : ouvrez Chrome à l'adresse `https://VOTRE-SERVEUR/app` (ou scannez le code QR affiché dans le panneau) → **Installer l'application** → ouvrez le fichier téléchargé → autorisez l'installation depuis Chrome si demandé → Installer.
+4. L'application démarre directement sur le menu : depuis la version 1.3.1 elle connaît l'adresse du serveur en ligne. Le nom de la tablette est « Tablette <modèle> » ; changez-le si vous voulez (appui long sur le logo → PIN).
+
+Pour une mise à jour : téléversez le nouvel APK dans le panneau, puis réinstallez-le sur les tablettes depuis la même page (les réglages sont conservés).
+
+## 2 bis. Installer sur les tablettes (installation manuelle, câble USB)
 
 **Méthode A — par fichier (la plus simple)**
 1. Copiez `app-release.apk` sur la tablette (câble USB, Google Drive, e-mail à soi-même, ou clé USB avec adaptateur).

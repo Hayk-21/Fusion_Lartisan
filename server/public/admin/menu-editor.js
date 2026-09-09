@@ -1,4 +1,4 @@
-/* Menu editor — categories, items, variants, option groups. Works on a local copy; "Save" sends the whole menu. */
+/* Menu editor · categories, items, variants, option groups. Works on a local copy; "Save" sends the whole menu. */
 (function () {
   let menu = null, selCat = null, selItem = null, dirty = false;
   const uid = (p) => p + '-' + Math.random().toString(36).slice(2, 7);

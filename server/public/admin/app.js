@@ -25,6 +25,9 @@
     $$('.lang-switch button').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
     document.dispatchEvent(new CustomEvent('langchange'));
   }
+  // mobile drawer
+  document.getElementById('menuToggle')?.addEventListener('click', () => document.querySelector('.sidebar').classList.toggle('open'));
+  document.querySelectorAll('.sidebar nav a').forEach(a => a.addEventListener('click', () => document.querySelector('.sidebar').classList.remove('open')));
   window.setLang = (l) => { lang = l; localStorage.setItem('admin_lang', l); applyLang(); };
   $$('.lang-switch button').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
 
@@ -116,7 +119,7 @@
 
   async function startApp() {
     running = true; connectWs(); route();
-    try { const s = await api('/settings/public'); $('#brandName').textContent = s.cafe_name; document.title = s.cafe_name + ' — Admin'; window.publicSettingsCache = s; if (s.logo_url) $('.brand img').src = s.logo_url; } catch {}
+    try { const s = await api('/settings/public'); $('#brandName').textContent = s.cafe_name; document.title = s.cafe_name + ' · Admin'; window.publicSettingsCache = s; if (s.logo_url) $('.brand img').src = s.logo_url; } catch {}
     document.dispatchEvent(new CustomEvent('app-start'));
   }
   function stopApp() { running = false; clearTimeout(wsTimer); try { ws && ws.close(); } catch {} document.dispatchEvent(new CustomEvent('app-stop')); }

@@ -1,4 +1,4 @@
-/* Statistics view — KPIs + Chart.js charts */
+/* Statistics view · KPIs + Chart.js charts */
 (function () {
   const charts = {};
   const COLORS = ['#a05a4a', '#d9a66f', '#7a473a', '#c98a1b', '#1f8a5b', '#2f6fb3', '#b8657b', '#8a8a5c', '#5c7a8a', '#e0b8a8'];
@@ -32,7 +32,7 @@
     const k = s.totals;
     $('#kpis').innerHTML = [
       ['kpi.revenue', money(k.revenue)], ['kpi.orders', k.orders], ['kpi.avg', money(k.avg_ticket)], ['kpi.items', k.items_sold],
-      ['kpi.subtotal', money(k.subtotal)], ['kpi.taxes', money(k.tax_gst + k.tax_qst)], ['kpi.cancelled', k.cancelled], ['kpi.prep', k.avg_prep_minutes ?? '—'], ['kpi.online', k.online_orders ?? 0], ['kpi.tips', money(k.tips || 0)],
+      ['kpi.subtotal', money(k.subtotal)], ['kpi.taxes', money(k.tax_gst + k.tax_qst)], ['kpi.cancelled', k.cancelled], ['kpi.prep', k.avg_prep_minutes ?? '-'], ['kpi.online', k.online_orders ?? 0], ['kpi.tips', money(k.tips || 0)],
     ].map(([l, v]) => `<div class="kpi"><div class="v">${v}</div><div class="l">${t(l)}</div></div>`).join('');
 
     const en = getLang() === 'en';
@@ -51,7 +51,7 @@
     chart('chCat', { type: 'doughnut', data: { labels: s.by_category.map(c => menuCats[c.category_id] || c.category_id), datasets: [{ data: s.by_category.map(c => c.revenue), backgroundColor: COLORS }] },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' }, tooltip: { callbacks: { label: c => ' ' + money(c.raw) } } } } });
 
-    $('#topItemsTable tbody').innerHTML = s.top_items.map(i => `<tr><td>${esc(en ? i.name_en : i.name_fr)}</td><td>${i.qty}</td><td>${money(i.revenue)}</td></tr>`).join('') || `<tr><td colspan="3" class="muted">—</td></tr>`;
+    $('#topItemsTable tbody').innerHTML = s.top_items.map(i => `<tr><td>${esc(en ? i.name_en : i.name_fr)}</td><td>${i.qty}</td><td>${money(i.revenue)}</td></tr>`).join('') || `<tr><td colspan="3" class="muted">-</td></tr>`;
     $('#serviceTable tbody').innerHTML =
       s.by_service.map(x => `<tr><td>${x.service_type === 'takeout' ? t('stats.takeout') : t('stats.dineIn')}</td><td>${x.orders} ${t('stats.orders')}</td><td>${money(x.revenue)}</td></tr>`).join('') +
       s.by_device.map(x => `<tr><td>${x.device === '__online__' ? '🌐 ' + t('stats.online') : '📱 ' + esc(x.device)}</td><td>${x.orders} ${t('stats.orders')}</td><td>${money(x.revenue)}</td></tr>`).join('');

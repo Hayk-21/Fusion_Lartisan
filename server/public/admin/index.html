@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>L'Artisan — Administration</title>
+<title>L'Artisan · Administration</title>
 <link rel="icon" href="/shared/logo-mark.png">
 <link rel="stylesheet" href="style.css">
 </head>
@@ -50,6 +50,7 @@
     </div>
   </aside>
 
+  <button id="menuToggle" class="menu-toggle" aria-label="Menu">☰</button>
   <main class="content">
     <!-- -------------------------------------------------- LIVE ORDERS -->
     <section id="view-live" class="view">
@@ -170,7 +171,7 @@
           <div id="siteState" class="site-state">…</div>
           <label class="check test-mode"><input type="checkbox" id="wTestMode"><span data-i18n="site.testMode">🧪 Mode test : le site est « ouvert » et accepte les commandes même hors des heures d'ouverture (à désactiver après vos essais)</span></label>
           <label class="check"><input type="checkbox" id="wOrdering"><span data-i18n="site.ordering">Accepter les commandes en ligne</span></label>
-          <label class="check"><input type="checkbox" id="wTempClosed"><span data-i18n="site.tempClosed">Fermé exceptionnellement (aujourd'hui) — le site affiche « fermé » et refuse les commandes</span></label>
+          <label class="check"><input type="checkbox" id="wTempClosed"><span data-i18n="site.tempClosed">Fermé exceptionnellement (aujourd'hui) · le site affiche « fermé » et refuse les commandes</span></label>
           <div class="row2"><label><span data-i18n="site.closedMsgFr">Message de fermeture (FR)</span><input id="wClosedFr" placeholder="Fermé pour vacances jusqu'au 12 août"></label><label><span data-i18n="site.closedMsgEn">Message (EN)</span><input id="wClosedEn"></label></div>
           <h3 data-i18n="site.hours">Heures d'ouverture</h3>
           <label class="check"><input type="checkbox" id="wHoursGoogle"><span data-i18n="site.hoursGoogle">Prendre les heures automatiquement sur la fiche Google Maps (nécessite la clé Google ci-contre)</span></label>
@@ -184,11 +185,11 @@
             <label><span data-i18n="site.lastOrder">Dernière commande avant fermeture (min)</span><input type="number" id="wLast" min="0" max="120"></label>
           </div>
           <h3 data-i18n="site.payment">Paiement</h3>
-          <label><span data-i18n="site.paymentMode">Mode</span><select id="wPayMode"><option value="counter" data-i18n="site.payCounter">Paiement au comptoir lors du ramassage</option><option value="stripe" data-i18n="site.payStripe">Paiement en ligne (Stripe : cartes, Apple Pay, Google Pay)</option><option value="both" data-i18n="site.payBoth">Les deux — le client choisit</option></select></label>
+          <label><span data-i18n="site.paymentMode">Mode</span><select id="wPayMode"><option value="counter" data-i18n="site.payCounter">Paiement au comptoir lors du ramassage</option><option value="stripe" data-i18n="site.payStripe">Paiement en ligne (Stripe : cartes, Apple Pay, Google Pay)</option><option value="both" data-i18n="site.payBoth">Les deux · le client choisit</option></select></label>
           <div id="stripeBox" class="hidden">
-            <label><span>Stripe — Publishable key (pk_…)</span><input id="wStripePk"></label>
-            <label><span>Stripe — Secret key (sk_…)</span><input id="wStripeSk" type="password" placeholder="••••••••"></label>
-            <label><span>Stripe — Webhook signing secret (whsec_…)</span><input id="wStripeWh" type="password" placeholder="••••••••"></label>
+            <label><span>Stripe · Publishable key (pk_…)</span><input id="wStripePk"></label>
+            <label><span>Stripe · Secret key (sk_…)</span><input id="wStripeSk" type="password" placeholder="••••••••"></label>
+            <label><span>Stripe · Webhook signing secret (whsec_…)</span><input id="wStripeWh" type="password" placeholder="••••••••"></label>
             <p class="muted"><span data-i18n="site.stripeHint">Webhook Stripe : ajoutez l'URL ci-dessous avec l'événement checkout.session.completed (voir docs/SITE_WEB.md).</span><br><code id="stripeWebhookUrl"></code></p>
           </div>
           <label class="check"><input type="checkbox" id="wTips"><span data-i18n="site.tips">Proposer un pourboire</span></label>
@@ -222,6 +223,18 @@
         <div class="head-actions"><button id="devRefresh" class="ghost" data-i18n="common.refresh">Actualiser</button></div></header>
       <div class="two-col">
         <div class="card"><h3 data-i18n="devices.network">Adresse du serveur</h3><p class="muted" data-i18n="devices.networkHint">Entrez cette adresse dans l'application tablette (appui long sur le logo → PIN). Sur le même Wi-Fi, la détection automatique fonctionne aussi.</p><div id="netUrls"></div></div>
+        <div class="card">
+          <h3 data-i18n="devices.app">📲 Application tablette (APK)</h3>
+          <p class="muted" data-i18n="devices.appHint">Téléversez ici l'application compilée (fichier .apk). Les tablettes et téléphones l'installent ensuite en ouvrant l'adresse ci-dessous ou en scannant le code QR ; l'application se connecte toute seule à ce serveur.</p>
+          <div id="apkInfo" class="muted"></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0">
+            <button id="apkUpload" class="primary">⬆ <span data-i18n="devices.appUpload">Téléverser un APK</span></button>
+            <a id="apkDownload" class="btn hidden" href="/app/lartisan.apk">⬇ <span data-i18n="devices.appDownload">Télécharger l'APK</span></a>
+            <a id="apkPage" class="btn hidden" target="_blank" rel="noopener">↗ <span data-i18n="devices.appPage">Page d'installation</span></a>
+          </div>
+          <div id="apkProgress" class="muted hidden"></div>
+          <div id="apkQr" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"></div>
+        </div>
         <div class="card"><h3 data-i18n="devices.list">Tablettes</h3><div class="table-wrap"><table class="table" id="devTable"><thead><tr><th data-i18n="devices.name">Nom</th><th data-i18n="devices.status">État</th><th data-i18n="devices.menuVersion">Version du menu</th><th data-i18n="devices.lastSeen">Dernier contact</th></tr></thead><tbody></tbody></table></div></div>
       </div>
     </section>
@@ -261,7 +274,7 @@
           <h3 data-i18n="settings.printer">🖨 Imprimante à tickets</h3>
           <label class="check"><input type="checkbox" id="pEnabled"><span data-i18n="settings.printEnabled">Imprimer automatiquement chaque nouvelle commande</span></label>
           <label><span data-i18n="settings.printMode">Connexion</span><select id="pMode">
-            <option value="windows" data-i18n="settings.printWindows">Imprimante installée sur cet ordinateur (USB — pilote Star)</option>
+            <option value="windows" data-i18n="settings.printWindows">Imprimante installée sur cet ordinateur (USB · pilote Star)</option>
             <option value="network" data-i18n="settings.printNetwork">Imprimante réseau (adresse IP, port 9100)</option>
             <option value="agent" data-i18n="settings.printAgent">Agent d'impression sur l'ordinateur du café (serveur hébergé en ligne)</option>
           </select></label>
@@ -269,7 +282,7 @@
             <p class="muted" data-i18n="settings.printAgentHint">Le serveur est en ligne (Railway) et l'imprimante est branchée à l'ordinateur du café : lancez <b>start-print-agent.bat</b> sur cet ordinateur avec le jeton ci-dessous (voir docs/IMPRIMANTE.md).</p>
             <p><a id="pInstaller" class="btn primary" href="/api/admin/print/agent-installer" download>⬇ <span data-i18n="settings.agentInstaller">Télécharger l'installateur Windows (.bat)</span></a></p>
             <p class="muted" data-i18n="settings.agentInstallerHint">Copiez ce fichier sur l'ordinateur relié à l'imprimante et double-cliquez-le : aucune question, tout se configure et un ticket « Tout est connecté » sort de l'imprimante.</p>
-            <label><span data-i18n="settings.agentToken">Jeton de l'agent</span><div class="token-box"><code id="pToken">—</code><button id="pTokenCopy" class="small ghost" title="Copier">📋</button><button id="pTokenNew" class="small ghost" data-i18n="settings.agentTokenNew">Générer</button></div></label>
+            <label><span data-i18n="settings.agentToken">Jeton de l'agent</span><div class="token-box"><code id="pToken">-</code><button id="pTokenCopy" class="small ghost" title="Copier">📋</button><button id="pTokenNew" class="small ghost" data-i18n="settings.agentTokenNew">Générer</button></div></label>
             <div id="pAgents" class="muted"></div>
             <label><span data-i18n="settings.printerName">Imprimante</span><input id="pAgentPrinter" placeholder="Star TSP650"></label>
           </div>
@@ -309,9 +322,11 @@
 <div id="toasts" class="toasts"></div>
 <input type="file" id="importFile" accept="application/json" class="hidden">
 <input type="file" id="imageFile" accept="image/*" class="hidden">
+<input type="file" id="apkFile" accept=".apk,application/vnd.android.package-archive" class="hidden">
 <audio id="alertAudio" preload="auto"></audio>
 
 <script src="vendor/chart.umd.js"></script>
+<script src="vendor/qrcode.js"></script>
 <script src="i18n.js"></script>
 <script src="app.js"></script>
 <script src="live.js"></script>
