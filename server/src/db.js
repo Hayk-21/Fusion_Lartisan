@@ -57,7 +57,7 @@ export const DEFAULT_SETTINGS = {
   pickup_slot_minutes: 15,
   pickup_last_order_minutes: 15,       // no pickup later than closing − this
   tips_enabled: true,
-  tip_options: [0, 10, 15, 20],
+  tip_options: [0, 5, 10, 15],
   payment_mode: 'counter',             // 'counter' (pay at pickup) | 'stripe' | 'both'
   stripe_publishable_key: '',
   stripe_secret_key: '',
@@ -165,7 +165,8 @@ export function setSettings(patch) {
 }
 
 const SECRET_KEYS = ['pin', 'stripe_secret_key', 'stripe_webhook_secret', 'google_api_key', 'print_agent_token'];
-// one-off cleanup: the first website version shipped a made-up "Breton tradition" text; drop it so the neutral default (or Google's description) applies
+// one-off cleanups: tip options 0/10/15/20 → 0/5/10/15 (Hayk's choice); the first website version shipped a made-up "Breton tradition" text; drop it so the neutral default (or Google's description) applies
+try { if (JSON.stringify(getSettings().tip_options) === '[0,10,15,20]') db.prepare("DELETE FROM settings WHERE key = 'tip_options'").run(); } catch {}
 try { const a = getSettings().about; if (a && /tradition bretonne|Breton tradition/i.test((a.fr || '') + (a.en || ''))) db.prepare("DELETE FROM settings WHERE key IN ('about','tagline')").run(); } catch {}
 
 export function publicSettings() {

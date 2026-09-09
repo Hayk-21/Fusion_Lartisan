@@ -14,7 +14,7 @@ const STR = {
     back: 'Retour', confirm: 'Confirmer la commande', confirmPay: 'Payer {t}', sending: 'Envoi…',
     open: 'Ouvert · ferme à {t}', closed: 'Fermé', closedTemp: 'Fermé exceptionnellement', opensTomorrow: 'ouvre demain à {t}', opensToday: 'ouvre à {t}',
     bannerClosed: 'Le café est fermé · la commande en ligne reprend {when}. Vous pouvez consulter le menu.', bannerLate: "Trop tard pour commander aujourd'hui · à demain ! Vous pouvez consulter le menu.", bannerOff: 'La commande en ligne est temporairement désactivée.',
-    closedBtn: 'Café fermé · commande impossible', lateBtn: "Trop tard pour aujourd'hui", menuUpdated: 'Le menu a été mis à jour', errNet: 'Connexion impossible, réessayez.', cancelled: 'Paiement annulé · votre panier est conservé.', max: 'Maximum {n}' },
+    closedBtn: 'Café fermé · commande impossible', service: 'Sur place ou à emporter ?', takeout: 'À emporter', dineIn: 'Sur place', arrival: "Heure d'arrivée", lateBtn: "Trop tard pour aujourd'hui", menuUpdated: 'Le menu a été mis à jour', errNet: 'Connexion impossible, réessayez.', cancelled: 'Paiement annulé · votre panier est conservé.', max: 'Maximum {n}' },
   en: { orderOnline: 'Order online', yourOrder: 'Your order', clear: 'Clear', checkout: 'Checkout', viewCart: 'View order', empty: 'Your order is empty.\nTap a dish to start.',
     from: 'from', add: 'Add', included: 'included', includedOf: '{c}/{n} included', extra: 'extra', required: 'Required', choose: 'Choose', qty: 'Quantity', note: 'Note for the kitchen (allergies, no onion…)',
     subtotal: 'Subtotal', gst: 'GST ({r}%)', qst: 'QST ({r}%)', tip: 'Tip', total: 'Total', items: '{n} item(s)',
@@ -24,7 +24,7 @@ const STR = {
     back: 'Back', confirm: 'Confirm order', confirmPay: 'Pay {t}', sending: 'Sending…',
     open: 'Open · closes at {t}', closed: 'Closed', closedTemp: 'Exceptionally closed', opensTomorrow: 'opens tomorrow at {t}', opensToday: 'opens at {t}',
     bannerClosed: 'The café is closed · online ordering resumes {when}. You can still browse the menu.', bannerLate: 'Too late to order today · see you tomorrow! You can still browse the menu.', bannerOff: 'Online ordering is temporarily disabled.',
-    closedBtn: 'Café closed · ordering unavailable', lateBtn: 'Too late for today', menuUpdated: 'The menu was updated', errNet: 'Cannot connect, please retry.', cancelled: 'Payment cancelled · your cart was kept.', max: 'Maximum {n}' },
+    closedBtn: 'Café closed · ordering unavailable', service: 'Dine in or take out?', takeout: 'Take out', dineIn: 'Dine in', arrival: 'Arrival time', lateBtn: 'Too late for today', menuUpdated: 'The menu was updated', errNet: 'Cannot connect, please retry.', cancelled: 'Payment cancelled · your cart was kept.', max: 'Maximum {n}' },
 };
 let lang = localStorage.getItem('site_lang') || ((navigator.language || 'fr').toLowerCase().startsWith('en') ? 'en' : 'fr');
 const t = (k, v = {}) => { let s = STR[lang][k] ?? STR.fr[k] ?? k; for (const [a, b] of Object.entries(v)) s = s.replace('{' + a + '}', b); return s; };
@@ -153,7 +153,7 @@ $('#sheet').onclick = e => { if (e.target === $('#sheet')) closeSheet(); };
 
 // ---------------------------------------------------------------- checkout
 const saved = JSON.parse(localStorage.getItem('web_customer') || '{}');
-let form = { name: saved.name || '', phone: saved.phone || '', email: saved.email || '', pickup: 'asap', tip: null, payment: null };
+let form = { name: saved.name || '', phone: saved.phone || '', email: saved.email || '', pickup: 'asap', tip: null, payment: null, service: 'takeout' };
 $('#reviewBtn').onclick = async () => {
   await refreshState();
   if (!site.state.ordering) return;
@@ -162,7 +162,7 @@ $('#reviewBtn').onclick = async () => {
 };
 function drawCheckout() {
   const st = site.state; const p = priceOrder(menu, cart, settings, lang); if (!p.ok) return toast(p.error, 'err');
-  const tips = st.tips; if (form.tip == null) form.tip = tips ? (tips.includes(15) ? 15 : tips[0]) : 0;
+  const tips = st.tips; if (form.tip == null) form.tip = tips ? (tips.includes(10) ? 10 : tips[0]) : 0;
   if (!form.payment || !st.payment_modes.includes(form.payment)) form.payment = st.payment_modes[0];
   const tipAmt = tips ? Math.round(p.subtotal * form.tip) / 100 : 0;
   const total = Math.round((p.total + tipAmt) * 100) / 100;
@@ -175,7 +175,8 @@ function drawCheckout() {
         <div class="field"><label>${t('phone')} *</label><input id="fPhone" value="${esc(form.phone)}" maxlength="24" inputmode="tel" autocomplete="tel" placeholder="514 555 0123"></div>
       </div>
       <div class="field"><label>${t('email')}</label><input id="fEmail" value="${esc(form.email)}" maxlength="80" inputmode="email" autocomplete="email"></div>
-      <div class="field"><label>${t('pickup')}</label><select id="fPickup">${st.slots.map(s => `<option value="${s.value}" ${s.value === form.pickup ? 'selected' : ''}>${s.value === 'asap' ? t('asap', { m: st.lead_minutes, t: fmtT(minToHHMM(s.minutes)) }) : fmtT(s.value)}</option>`).join('')}</select></div>
+      <div class="field"><label>${t('service')}</label><div class="seg" id="svcSeg"><button data-svc="takeout" class="${form.service !== 'dine_in' ? 'on' : ''}">🥡 ${t('takeout')}</button><button data-svc="dine_in" class="${form.service === 'dine_in' ? 'on' : ''}">🍽️ ${t('dineIn')}</button></div></div>
+      <div class="field"><label>${form.service === 'dine_in' ? t('arrival') : t('pickup')}</label><select id="fPickup">${st.slots.map(s => `<option value="${s.value}" ${s.value === form.pickup ? 'selected' : ''}>${s.value === 'asap' ? t('asap', { m: st.lead_minutes, t: fmtT(minToHHMM(s.minutes)) }) : fmtT(s.value)}</option>`).join('')}</select></div>
       ${tips ? `<div class="field"><label>${t('tipLabel')}</label><div class="seg" id="tipSeg">${tips.map(x => `<button data-tip="${x}" class="${x === form.tip ? 'on' : ''}">${x === 0 ? t('noTip') : x + ' %'}</button>`).join('')}</div></div>` : ''}
       ${st.payment_modes.length > 1 ? `<div class="field"><label>${t('payment')}</label><div class="seg" id="paySeg">${st.payment_modes.map(m => `<button data-pay="${m}" class="${m === form.payment ? 'on' : ''}">${m === 'stripe' ? '💳 ' + t('payStripe') : '🏪 ' + t('payCounter')}</button>`).join('')}</div></div>` : ''}
       <div class="pay-note" id="payNote">${form.payment === 'stripe' ? t('payStripeNote') : t('payCounterNote')}</div>
@@ -184,6 +185,7 @@ function drawCheckout() {
     <div class="sheet-foot"><button class="btn" id="backBtn">${t('back')}</button><button class="btn primary big" id="confirmBtn">${form.payment === 'stripe' ? '💳 ' + t('confirmPay', { t: money(total) }) : '✓ ' + t('confirm')}</button></div>`;
   $('#sheetClose').onclick = closeSheet; $('#backBtn').onclick = closeSheet;
   $('#tipSeg')?.addEventListener('click', e => { const b = e.target.closest('[data-tip]'); if (!b) return; form.tip = Number(b.dataset.tip); saveForm(); drawCheckout(); });
+  $('#svcSeg').addEventListener('click', e => { const b = e.target.closest('[data-svc]'); if (!b) return; form.service = b.dataset.svc; saveForm(); drawCheckout(); });
   $('#paySeg')?.addEventListener('click', e => { const b = e.target.closest('[data-pay]'); if (!b) return; form.payment = b.dataset.pay; saveForm(); drawCheckout(); });
   ['fName', 'fPhone', 'fEmail'].forEach(id => $('#' + id).oninput = saveForm);
   $('#fPickup').onchange = saveForm;
@@ -197,7 +199,7 @@ async function submit() {
   const btn = $('#confirmBtn'); btn.disabled = true; const label = btn.textContent; btn.textContent = t('sending');
   try {
     const r = await fetch('/api/online-orders', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ lang, customer_name: form.name, customer_phone: form.phone, customer_email: form.email, pickup: form.pickup, tip_percent: form.tip, payment: form.payment, lines: cart }) });
+      body: JSON.stringify({ lang, customer_name: form.name, customer_phone: form.phone, customer_email: form.email, pickup: form.pickup, tip_percent: form.tip, payment: form.payment, service_type: form.service, lines: cart }) });
     const data = await r.json();
     if (!r.ok) throw new Error(data.error || 'error');
     cart = []; saveCart();

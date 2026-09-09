@@ -114,7 +114,7 @@ export function buildTicket(order, settings, { reprint = false } = {}) {
   line(order.service_type === 'takeout' ? t('À EMPORTER', 'TAKE OUT') : t('SUR PLACE', 'DINE IN'));
   if (order.source === 'online') {
     line(t('COMMANDE EN LIGNE', 'ONLINE ORDER'));
-    parts.push(c.tall); line(t('Ramassage : ', 'Pickup: ') + (order.pickup_time || '')); parts.push(c.normal);
+    parts.push(c.tall); line((order.service_type === 'dine_in' ? t('Arrivée : ', 'Arrival: ') : t('Ramassage : ', 'Pickup: ')) + (order.pickup_time || '')); parts.push(c.normal);
     line(order.payment_status === 'paid' ? t('PAYÉ EN LIGNE', 'PAID ONLINE') : t('À PAYER AU COMPTOIR', 'PAY AT THE COUNTER'));
   }
   parts.push(c.boldOff, c.alignLeft);

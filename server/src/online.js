@@ -90,7 +90,7 @@ export async function createOnlineOrder(payload, { baseUrl } = {}) {
 
   const token = crypto.randomBytes(12).toString('hex');
   const r = createOrder(
-    { lang, lines: payload.lines, customer_name: name, service_type: 'takeout', note: payload.note, device_name: t(lang, 'Site web', 'Website'), device_id: 'web' },
+    { lang, lines: payload.lines, customer_name: name, service_type: payload.service_type === 'dine_in' ? 'dine_in' : 'takeout', note: payload.note, device_name: t(lang, 'Site web', 'Website'), device_id: 'web' },
     { source: 'online', pickup_time: pickup.time, tip, payment_method: payment, payment_status: 'unpaid', customer_phone: phone, customer_email: email || null,
       public_token: token, status: payment === 'stripe' ? 'pending_payment' : 'new' },
   );
@@ -145,6 +145,6 @@ export async function refundIfPaid(order) {
 }
 
 export function publicOrder(o) {
-  return { id: o.id, number: o.number, status: o.status, pickup_time: o.pickup_time, total: o.total, tip: o.tip, subtotal: o.subtotal, tax_gst: o.tax_gst, tax_qst: o.tax_qst,
+  return { id: o.id, number: o.number, status: o.status, pickup_time: o.pickup_time, service_type: o.service_type, total: o.total, tip: o.tip, subtotal: o.subtotal, tax_gst: o.tax_gst, tax_qst: o.tax_qst,
     payment_method: o.payment_method, payment_status: o.payment_status, customer_name: o.customer_name, created_at: o.created_at, lines: o.lines, token: o.public_token };
 }

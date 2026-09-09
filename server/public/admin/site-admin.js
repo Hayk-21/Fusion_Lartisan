@@ -34,7 +34,7 @@
     $('#wPayMode').value = s.payment_mode || 'counter'; togglePay();
     $('#wStripePk').value = s.stripe_publishable_key || ''; $('#wStripeSk').value = ''; $('#wStripeWh').value = '';
     $('#wStripeSk').placeholder = s.stripe_secret_key ? '•••••••• (' + t('site.keySet') + ')' : 'sk_live_…'; $('#wStripeWh').placeholder = s.stripe_webhook_secret ? '•••••••• (' + t('site.keySet') + ')' : 'whsec_…';
-    $('#wTips').checked = s.tips_enabled !== false; $('#wTipOptions').value = (s.tip_options || [0, 10, 15, 20]).join(', ');
+    $('#wTips').checked = s.tips_enabled !== false; $('#wTipOptions').value = (s.tip_options || [0, 5, 10, 15]).join(', ');
     $('#wAddress').value = s.address || ''; $('#wPhone').value = s.phone || ''; $('#wEmail').value = s.email || ''; $('#wInstagram').value = s.instagram || ''; $('#wFacebook').value = s.facebook || '';
     $('#wTagFr').value = s.tagline?.fr || ''; $('#wTagEn').value = s.tagline?.en || ''; $('#wAboutFr').value = s.about?.fr || ''; $('#wAboutEn').value = s.about?.en || '';
     $('#wMapsUrl').value = s.google_maps_url || ''; $('#wPublicUrl').value = s.public_url || '';
@@ -63,7 +63,7 @@
       hours: readHours(), timezone: $('#wTz').value.trim() || 'America/Toronto',
       pickup_lead_minutes: Number($('#wLead').value) || 15, pickup_slot_minutes: Number($('#wSlot').value) || 15, pickup_last_order_minutes: Number($('#wLast').value) || 0,
       payment_mode: $('#wPayMode').value, stripe_publishable_key: $('#wStripePk').value.trim(),
-      tips_enabled: $('#wTips').checked, tip_options: tips.length ? [...new Set(tips)].sort((a, b) => a - b) : [0, 10, 15, 20],
+      tips_enabled: $('#wTips').checked, tip_options: tips.length ? [...new Set(tips)].sort((a, b) => a - b) : [0, 5, 10, 15],
       address: $('#wAddress').value.trim(), phone: $('#wPhone').value.trim(), email: $('#wEmail').value.trim(), instagram: $('#wInstagram').value.trim().replace(/^@/, ''), facebook: $('#wFacebook').value.trim(),
       tagline: { fr: $('#wTagFr').value.trim(), en: $('#wTagEn').value.trim() }, about: { fr: $('#wAboutFr').value.trim(), en: $('#wAboutEn').value.trim() },
       google_maps_url: $('#wMapsUrl').value.trim(), public_url: $('#wPublicUrl').value.trim().replace(/\/+$/, ''),
