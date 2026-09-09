@@ -1,0 +1,8 @@
+node_modules
+data/lartisan.db*
+data/uploads
+data/backups
+test
+*.bat
+*.command
+print-agent/print-agent.json

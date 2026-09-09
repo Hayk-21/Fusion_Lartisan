@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confirmation — Fusion L'Artisan</title>
+<link rel="icon" href="/shared/logo-mark.png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/site.css">
+<style>
+.card{background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:0 10px 40px rgba(0,0,0,.08);padding:34px 30px;max-width:640px;margin:40px auto;text-align:center}
+.num{font-family:"Playfair Display",serif;font-size:96px;color:var(--brand);line-height:1;margin:6px 0}
+.status{display:inline-flex;gap:8px;align-items:center;padding:8px 16px;border-radius:999px;font-weight:700;background:var(--soft);border:1px solid var(--line);margin:10px 0}
+.status.ready{background:#e7f6ee;border-color:#bfe6cf;color:#155c3b}
+.steps{display:flex;justify-content:center;gap:6px;margin:14px 0 20px}
+.steps span{width:70px;height:6px;border-radius:3px;background:var(--line)}
+.steps span.on{background:var(--brand)}
+.lines{text-align:left;margin:20px 0;border-top:1px solid var(--line)}
+.lines div{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed var(--line);font-size:15px}
+.lines .tot{font-weight:900;font-size:18px;border-bottom:none}
+.pickup{font-size:20px;font-weight:700;color:var(--brand2)}
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap"><a class="brand" href="/"><img id="navLogo" src="/shared/logo-mark.png" alt=""><span><b id="navName">L'Artisan</b><small>Crêperie & Café</small></span></a><nav><div class="lang"><button data-lang="fr">FR</button><button data-lang="en">EN</button></div></nav></div></header>
+<main class="wrap">
+  <div class="card" id="card"><p class="muted">…</p></div>
+</main>
+<script>
+(function () {
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const STR = {
+    fr: { thanks: 'Merci, {n} !', sub: 'Votre commande est confirmée.', num: 'Votre numéro de commande', pickup: 'Ramassage vers', addr: 'au comptoir — {a}', paid: 'Payée en ligne ✓', unpaid: 'À régler au comptoir lors du ramassage', pending: 'Paiement en attente…',
+      st: { new: 'Reçue — en attente en cuisine', preparing: 'En préparation', ready: 'Prête ! Venez la chercher 🎉', completed: 'Récupérée — bon appétit !', cancelled: 'Annulée', pending_payment: 'En attente du paiement' },
+      subtotal: 'Sous-total', tax: 'Taxes', tip: 'Pourboire', total: 'Total', again: 'Commander à nouveau', home: 'Retour au site', notfound: 'Commande introuvable.', refresh: 'Cette page se met à jour automatiquement.' },
+    en: { thanks: 'Thank you, {n}!', sub: 'Your order is confirmed.', num: 'Your order number', pickup: 'Pickup around', addr: 'at the counter — {a}', paid: 'Paid online ✓', unpaid: 'Pay at the counter when you pick up', pending: 'Payment pending…',
+      st: { new: 'Received — waiting in the kitchen', preparing: 'Being prepared', ready: 'Ready! Come and get it 🎉', completed: 'Picked up — enjoy!', cancelled: 'Cancelled', pending_payment: 'Waiting for payment' },
+      subtotal: 'Subtotal', tax: 'Taxes', tip: 'Tip', total: 'Total', again: 'Order again', home: 'Back to the site', notfound: 'Order not found.', refresh: 'This page refreshes automatically.' },
+  };
+  let lang = localStorage.getItem('site_lang') || ((navigator.language || 'fr').toLowerCase().startsWith('en') ? 'en' : 'fr');
+  const t = (k, v = {}) => { let s = STR[lang][k] ?? STR.fr[k] ?? k; if (typeof s !== 'string') return s; for (const [a, b] of Object.entries(v)) s = s.replace('{' + a + '}', b); return s; };
+  const money = n => { const v = (Math.round(n * 100) / 100).toFixed(2); return lang === 'en' ? '$' + v : v.replace('.', ',') + ' $'; };
+  const fmtT = hhmm => { if (!hhmm) return ''; const [h, m] = hhmm.split(':').map(Number); return lang === 'en' ? `${((h + 11) % 12) + 1}:${String(m).padStart(2, '0')} ${h < 12 ? 'am' : 'pm'}` : `${h} h${m ? ' ' + String(m).padStart(2, '0') : ''}`; };
+  const q = new URLSearchParams(location.search); const id = q.get('id'), token = q.get('t'), session = q.get('session_id');
+  let order = null, site = null;
+  document.querySelectorAll('.lang button').forEach(b => { b.classList.toggle('active', b.dataset.lang === lang); b.onclick = () => { lang = b.dataset.lang; localStorage.setItem('site_lang', lang); document.querySelectorAll('.lang button').forEach(x => x.classList.toggle('active', x.dataset.lang === lang)); render(); }; });
+  function render() {
+    if (!order) return;
+    const steps = ['new', 'preparing', 'ready', 'completed']; const idx = steps.indexOf(order.status);
+    $('#card').innerHTML = `<h2>${t('thanks', { n: esc(order.customer_name || '') })}</h2><p class="muted">${t('sub')}</p>
+      <p class="muted" style="margin:14px 0 0">${t('num')}</p><div class="num">#${order.number}</div>
+      <div class="status ${order.status === 'ready' ? 'ready' : ''}">${esc(t('st')[order.status] || order.status)}</div>
+      <div class="steps">${steps.slice(0, 3).map((s, i) => `<span class="${i <= idx ? 'on' : ''}"></span>`).join('')}</div>
+      <div class="pickup">🕒 ${t('pickup')} ${fmtT(order.pickup_time)}</div><p class="muted">${t('addr', { a: esc(site?.address || '') })}</p>
+      <p><b>${order.payment_status === 'paid' ? t('paid') : (order.status === 'pending_payment' ? t('pending') : t('unpaid'))}</b></p>
+      <div class="lines">${order.lines.map(l => `<div><span>${l.qty}× ${esc(l.name)}${l.variant_name ? ' — ' + esc(l.variant_name) : ''}${l.options?.length ? ' <small class="muted">(' + l.options.map(o => esc(o.name)).join(', ') + ')</small>' : ''}</span><span>${money(l.line_total)}</span></div>`).join('')}
+        <div><span>${t('subtotal')}</span><span>${money(order.subtotal)}</span></div><div><span>${t('tax')}</span><span>${money(order.tax_gst + order.tax_qst)}</span></div>${order.tip ? `<div><span>${t('tip')}</span><span>${money(order.tip)}</span></div>` : ''}<div class="tot"><span>${t('total')}</span><span>${money(order.total)}</span></div></div>
+      <p class="muted" style="font-size:13px">${t('refresh')}</p>
+      <p><a class="btn primary" href="/commander/">${t('again')}</a> <a class="btn" href="/">${t('home')}</a></p>`;
+  }
+  async function load(first) {
+    try {
+      const r = await fetch(`/api/online-orders/${id}?t=${encodeURIComponent(token)}${first && session ? '&session_id=' + encodeURIComponent(session) : ''}`);
+      if (!r.ok) { $('#card').innerHTML = `<p>${t('notfound')}</p>`; return; }
+      order = await r.json(); render();
+    } catch {}
+  }
+  fetch('/api/site').then(r => r.json()).then(s => { site = s; $('#navName').textContent = s.cafe_name; $('#navLogo').src = s.logo_url || '/shared/logo-mark.png'; render(); });
+  load(true); setInterval(() => load(false), 15000);
+})();
+</script>
+</body>
+</html>

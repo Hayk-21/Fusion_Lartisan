@@ -1,0 +1,7 @@
+<resources>
+    <style name="Theme.LArtisan" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">#fffaf4</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowBackground">#fffaf4</item>
+    </style>
+</resources>

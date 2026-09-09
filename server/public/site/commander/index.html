@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commander en ligne — Fusion L'Artisan</title>
+<link rel="icon" href="/shared/logo-mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/site.css">
+<link rel="stylesheet" href="/commander/order.css">
+</head>
+<body>
+<div id="closedBanner" class="closed-banner hidden"></div>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="/"><img id="navLogo" src="/shared/logo-mark.png" alt=""><span><b id="navName">L'Artisan</b><small data-i18n="orderOnline">Commander en ligne</small></span></a>
+  <nav>
+    <span class="badge" id="openBadge"><span class="dot"></span><span id="openText">…</span></span>
+    <div class="lang"><button data-lang="fr">FR</button><button data-lang="en">EN</button></div>
+  </nav>
+</div></header>
+
+<nav class="tabs wrap" id="tabs"></nav>
+<main class="wrap layout">
+  <section class="menu" id="menu"></section>
+  <aside class="cart" id="cart">
+    <div class="cart-head"><h2 data-i18n="yourOrder">Votre commande</h2><button class="link" id="cartClear" data-i18n="clear">Vider</button><button class="link" id="cartClose">✕</button></div>
+    <div class="cart-lines" id="cartLines"></div>
+    <div class="cart-totals" id="cartTotals"></div>
+    <button class="btn primary big" id="reviewBtn" disabled data-i18n="checkout">Passer la commande</button>
+  </aside>
+</main>
+<div class="cart-bar" id="cartBar"><div><div class="muted" id="barCount"></div><b id="barTotal"></b></div><button class="btn primary" id="barOpen" data-i18n="viewCart">Voir la commande</button></div>
+
+<div id="sheet" class="sheet hidden"><div class="sheet-card" id="sheetCard"></div></div>
+<div id="toast" class="toast hidden"></div>
+<script type="module" src="/commander/order.js"></script>
+</body>
+</html>

@@ -1,0 +1,4961 @@
+{
+  "currency": "CAD",
+  "categories": [
+    {
+      "id": "du-jour",
+      "name": {
+        "fr": "Spécial du jour",
+        "en": "Today's Special"
+      },
+      "icon": "⭐",
+      "sort": 1,
+      "visible": true,
+      "description": {
+        "fr": "Une création salée et une création sucrée, le temps d'une journée",
+        "en": "One savory creation and one sweet creation, just for the day"
+      },
+      "daily_special": true
+    },
+    {
+      "id": "galettes",
+      "name": {
+        "fr": "Galettes salées",
+        "en": "Savoury Galettes"
+      },
+      "icon": "🥙",
+      "sort": 2,
+      "visible": true,
+      "description": {
+        "fr": "Sarrasin bio, sans gluten — composez votre galette",
+        "en": "Organic buckwheat, gluten-free — build your galette"
+      }
+    },
+    {
+      "id": "signatures-salees",
+      "name": {
+        "fr": "Signatures de l'Atelier",
+        "en": "Atelier Signatures"
+      },
+      "icon": "✨",
+      "sort": 3,
+      "visible": true,
+      "description": {
+        "fr": "Galettes bio & sans gluten, servies avec une petite salade du jour",
+        "en": "Organic & gluten-free galettes, served with a small salad of the day"
+      }
+    },
+    {
+      "id": "trilogie-salee",
+      "name": {
+        "fr": "La Trilogie du Cœur",
+        "en": "The Trilogy of the Heart"
+      },
+      "icon": "❤️",
+      "sort": 4,
+      "visible": true,
+      "description": {
+        "fr": "Pour chaque crêpe vendue de cette trilogie, 1 $ est versé à une cause qui nous tient à cœur.",
+        "en": "For every crêpe sold from this trilogy, $1 is donated to a cause close to our hearts."
+      }
+    },
+    {
+      "id": "formules-salees",
+      "name": {
+        "fr": "Formules salées",
+        "en": "Savoury Formulas"
+      },
+      "icon": "🍽️",
+      "sort": 5,
+      "visible": true,
+      "description": {
+        "fr": "Des formules combinées pour un repas complet",
+        "en": "Combo formulas for a complete meal"
+      }
+    },
+    {
+      "id": "crepes",
+      "name": {
+        "fr": "Crêpes sucrées",
+        "en": "Sweet Crêpes"
+      },
+      "icon": "🍓",
+      "sort": 6,
+      "visible": true,
+      "description": {
+        "fr": "L'Artisan, c'est vous — composez votre crêpe sucrée",
+        "en": "L'Artisan is You — build your own sweet crêpe"
+      }
+    },
+    {
+      "id": "signatures-sucrees",
+      "name": {
+        "fr": "Crêpes signatures",
+        "en": "Signature Crêpes"
+      },
+      "icon": "🌟",
+      "sort": 7,
+      "visible": true,
+      "description": {
+        "fr": "Nos créations sucrées, un voyage pour les papilles",
+        "en": "Our sweet creations, a journey for the taste buds"
+      }
+    },
+    {
+      "id": "formules-sucrees",
+      "name": {
+        "fr": "Formules sucrées",
+        "en": "Sweet Formulas"
+      },
+      "icon": "🍨",
+      "sort": 8,
+      "visible": true,
+      "description": {
+        "fr": "Pour bien commencer la journée",
+        "en": "To start your day right"
+      }
+    },
+    {
+      "id": "glaces",
+      "name": {
+        "fr": "Milkshakes & Coupes glacées",
+        "en": "Milkshakes & Ice Cream"
+      },
+      "icon": "🍦",
+      "sort": 9,
+      "visible": true,
+      "description": {
+        "fr": "À composer soi-même — crème Chantilly incluse",
+        "en": "Build your own — whipped cream included"
+      }
+    },
+    {
+      "id": "boissons-chaudes",
+      "name": {
+        "fr": "Boissons chaudes",
+        "en": "Hot Drinks"
+      },
+      "icon": "☕",
+      "sort": 10,
+      "visible": true,
+      "description": {
+        "fr": "Café barista, thés & lattés",
+        "en": "Barista coffee, teas & lattes"
+      }
+    },
+    {
+      "id": "boissons-froides",
+      "name": {
+        "fr": "Boissons & Jus",
+        "en": "Drinks & Juices"
+      },
+      "icon": "🥤",
+      "sort": 11,
+      "visible": true,
+      "description": {
+        "fr": "Fraîcheurs maison, cocktails sans alcool, smoothies",
+        "en": "House refreshers, mocktails, smoothies"
+      }
+    }
+  ],
+  "items": [
+    {
+      "id": "dj-oeuf-jardin",
+      "category_id": "du-jour",
+      "name": {
+        "fr": "L'Œuf & Jardin",
+        "en": "The Egg & Garden"
+      },
+      "image": "/shared/dishes/dj-oeuf-jardin.jpg",
+      "description": {
+        "fr": "Galette de sarrasin bio sans gluten, œuf miroir, fromage fondant, champignons de Paris poêlés, courgettes, épinards frais, tomates et graines de sésame grillées.",
+        "en": "Organic gluten-free buckwheat galette, sunny-side-up egg, melted cheese, pan-seared button mushrooms, zucchini, fresh spinach, tomatoes & toasted sesame seeds."
+      },
+      "price": 15.99,
+      "available": true,
+      "sort": 1,
+      "badge": {
+        "fr": "Salée du jour",
+        "en": "Savory of the day"
+      },
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "dj-gourmande-chef",
+      "category_id": "du-jour",
+      "name": {
+        "fr": "La Gourmande du Chef",
+        "en": "The Chef's Indulgence"
+      },
+      "image": "/shared/dishes/dj-gourmande-chef.jpg",
+      "description": {
+        "fr": "Crêpe de froment, Nutella®, banane, fraises fraîches et crème Chantilly. Offerte selon l'inspiration du chef, sur demande.",
+        "en": "Wheat crêpe, Nutella®, banana, fresh strawberries and whipped cream. Offered at the chef's inspiration, upon request."
+      },
+      "price": 13.99,
+      "available": true,
+      "sort": 2,
+      "badge": {
+        "fr": "Sucrée du jour",
+        "en": "Sweet of the day"
+      },
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "dj-latte",
+      "category_id": "du-jour",
+      "name": {
+        "fr": "Latte du jour",
+        "en": "Latte of the Day"
+      },
+      "image": "/shared/dishes/dj-latte.jpg",
+      "description": {
+        "fr": "Vanille, caramel, pistache ou noisette, selon l'inspiration du jour.",
+        "en": "Vanilla, caramel, pistachio or hazelnut, depending on today's inspiration."
+      },
+      "price": 5.25,
+      "available": true,
+      "sort": 3,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "dj-iced-latte",
+      "category_id": "du-jour",
+      "name": {
+        "fr": "Iced Latte du jour",
+        "en": "Iced Latte of the Day"
+      },
+      "image": "/shared/dishes/dj-iced-latte.jpg",
+      "description": {
+        "fr": "Espresso, lait froid et saveur du jour, servi sur glace.",
+        "en": "Espresso, cold milk and today's flavor, served over ice."
+      },
+      "price": 6.25,
+      "available": true,
+      "sort": 4,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "dj-matcha",
+      "category_id": "du-jour",
+      "name": {
+        "fr": "Matcha du jour",
+        "en": "Matcha of the Day"
+      },
+      "image": "/shared/dishes/dj-matcha.jpg",
+      "description": {
+        "fr": "Matcha japonais, lait et saveur du jour : pistache, fraise ou vanille.",
+        "en": "Japanese matcha, milk and today's flavor: pistachio, strawberry or vanilla."
+      },
+      "price": 6.55,
+      "available": true,
+      "sort": 5,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "dj-cafe-filtre",
+      "category_id": "du-jour",
+      "name": {
+        "fr": "Café filtre",
+        "en": "Filter Coffee"
+      },
+      "image": "/shared/dishes/dj-cafe-filtre.jpg",
+      "description": {
+        "fr": "Café fraîchement préparé, servi chaud.",
+        "en": "Freshly brewed coffee, served hot."
+      },
+      "price": 3.25,
+      "available": true,
+      "sort": 6,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "galette-composer",
+      "category_id": "galettes",
+      "name": {
+        "fr": "Composez votre galette",
+        "en": "Build your galette"
+      },
+      "image": "/shared/dishes/galette-composer.jpg",
+      "description": {
+        "fr": "Galette de sarrasin bio, sans gluten. Servie avec notre salade maison et sa vinaigrette signature. Les garnitures au-delà de l'inclus s'ajoutent à +2,99 $.",
+        "en": "Organic buckwheat galette, gluten-free. Served with our house salad and signature vinaigrette. Fillings beyond the included ones are +$2.99 each."
+      },
+      "price": 14.99,
+      "available": true,
+      "sort": 7,
+      "badge": {
+        "fr": "Sans gluten",
+        "en": "Gluten-free"
+      },
+      "variants": [
+        {
+          "id": "essentiel",
+          "name": {
+            "fr": "L'Essentiel",
+            "en": "The Essential"
+          },
+          "price": 14.99,
+          "included": {
+            "garnitures": 3
+          },
+          "description": {
+            "fr": "Base + 3 garnitures au choix",
+            "en": "Base + 3 fillings of your choice"
+          }
+        },
+        {
+          "id": "gourmand",
+          "name": {
+            "fr": "Le Gourmand",
+            "en": "The Gourmet"
+          },
+          "price": 17.99,
+          "included": {
+            "garnitures": 4
+          },
+          "description": {
+            "fr": "Base + 4 garnitures au choix",
+            "en": "Base + 4 fillings"
+          }
+        },
+        {
+          "id": "nature",
+          "name": {
+            "fr": "Base Nature",
+            "en": "Plain Base"
+          },
+          "price": 9.99,
+          "included": {
+            "garnitures": 0
+          },
+          "description": {
+            "fr": "Galette sarrasin bio, sans garniture",
+            "en": "Organic buckwheat galette, gluten-free, no filling"
+          }
+        }
+      ],
+      "option_groups": [
+        {
+          "id": "garnitures",
+          "name": {
+            "fr": "Garnitures",
+            "en": "Fillings"
+          },
+          "type": "multi",
+          "required": false,
+          "min": 0,
+          "max": null,
+          "included": 3,
+          "extra_price": 2.99,
+          "options": [
+            {
+              "id": "cheddar",
+              "name": {
+                "fr": "Cheddar",
+                "en": "Cheddar"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Fromages",
+                "en": "Cheeses"
+              }
+            },
+            {
+              "id": "fromage-creme",
+              "name": {
+                "fr": "Fromage à la crème",
+                "en": "Cream cheese"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Fromages",
+                "en": "Cheeses"
+              }
+            },
+            {
+              "id": "creme-fraiche",
+              "name": {
+                "fr": "Crème fraîche",
+                "en": "Crème fraîche"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Fromages",
+                "en": "Cheeses"
+              }
+            },
+            {
+              "id": "emmental",
+              "name": {
+                "fr": "Emmental suisse",
+                "en": "Swiss Emmental"
+              },
+              "price": 2.49,
+              "available": true,
+              "section": {
+                "fr": "Fromages",
+                "en": "Cheeses"
+              }
+            },
+            {
+              "id": "chevre",
+              "name": {
+                "fr": "Fromage de chèvre",
+                "en": "Goat cheese"
+              },
+              "price": 2.49,
+              "available": true,
+              "section": {
+                "fr": "Fromages",
+                "en": "Cheeses"
+              }
+            },
+            {
+              "id": "jambon-poulet",
+              "name": {
+                "fr": "Jambon de poulet",
+                "en": "Chicken ham"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Viandes",
+                "en": "Meats"
+              }
+            },
+            {
+              "id": "jambon-dinde",
+              "name": {
+                "fr": "Jambon de dinde",
+                "en": "Turkey ham"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Viandes",
+                "en": "Meats"
+              }
+            },
+            {
+              "id": "jambon-dinde-fume",
+              "name": {
+                "fr": "Jambon de dinde fumé",
+                "en": "Smoked turkey ham"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Viandes",
+                "en": "Meats"
+              }
+            },
+            {
+              "id": "oeuf",
+              "name": {
+                "fr": "Œuf — miroir ou brouillé",
+                "en": "Egg — sunny-side up or scrambled"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Viandes",
+                "en": "Meats"
+              }
+            },
+            {
+              "id": "poulet-marine",
+              "name": {
+                "fr": "Poulet mariné",
+                "en": "Marinated chicken"
+              },
+              "price": 4.99,
+              "available": true,
+              "section": {
+                "fr": "Viandes",
+                "en": "Meats"
+              }
+            },
+            {
+              "id": "boeuf-hache",
+              "name": {
+                "fr": "Bœuf haché",
+                "en": "Ground beef"
+              },
+              "price": 4,
+              "available": true,
+              "section": {
+                "fr": "Viandes",
+                "en": "Meats"
+              }
+            },
+            {
+              "id": "saucisse",
+              "name": {
+                "fr": "Saucisse artisanale maison",
+                "en": "House-made artisan sausage"
+              },
+              "price": 4.5,
+              "available": true,
+              "section": {
+                "fr": "Viandes",
+                "en": "Meats"
+              }
+            },
+            {
+              "id": "champignons",
+              "name": {
+                "fr": "Champignons",
+                "en": "Mushrooms"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Légumes",
+                "en": "Vegetables"
+              }
+            },
+            {
+              "id": "epinards",
+              "name": {
+                "fr": "Épinards frais",
+                "en": "Fresh spinach"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Légumes",
+                "en": "Vegetables"
+              }
+            },
+            {
+              "id": "tomates",
+              "name": {
+                "fr": "Tomates fraîches",
+                "en": "Fresh tomatoes"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Légumes",
+                "en": "Vegetables"
+              }
+            },
+            {
+              "id": "tomates-sechees",
+              "name": {
+                "fr": "Tomates séchées",
+                "en": "Sun-dried tomatoes"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Légumes",
+                "en": "Vegetables"
+              }
+            },
+            {
+              "id": "courgettes",
+              "name": {
+                "fr": "Courgettes",
+                "en": "Zucchini"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Légumes",
+                "en": "Vegetables"
+              }
+            },
+            {
+              "id": "aubergines",
+              "name": {
+                "fr": "Aubergines",
+                "en": "Eggplant"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Légumes",
+                "en": "Vegetables"
+              }
+            },
+            {
+              "id": "poivrons",
+              "name": {
+                "fr": "Poivrons",
+                "en": "Bell peppers"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Légumes",
+                "en": "Vegetables"
+              }
+            },
+            {
+              "id": "pommes-terre",
+              "name": {
+                "fr": "Pommes de terre",
+                "en": "Potatoes"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Légumes",
+                "en": "Vegetables"
+              }
+            },
+            {
+              "id": "oignons-caramelises",
+              "name": {
+                "fr": "Oignons caramélisés",
+                "en": "Caramelized onions"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Légumes",
+                "en": "Vegetables"
+              }
+            },
+            {
+              "id": "avocat",
+              "name": {
+                "fr": "Avocat",
+                "en": "Avocado"
+              },
+              "price": 2.49,
+              "available": true,
+              "section": {
+                "fr": "Légumes",
+                "en": "Vegetables"
+              }
+            },
+            {
+              "id": "thon",
+              "name": {
+                "fr": "Thon",
+                "en": "Tuna"
+              },
+              "price": 4.49,
+              "available": true,
+              "section": {
+                "fr": "Poissons",
+                "en": "Seafood"
+              }
+            },
+            {
+              "id": "saumon-fume",
+              "name": {
+                "fr": "Saumon fumé",
+                "en": "Smoked salmon"
+              },
+              "price": 5.99,
+              "available": true,
+              "section": {
+                "fr": "Poissons",
+                "en": "Seafood"
+              }
+            },
+            {
+              "id": "crevettes",
+              "name": {
+                "fr": "Crevettes",
+                "en": "Shrimp"
+              },
+              "price": 5.99,
+              "available": true,
+              "section": {
+                "fr": "Poissons",
+                "en": "Seafood"
+              }
+            }
+          ],
+          "hint": {
+            "fr": "Garniture supplémentaire : +2,99 $. Certains ingrédients ont un supplément.",
+            "en": "Extra filling: +$2.99. Some ingredients carry a surcharge."
+          }
+        },
+        {
+          "id": "sauces",
+          "name": {
+            "fr": "Sauces",
+            "en": "Sauces"
+          },
+          "type": "multi",
+          "required": false,
+          "min": 0,
+          "max": null,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "bechamel",
+              "name": {
+                "fr": "Sauce béchamel",
+                "en": "Béchamel sauce"
+              },
+              "price": 1.55,
+              "available": true
+            },
+            {
+              "id": "tomate",
+              "name": {
+                "fr": "Sauce tomate",
+                "en": "Tomato sauce"
+              },
+              "price": 1.55,
+              "available": true
+            },
+            {
+              "id": "pesto",
+              "name": {
+                "fr": "Sauce pesto",
+                "en": "Pesto sauce"
+              },
+              "price": 1.55,
+              "available": true
+            },
+            {
+              "id": "miel-moutarde",
+              "name": {
+                "fr": "Miel moutarde",
+                "en": "Honey mustard"
+              },
+              "price": 1.75,
+              "available": true
+            },
+            {
+              "id": "sirop-erable",
+              "name": {
+                "fr": "Sirop d'érable pur",
+                "en": "Pure maple syrup"
+              },
+              "price": 1.75,
+              "available": true
+            },
+            {
+              "id": "miel-bio",
+              "name": {
+                "fr": "Miel bio",
+                "en": "Organic honey"
+              },
+              "price": 1.75,
+              "available": true
+            },
+            {
+              "id": "mayonnaise",
+              "name": {
+                "fr": "Mayonnaise",
+                "en": "Mayonnaise"
+              },
+              "price": 0.75,
+              "available": true
+            },
+            {
+              "id": "moutarde",
+              "name": {
+                "fr": "Moutarde",
+                "en": "Mustard"
+              },
+              "price": 0.75,
+              "available": true
+            },
+            {
+              "id": "sriracha",
+              "name": {
+                "fr": "Sriracha",
+                "en": "Sriracha"
+              },
+              "price": 0.75,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sig-foret-verte",
+      "category_id": "signatures-salees",
+      "name": {
+        "fr": "La Forêt Verte",
+        "en": "The Green Forest"
+      },
+      "image": "/shared/dishes/sig-foret-verte.jpg",
+      "description": {
+        "fr": "Galette de sarrasin bio croustillante, houmous onctueux, tofu fumé mariné et doré, champignons sautés à l'ail, jeunes pousses d'épinards, sauce citron-tahini et graines de citrouille grillées.",
+        "en": "Crisp organic buckwheat galette, silky hummus, marinated smoked tofu golden-seared, garlic-sautéed mushrooms, baby spinach, lemon-tahini sauce and toasted pumpkin seeds."
+      },
+      "price": 18.99,
+      "available": true,
+      "sort": 8,
+      "badge": {
+        "fr": "VEGAN",
+        "en": "VEGAN"
+      },
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "sig-eveil-levant",
+      "category_id": "signatures-salees",
+      "name": {
+        "fr": "L'Éveil du Levant",
+        "en": "Dawn of the Levant"
+      },
+      "image": "/shared/dishes/sig-eveil-levant.jpg",
+      "description": {
+        "fr": "Labneh, œuf mollet, salsa croquante de concombre, tomates cerises et menthe fraîche, parfumés au za'atar et à l'huile d'olive extra vierge.",
+        "en": "Labneh, soft-boiled egg, crisp cucumber salsa, cherry tomatoes and fresh mint, scented with za'atar and extra virgin olive oil."
+      },
+      "price": 18.99,
+      "available": true,
+      "sort": 9,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "sig-chevre-gourmand",
+      "category_id": "signatures-salees",
+      "name": {
+        "fr": "Le Chèvre Gourmand",
+        "en": "The Gourmet Goat Cheese"
+      },
+      "image": "/shared/dishes/sig-chevre-gourmand.jpg",
+      "description": {
+        "fr": "Fromage de chèvre du Québec, jeunes épinards, noix, figues séchées marinées au miel bio et au romarin, filet de balsamique.",
+        "en": "Québec goat cheese, baby spinach, walnuts, dried figs marinated in organic honey and rosemary, a drizzle of balsamic."
+      },
+      "price": 20.99,
+      "available": true,
+      "sort": 10,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "sig-nordique",
+      "category_id": "signatures-salees",
+      "name": {
+        "fr": "La Nordique",
+        "en": "The Nordic"
+      },
+      "image": "/shared/dishes/sig-nordique.jpg",
+      "description": {
+        "fr": "Saumon fumé de l'Atlantique sur crème fraîche à l'aneth, câpres maison croustillantes et oignons rouges.",
+        "en": "Atlantic smoked salmon over dill-infused crème fraîche, crisp house capers and red onions."
+      },
+      "price": 22.99,
+      "available": true,
+      "sort": 11,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "sig-cidre-vague",
+      "category_id": "signatures-salees",
+      "name": {
+        "fr": "Le Cidre et la Vague",
+        "en": "Cider & the Wave"
+      },
+      "image": "/shared/dishes/sig-cidre-vague.jpg",
+      "description": {
+        "fr": "Crevettes sautées à l'ail déglacées au vinaigre de cidre, fondue de poireaux et champignons, sauce crémeuse au persil.",
+        "en": "Garlic-sautéed shrimp deglazed with cider vinegar, leek and mushroom fondue, creamy parsley sauce."
+      },
+      "price": 22.99,
+      "available": true,
+      "sort": 12,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "sig-tandoori",
+      "category_id": "signatures-salees",
+      "name": {
+        "fr": "La Tandoori",
+        "en": "The Tandoori"
+      },
+      "image": "/shared/dishes/sig-tandoori.jpg",
+      "description": {
+        "fr": "Poulet mariné aux épices tandoori, compotée d'oignons caramélisés, tomates fraîches et raïta concombre-coriandre à la menthe.",
+        "en": "Chicken marinated in tandoori spices, caramelized onion compote, fresh tomatoes and minted cucumber-coriander raita."
+      },
+      "price": 20.99,
+      "available": true,
+      "sort": 13,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "sig-smoked-meat",
+      "category_id": "signatures-salees",
+      "name": {
+        "fr": "La Smoked Meat",
+        "en": "The Smoked Meat"
+      },
+      "image": "/shared/dishes/sig-smoked-meat.jpg",
+      "description": {
+        "fr": "Généreuses tranches de smoked meat, cheddar fondu, cornichons croquants et authentique moutarde de Montréal.",
+        "en": "Generous slices of smoked meat, melted cheddar, crisp pickles and authentic Montreal mustard."
+      },
+      "price": 21.99,
+      "available": true,
+      "sort": 14,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "tri-amour-maman",
+      "category_id": "trilogie-salee",
+      "name": {
+        "fr": "L'Amour de Maman",
+        "en": "Mom's Love"
+      },
+      "image": "/shared/dishes/tri-amour-maman.jpg",
+      "description": {
+        "fr": "Galette de sarrasin bio, boulette de bœuf maison aux herbes, ratatouille mijotée, épinards frais et cheddar fondu.",
+        "en": "Organic buckwheat galette, house-made herbed beef meatball, slow-simmered ratatouille, fresh spinach and melted cheddar."
+      },
+      "price": 19.99,
+      "available": true,
+      "sort": 15,
+      "badge": {
+        "fr": "1 $ reversé",
+        "en": "$1 donated"
+      },
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "tri-signature-pa",
+      "category_id": "trilogie-salee",
+      "name": {
+        "fr": "La Signature de Pa'",
+        "en": "Pa's Signature"
+      },
+      "image": "/shared/dishes/tri-signature-pa.jpg",
+      "description": {
+        "fr": "Galette de sarrasin bio, poulet effiloché, champignons de Paris à l'ail, jeunes épinards et crème d'Isigny au thym, cheddar fondu.",
+        "en": "Organic buckwheat galette, shredded chicken, garlic Paris mushrooms, baby spinach and thyme Isigny cream, all finished with melted cheddar."
+      },
+      "price": 19.99,
+      "available": true,
+      "sort": 16,
+      "badge": {
+        "fr": "1 $ reversé",
+        "en": "$1 donated"
+      },
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "tri-festin-soeurs",
+      "category_id": "trilogie-salee",
+      "name": {
+        "fr": "Le Festin des Sœurs",
+        "en": "The Sisters' Feast"
+      },
+      "image": "/shared/dishes/tri-festin-soeurs.jpg",
+      "description": {
+        "fr": "Galette croustillante garnie de ratatouille maison, cheddar fondu, œuf miroir crémeux, fromage de chèvre et graines de citrouille grillées.",
+        "en": "Crisp galette topped with house ratatouille, melted cheddar, creamy sunny-side egg, goat cheese and toasted pumpkin seeds."
+      },
+      "price": 19.99,
+      "available": true,
+      "sort": 17,
+      "badge": {
+        "fr": "1 $ reversé",
+        "en": "$1 donated"
+      },
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "form-lunch-pro",
+      "category_id": "formules-salees",
+      "name": {
+        "fr": "Formule Lunch Pro",
+        "en": "Lunch Pro Formula"
+      },
+      "image": "/shared/dishes/form-lunch-pro.jpg",
+      "description": {
+        "fr": "Un déjeuner savoureux et abordable pour égayer votre après-midi. 1 galette de sarrasin au choix + 1 boisson.",
+        "en": "A tasty, affordable lunch to brighten your afternoon. 1 buckwheat galette of your choice + 1 drink."
+      },
+      "price": 13.99,
+      "available": true,
+      "sort": 18,
+      "badge": {
+        "fr": "Populaire",
+        "en": "Popular"
+      },
+      "variants": [],
+      "option_groups": [
+        {
+          "id": "galette",
+          "name": {
+            "fr": "Choix de galette",
+            "en": "Galette choice"
+          },
+          "type": "single",
+          "required": true,
+          "min": 1,
+          "max": 1,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "dinde-champ-cheddar",
+              "name": {
+                "fr": "Jambon de dinde, champignons, cheddar",
+                "en": "Turkey ham, mushrooms, cheddar"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "oeuf-champ-cheddar",
+              "name": {
+                "fr": "Œuf, champignons, cheddar (végétarienne)",
+                "en": "Egg, mushrooms, cheddar (vegetarian)"
+              },
+              "price": 0,
+              "available": true
+            }
+          ]
+        },
+        {
+          "id": "boisson",
+          "name": {
+            "fr": "Boisson incluse",
+            "en": "Included drink"
+          },
+          "type": "single",
+          "required": true,
+          "min": 1,
+          "max": 1,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "cafe-filtre",
+              "name": {
+                "fr": "Café filtre (12 oz)",
+                "en": "Filter coffee (12 oz)"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "the",
+              "name": {
+                "fr": "Thé maison",
+                "en": "House tea"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "eska",
+              "name": {
+                "fr": "Eau Eska",
+                "en": "Eska water"
+              },
+              "price": 0,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "form-etudiant",
+      "category_id": "formules-salees",
+      "name": {
+        "fr": "Formule Étudiant",
+        "en": "Student Formula"
+      },
+      "image": "/shared/dishes/form-etudiant.jpg",
+      "description": {
+        "fr": "Sur présentation d'une carte étudiante valide — du lundi au vendredi, de 11 h à 15 h. 1 galette salée au choix + 1 boisson.",
+        "en": "Valid student ID required — Mon. to Fri., 11 am to 3 pm. 1 savoury galette of your choice + 1 drink."
+      },
+      "price": 11.99,
+      "available": true,
+      "sort": 19,
+      "badge": null,
+      "variants": [],
+      "option_groups": [
+        {
+          "id": "galette",
+          "name": {
+            "fr": "Choix de galette",
+            "en": "Galette choice"
+          },
+          "type": "single",
+          "required": true,
+          "min": 1,
+          "max": 1,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "dinde-cheddar",
+              "name": {
+                "fr": "Jambon de dinde, cheddar",
+                "en": "Turkey ham, cheddar"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "oeuf-cheddar",
+              "name": {
+                "fr": "Œuf, cheddar (végétarienne)",
+                "en": "Egg, cheddar (vegetarian)"
+              },
+              "price": 0,
+              "available": true
+            }
+          ]
+        },
+        {
+          "id": "boisson",
+          "name": {
+            "fr": "Boisson incluse",
+            "en": "Included drink"
+          },
+          "type": "single",
+          "required": true,
+          "min": 1,
+          "max": 1,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "cafe-filtre",
+              "name": {
+                "fr": "Café filtre (12 oz)",
+                "en": "Filter coffee (12 oz)"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "the",
+              "name": {
+                "fr": "Thé maison",
+                "en": "House tea"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "eska",
+              "name": {
+                "fr": "Eau Eska",
+                "en": "Eska water"
+              },
+              "price": 0,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "form-artisan-salee",
+      "category_id": "formules-salees",
+      "name": {
+        "fr": "La Formule de l'Artisan",
+        "en": "The Artisan's Formula"
+      },
+      "image": "/shared/dishes/form-artisan-salee.jpg",
+      "description": {
+        "fr": "Une expérience gourmande complète : 1 galette salée + 1 crêpe sucrée + 1 boisson.",
+        "en": "A complete gourmet experience: 1 savoury galette + 1 sweet crêpe + 1 drink."
+      },
+      "price": 25.99,
+      "available": true,
+      "sort": 20,
+      "badge": null,
+      "variants": [],
+      "option_groups": [
+        {
+          "id": "galette",
+          "name": {
+            "fr": "Votre galette",
+            "en": "Your galette"
+          },
+          "type": "single",
+          "required": true,
+          "min": 1,
+          "max": 1,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "chakchouka",
+              "name": {
+                "fr": "La Chakchouka de l'Artisan (chakchouka maison mijotée, œufs, fromage fondant)",
+                "en": "L'Artisan Chakchouka (house shakshuka, eggs, melted cheese)"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "dinde-champ-cheddar",
+              "name": {
+                "fr": "Jambon de dinde, champignons, cheddar",
+                "en": "Turkey ham, mushrooms, cheddar"
+              },
+              "price": 0,
+              "available": true
+            }
+          ]
+        },
+        {
+          "id": "crepe",
+          "name": {
+            "fr": "Votre crêpe sucrée",
+            "en": "Your sweet crêpe"
+          },
+          "type": "single",
+          "required": true,
+          "min": 1,
+          "max": 1,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "nutella",
+              "name": {
+                "fr": "Nutella & crème fouettée",
+                "en": "Nutella & whipped cream"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "caramel",
+              "name": {
+                "fr": "Caramel au beurre salé & crème fouettée",
+                "en": "Salted butter caramel & whipped cream"
+              },
+              "price": 0,
+              "available": true
+            }
+          ]
+        },
+        {
+          "id": "boisson",
+          "name": {
+            "fr": "Boisson incluse",
+            "en": "Included drink"
+          },
+          "type": "single",
+          "required": true,
+          "min": 1,
+          "max": 1,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "cafe-filtre",
+              "name": {
+                "fr": "Café filtre (12 oz)",
+                "en": "Filter coffee (12 oz)"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "the",
+              "name": {
+                "fr": "Thé maison",
+                "en": "House tea"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "eska",
+              "name": {
+                "fr": "Eau Eska",
+                "en": "Eska water"
+              },
+              "price": 0,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "crepe-composer",
+      "category_id": "crepes",
+      "name": {
+        "fr": "Composez votre crêpe",
+        "en": "Build your crêpe"
+      },
+      "image": "/shared/dishes/crepe-composer.jpg",
+      "description": {
+        "fr": "Notre pâte maison est élaborée à partir d'un mélange exclusif de deux farines, dont une farine bio naturellement sans gluten. Garniture supplémentaire : +2,49 $.",
+        "en": "Our house-made batter is crafted from an exclusive blend of two carefully selected flours, including a naturally gluten-free organic flour. Extra filling: +$2.49."
+      },
+      "price": 10.49,
+      "available": true,
+      "sort": 21,
+      "badge": null,
+      "variants": [
+        {
+          "id": "essentiel",
+          "name": {
+            "fr": "L'Essentiel",
+            "en": "The Essential"
+          },
+          "price": 10.49,
+          "included": {
+            "garnitures": 1
+          },
+          "description": {
+            "fr": "Base au choix + 1 garniture",
+            "en": "Base of your choice + 1 filling"
+          }
+        },
+        {
+          "id": "gourmand",
+          "name": {
+            "fr": "Le Gourmand",
+            "en": "The Gourmet"
+          },
+          "price": 12.99,
+          "included": {
+            "garnitures": 2
+          },
+          "description": {
+            "fr": "Base au choix + 2 garnitures",
+            "en": "Base of your choice + 2 fillings"
+          }
+        }
+      ],
+      "option_groups": [
+        {
+          "id": "base",
+          "name": {
+            "fr": "Votre base",
+            "en": "Your base"
+          },
+          "type": "single",
+          "required": true,
+          "min": 1,
+          "max": 1,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "froment",
+              "name": {
+                "fr": "Crêpe de froment traditionnelle",
+                "en": "Traditional wheat crêpe"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "sarrasin",
+              "name": {
+                "fr": "Crêpe de sarrasin bio (sans gluten)",
+                "en": "Organic buckwheat crêpe (gluten-free)"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "pancakes",
+              "name": {
+                "fr": "Duo de pancakes",
+                "en": "Duo of pancakes"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "gaufre",
+              "name": {
+                "fr": "Gaufre artisanale",
+                "en": "Artisan waffle"
+              },
+              "price": 2.49,
+              "available": true
+            }
+          ]
+        },
+        {
+          "id": "garnitures",
+          "name": {
+            "fr": "Garnitures",
+            "en": "Fillings"
+          },
+          "type": "multi",
+          "required": false,
+          "min": 0,
+          "max": null,
+          "included": 1,
+          "extra_price": 2.49,
+          "options": [
+            {
+              "id": "nutella",
+              "name": {
+                "fr": "Nutella",
+                "en": "Nutella"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Nappages",
+                "en": "Toppings"
+              }
+            },
+            {
+              "id": "choc-noir",
+              "name": {
+                "fr": "Chocolat noir belge",
+                "en": "Belgian dark chocolate"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Nappages",
+                "en": "Toppings"
+              }
+            },
+            {
+              "id": "choc-lait",
+              "name": {
+                "fr": "Chocolat au lait belge",
+                "en": "Belgian milk chocolate"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Nappages",
+                "en": "Toppings"
+              }
+            },
+            {
+              "id": "choc-blanc",
+              "name": {
+                "fr": "Chocolat blanc",
+                "en": "White chocolate"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Nappages",
+                "en": "Toppings"
+              }
+            },
+            {
+              "id": "caramel-bs",
+              "name": {
+                "fr": "Caramel au beurre salé",
+                "en": "Salted butter caramel"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Nappages",
+                "en": "Toppings"
+              }
+            },
+            {
+              "id": "coulis-fr",
+              "name": {
+                "fr": "Coulis de fruits rouges",
+                "en": "Mixed berry coulis"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Nappages",
+                "en": "Toppings"
+              }
+            },
+            {
+              "id": "biscoff",
+              "name": {
+                "fr": "Lotus Biscoff",
+                "en": "Lotus Biscoff"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Nappages",
+                "en": "Toppings"
+              }
+            },
+            {
+              "id": "beurre-arachide",
+              "name": {
+                "fr": "Beurre d'arachide",
+                "en": "Peanut butter"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Nappages",
+                "en": "Toppings"
+              }
+            },
+            {
+              "id": "beurre-amande",
+              "name": {
+                "fr": "Beurre d'amande",
+                "en": "Almond butter"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Nappages",
+                "en": "Toppings"
+              }
+            },
+            {
+              "id": "sirop-erable",
+              "name": {
+                "fr": "Sirop d'érable",
+                "en": "Maple syrup"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Nappages",
+                "en": "Toppings"
+              }
+            },
+            {
+              "id": "miel-bio",
+              "name": {
+                "fr": "Miel bio",
+                "en": "Organic honey"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Nappages",
+                "en": "Toppings"
+              }
+            },
+            {
+              "id": "confiture-fraise",
+              "name": {
+                "fr": "Confiture de fraise",
+                "en": "Strawberry preserves"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Nappages",
+                "en": "Toppings"
+              }
+            },
+            {
+              "id": "confiture-abricot",
+              "name": {
+                "fr": "Confiture d'abricot",
+                "en": "Apricot preserves"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Nappages",
+                "en": "Toppings"
+              }
+            },
+            {
+              "id": "bananes",
+              "name": {
+                "fr": "Bananes",
+                "en": "Bananas"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Fruits",
+                "en": "Fruits"
+              }
+            },
+            {
+              "id": "fraises",
+              "name": {
+                "fr": "Fraises",
+                "en": "Strawberries"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Fruits",
+                "en": "Fruits"
+              }
+            },
+            {
+              "id": "pommes",
+              "name": {
+                "fr": "Pommes fraîches",
+                "en": "Fresh apples"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Fruits",
+                "en": "Fruits"
+              }
+            },
+            {
+              "id": "pommes-caramel",
+              "name": {
+                "fr": "Pommes caramélisées",
+                "en": "Caramelized apples"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Fruits",
+                "en": "Fruits"
+              }
+            },
+            {
+              "id": "ananas",
+              "name": {
+                "fr": "Ananas frais",
+                "en": "Fresh pineapple"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Fruits",
+                "en": "Fruits"
+              }
+            },
+            {
+              "id": "bleuets",
+              "name": {
+                "fr": "Bleuets",
+                "en": "Blueberries"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Fruits",
+                "en": "Fruits"
+              }
+            },
+            {
+              "id": "kiwis",
+              "name": {
+                "fr": "Kiwis",
+                "en": "Kiwis"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Fruits",
+                "en": "Fruits"
+              }
+            },
+            {
+              "id": "mangues",
+              "name": {
+                "fr": "Mangues",
+                "en": "Mangoes"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Fruits",
+                "en": "Fruits"
+              }
+            },
+            {
+              "id": "poires",
+              "name": {
+                "fr": "Poires",
+                "en": "Pears"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Fruits",
+                "en": "Fruits"
+              }
+            },
+            {
+              "id": "amandes",
+              "name": {
+                "fr": "Amandes effilées grillées",
+                "en": "Toasted sliced almonds"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Finitions",
+                "en": "Finishes"
+              }
+            },
+            {
+              "id": "noix",
+              "name": {
+                "fr": "Noix de Grenoble",
+                "en": "Walnuts"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Finitions",
+                "en": "Finishes"
+              }
+            },
+            {
+              "id": "cacahuetes",
+              "name": {
+                "fr": "Cacahuètes concassées",
+                "en": "Crushed peanuts"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Finitions",
+                "en": "Finishes"
+              }
+            },
+            {
+              "id": "coco",
+              "name": {
+                "fr": "Noix de coco râpée",
+                "en": "Shredded coconut"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Finitions",
+                "en": "Finishes"
+              }
+            },
+            {
+              "id": "oreo",
+              "name": {
+                "fr": "Oreos écrasés",
+                "en": "Crushed Oreos"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Finitions",
+                "en": "Finishes"
+              }
+            },
+            {
+              "id": "sucre-canne",
+              "name": {
+                "fr": "Sucre de canne bio",
+                "en": "Organic cane sugar"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Finitions",
+                "en": "Finishes"
+              }
+            },
+            {
+              "id": "beurre",
+              "name": {
+                "fr": "Beurre",
+                "en": "Butter"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Finitions",
+                "en": "Finishes"
+              }
+            }
+          ],
+          "hint": {
+            "fr": "Garniture supplémentaire : +2,49 $",
+            "en": "Extra filling: +$2.49"
+          }
+        },
+        {
+          "id": "premium",
+          "name": {
+            "fr": "Garnitures premium — crèmes signature",
+            "en": "Premium fillings — signature creams"
+          },
+          "type": "multi",
+          "required": false,
+          "min": 0,
+          "max": null,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "pistache",
+              "name": {
+                "fr": "Crème de pistache",
+                "en": "Pistachio cream"
+              },
+              "price": 3.5,
+              "available": true
+            },
+            {
+              "id": "marrons",
+              "name": {
+                "fr": "Crème de marrons",
+                "en": "Chestnut cream"
+              },
+              "price": 3.5,
+              "available": true
+            },
+            {
+              "id": "praline",
+              "name": {
+                "fr": "Praliné noisette",
+                "en": "Hazelnut praline cream"
+              },
+              "price": 3.5,
+              "available": true
+            },
+            {
+              "id": "speculoos",
+              "name": {
+                "fr": "Crème Spéculoos Biscoff",
+                "en": "Spéculoos Biscoff cream"
+              },
+              "price": 3.5,
+              "available": true
+            }
+          ]
+        },
+        {
+          "id": "chantilly",
+          "name": {
+            "fr": "La Touche de l'Artisan",
+            "en": "The Artisan's Touch"
+          },
+          "type": "multi",
+          "required": false,
+          "min": 0,
+          "max": null,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "chantilly",
+              "name": {
+                "fr": "Rosace de crème Chantilly (offerte)",
+                "en": "Whipped cream rosette (on request)"
+              },
+              "price": 0,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ssig-acidule-boreal",
+      "category_id": "signatures-sucrees",
+      "name": {
+        "fr": "L'Acidulé Boréal",
+        "en": "The Boreal Citrus"
+      },
+      "image": "/shared/dishes/ssig-acidule-boreal.jpg",
+      "description": {
+        "fr": "Crémeux citron-lime, caramel au beurre salé, sablé citron & crumble amande.",
+        "en": "Lemon-lime cream, salted butter caramel, lemon shortbread & almond crumble."
+      },
+      "price": 14.99,
+      "available": true,
+      "sort": 22,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "ssig-erable-royal",
+      "category_id": "signatures-sucrees",
+      "name": {
+        "fr": "L'Érable Royal",
+        "en": "The Royal Maple"
+      },
+      "image": "/shared/dishes/ssig-erable-royal.jpg",
+      "description": {
+        "fr": "Beurre d'arachide salé, bananes, cacahuètes, filet de sirop d'érable pur.",
+        "en": "Salted peanut butter, bananas, peanuts, drizzle of pure maple syrup."
+      },
+      "price": 16.99,
+      "available": true,
+      "sort": 23,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "ssig-elegance",
+      "category_id": "signatures-sucrees",
+      "name": {
+        "fr": "Élégance",
+        "en": "Elegance"
+      },
+      "image": "/shared/dishes/ssig-elegance.jpg",
+      "description": {
+        "fr": "Poires pochées hibiscus, ganache chocolat noir, amandes torréfiées, caramel beurre salé, glace vanille.",
+        "en": "Hibiscus-poached pears, dark chocolate ganache, roasted almonds, salted butter caramel, vanilla ice cream."
+      },
+      "price": 18.99,
+      "available": true,
+      "sort": 24,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "ssig-emeraude-pistache",
+      "category_id": "signatures-sucrees",
+      "name": {
+        "fr": "L'Émeraude de Pistache",
+        "en": "The Pistachio Emerald"
+      },
+      "image": "/shared/dishes/ssig-emeraude-pistache.jpg",
+      "description": {
+        "fr": "Crème de pistache fleur d'oranger, chocolat belge 55 %, kataifi croustillant, pistaches grillées, coulis framboise.",
+        "en": "Orange-blossom pistachio cream, 55% Belgian chocolate, crispy kataifi, roasted pistachios, raspberry coulis."
+      },
+      "price": 18.99,
+      "available": true,
+      "sort": 25,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "ssig-matcha-anko",
+      "category_id": "signatures-sucrees",
+      "name": {
+        "fr": "Matcha-Anko — De Tokyo à Montréal",
+        "en": "Matcha-Anko — From Tokyo to Montréal"
+      },
+      "image": "/shared/dishes/ssig-matcha-anko.jpg",
+      "description": {
+        "fr": "Pâte d'anko, bananes, crème fouettée au matcha, amandes effilées, coulis de fruits rouges.",
+        "en": "Anko paste, bananas, matcha whipped cream, sliced almonds, mixed berry coulis."
+      },
+      "price": 17.99,
+      "available": true,
+      "sort": 26,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "ssig-estivale",
+      "category_id": "signatures-sucrees",
+      "name": {
+        "fr": "L'Estivale",
+        "en": "The Summer Crêpe"
+      },
+      "image": "/shared/dishes/ssig-estivale.jpg",
+      "description": {
+        "fr": "Fraises au basilic, bananes, glace vanille, caramel beurre salé, chantilly, coulis de fruits rouges, crumble breton.",
+        "en": "Basil strawberries, bananas, vanilla ice cream, salted butter caramel, whipped cream, mixed berry coulis, Breton crumble."
+      },
+      "price": 17.99,
+      "available": true,
+      "sort": 27,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "stri-amour-maman",
+      "category_id": "signatures-sucrees",
+      "name": {
+        "fr": "L'Amour de Maman (sucrée)",
+        "en": "Mom's Love (sweet)"
+      },
+      "image": "/shared/dishes/stri-amour-maman.jpg",
+      "description": {
+        "fr": "Pommes rôties, mascarpone vanillée, noix de pécan et Grenoble, crumble spéculoos, caramel fleur de sel.",
+        "en": "Roasted apples, vanilla mascarpone, pecans and walnuts, spéculoos crumble, fleur de sel caramel."
+      },
+      "price": 18.99,
+      "available": true,
+      "sort": 28,
+      "badge": {
+        "fr": "Trilogie du Cœur",
+        "en": "Trilogy of the Heart"
+      },
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "stri-signature-pa",
+      "category_id": "signatures-sucrees",
+      "name": {
+        "fr": "Signature de Pa' (sucrée)",
+        "en": "Pa's Signature (sweet)"
+      },
+      "image": "/shared/dishes/stri-signature-pa.jpg",
+      "description": {
+        "fr": "Banane rôtie au lait de coco, caramel beurre salé, noix de Grenoble grillées, chantilly vanille, noix de coco toastée.",
+        "en": "Coconut-milk roasted banana, salted butter caramel, toasted walnuts, vanilla whipped cream, toasted coconut."
+      },
+      "price": 18.99,
+      "available": true,
+      "sort": 29,
+      "badge": {
+        "fr": "Trilogie du Cœur",
+        "en": "Trilogy of the Heart"
+      },
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "stri-festin-soeurs",
+      "category_id": "signatures-sucrees",
+      "name": {
+        "fr": "Le Festin des Sœurs (sucrée)",
+        "en": "The Sisters' Feast (sweet)"
+      },
+      "image": "/shared/dishes/stri-festin-soeurs.jpg",
+      "description": {
+        "fr": "Fraises & bleuets, mangue, miel bio, crème fouettée, pâte de pistache, crumble croustillant.",
+        "en": "Strawberries & blueberries, mango, organic honey, whipped cream, pistachio paste, crunchy crumble."
+      },
+      "price": 18.99,
+      "available": true,
+      "sort": 30,
+      "badge": {
+        "fr": "Trilogie du Cœur",
+        "en": "Trilogy of the Heart"
+      },
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "form-artisan-sucree",
+      "category_id": "formules-sucrees",
+      "name": {
+        "fr": "Formule de l'Artisan",
+        "en": "The Artisan's Formula"
+      },
+      "image": "/shared/dishes/form-artisan-sucree.jpg",
+      "description": {
+        "fr": "Notre création sucrée signature, servie avec un smoothie maison (fruits selon disponibilité).",
+        "en": "Our signature sweet creation, served with a house smoothie (fruit subject to availability)."
+      },
+      "price": 17.99,
+      "available": true,
+      "sort": 31,
+      "badge": {
+        "fr": "Signature",
+        "en": "Signature"
+      },
+      "variants": [],
+      "option_groups": [
+        {
+          "id": "crepe",
+          "name": {
+            "fr": "Votre crêpe signature",
+            "en": "Your signature crêpe"
+          },
+          "type": "single",
+          "required": true,
+          "min": 1,
+          "max": 1,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "choc-noisette",
+              "name": {
+                "fr": "L'Artisan Chocolat Noisette — ganache chocolat noir, banane rôtie, praliné noisette, chantilly vanille",
+                "en": "L'Artisan Chocolat Noisette — dark chocolate ganache, roasted banana, hazelnut praline, vanilla whipped cream"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "boreale",
+              "name": {
+                "fr": "La Boréale Fruité-Exotique — ananas rôti au miel, coulis mangue-passion, chantilly vanille, coco toastée",
+                "en": "La Boréale — honey-roasted pineapple, mango-passion coulis, vanilla whipped cream, toasted coconut"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "douceur-nordique",
+              "name": {
+                "fr": "La Douceur Nordique — pommes caramélisées à l'érable, chantilly vanille, pécan grillées",
+                "en": "La Douceur Nordique — maple-caramelized apples, vanilla whipped cream, toasted pecans"
+              },
+              "price": 0,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "form-midi",
+      "category_id": "formules-sucrees",
+      "name": {
+        "fr": "Formule Midi",
+        "en": "Midday Formula"
+      },
+      "image": "/shared/dishes/form-midi.jpg",
+      "description": {
+        "fr": "La pause déjeuner qui fait du bien. Crêpe L'Indémodable — Nutella, bananes fraîches, fraises juteuses, couronnée de chantilly + 1 café ou thé (12 oz).",
+        "en": "The lunch break that does you good. Crêpe L'Indémodable — Nutella, fresh bananas, juicy strawberries, crowned with whipped cream + 1 coffee or tea (12 oz)."
+      },
+      "price": 14.99,
+      "available": true,
+      "sort": 32,
+      "badge": null,
+      "variants": [],
+      "option_groups": [
+        {
+          "id": "boisson",
+          "name": {
+            "fr": "Boisson incluse",
+            "en": "Included drink"
+          },
+          "type": "single",
+          "required": true,
+          "min": 1,
+          "max": 1,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "cafe-filtre",
+              "name": {
+                "fr": "Café filtre (12 oz)",
+                "en": "Filter coffee (12 oz)"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "the",
+              "name": {
+                "fr": "Thé maison",
+                "en": "House tea"
+              },
+              "price": 0,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "form-express",
+      "category_id": "formules-sucrees",
+      "name": {
+        "fr": "Formule Express — Grab & Go",
+        "en": "Express Formula — Grab & Go"
+      },
+      "image": "/shared/dishes/form-express.jpg",
+      "description": {
+        "fr": "Pour les matins où chaque seconde compte. Crêpe signature aux fruits du jour + café filtre à emporter. Prête en moins de 3 minutes · Disponible jusqu'à 11 h.",
+        "en": "For mornings when every second counts. Signature crêpe with the fruit of the day + filter coffee to go. Ready in under 3 minutes · Available until 11 am."
+      },
+      "price": 12.99,
+      "available": true,
+      "sort": 33,
+      "badge": null,
+      "variants": [],
+      "option_groups": [
+        {
+          "id": "fruit",
+          "name": {
+            "fr": "Fruit du jour (selon disponibilité)",
+            "en": "Fruit of the day (subject to availability)"
+          },
+          "type": "single",
+          "required": true,
+          "min": 1,
+          "max": 1,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "nutella",
+              "name": {
+                "fr": "Nutella",
+                "en": "Nutella"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "fraise",
+              "name": {
+                "fr": "Fraise",
+                "en": "Strawberry"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "banane",
+              "name": {
+                "fr": "Banane",
+                "en": "Banana"
+              },
+              "price": 0,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "glace-composer",
+      "category_id": "glaces",
+      "name": {
+        "fr": "Compose ton dessert glacé",
+        "en": "Build your frozen dessert"
+      },
+      "image": "/shared/dishes/glace-composer.jpg",
+      "description": {
+        "fr": "Préparé à la commande, crème Chantilly incluse. Parfum supplémentaire : +2,50 $ · Topping supplémentaire : +2,00 $.",
+        "en": "Made to order, whipped cream included. Extra flavour: +$2.50 · Extra topping: +$2.00."
+      },
+      "price": 8.99,
+      "available": true,
+      "sort": 34,
+      "badge": null,
+      "variants": [
+        {
+          "id": "milkshake",
+          "name": {
+            "fr": "Milkshake",
+            "en": "Milkshake"
+          },
+          "price": 8.99,
+          "included": {
+            "parfums": 1,
+            "toppings": 1
+          },
+          "description": {
+            "fr": "1 parfum au choix + 1 topping au choix",
+            "en": "1 flavour + 1 topping of your choice"
+          }
+        },
+        {
+          "id": "coupe",
+          "name": {
+            "fr": "Coupe glacée",
+            "en": "Ice cream cup"
+          },
+          "price": 7.99,
+          "included": {
+            "parfums": 2,
+            "toppings": 1
+          },
+          "description": {
+            "fr": "2 boules au choix + 1 topping au choix",
+            "en": "2 scoops + 1 topping of your choice"
+          }
+        }
+      ],
+      "option_groups": [
+        {
+          "id": "parfums",
+          "name": {
+            "fr": "Parfums — crèmes glacées & sorbets",
+            "en": "Flavours — ice creams & sorbets"
+          },
+          "type": "multi",
+          "required": true,
+          "min": 1,
+          "max": null,
+          "included": 1,
+          "extra_price": 2.5,
+          "options": [
+            {
+              "id": "chocolat",
+              "name": {
+                "fr": "Crème glacée chocolat",
+                "en": "Chocolate ice cream"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "vanille",
+              "name": {
+                "fr": "Crème glacée vanille",
+                "en": "Vanilla ice cream"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "fraise",
+              "name": {
+                "fr": "Crème glacée à la fraise",
+                "en": "Strawberry ice cream"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "banane",
+              "name": {
+                "fr": "Crème glacée à la banane",
+                "en": "Banana ice cream"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "bleuet",
+              "name": {
+                "fr": "Crème glacée au bleuet",
+                "en": "Blueberry ice cream"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "pistache",
+              "name": {
+                "fr": "Crème glacée à la pistache",
+                "en": "Pistachio ice cream"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "caramel",
+              "name": {
+                "fr": "Crème glacée au caramel",
+                "en": "Caramel ice cream"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "the-vert",
+              "name": {
+                "fr": "Crème glacée au thé vert",
+                "en": "Green tea ice cream"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "erable",
+              "name": {
+                "fr": "Crème glacée à l'érable",
+                "en": "Maple ice cream"
+              },
+              "price": 0,
+              "available": true
+            }
+          ]
+        },
+        {
+          "id": "toppings",
+          "name": {
+            "fr": "Toppings",
+            "en": "Toppings"
+          },
+          "type": "multi",
+          "required": false,
+          "min": 0,
+          "max": null,
+          "included": 1,
+          "extra_price": 2,
+          "options": [
+            {
+              "id": "nutella",
+              "name": {
+                "fr": "Nutella",
+                "en": "Nutella"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Nappages",
+                "en": "Sauces"
+              }
+            },
+            {
+              "id": "caramel-bs",
+              "name": {
+                "fr": "Caramel beurre salé",
+                "en": "Salted butter caramel"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Nappages",
+                "en": "Sauces"
+              }
+            },
+            {
+              "id": "choc-noir",
+              "name": {
+                "fr": "Chocolat noir intense",
+                "en": "Intense dark chocolate"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Nappages",
+                "en": "Sauces"
+              }
+            },
+            {
+              "id": "choc-blanc",
+              "name": {
+                "fr": "Chocolat blanc onctueux",
+                "en": "Creamy white chocolate"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Nappages",
+                "en": "Sauces"
+              }
+            },
+            {
+              "id": "choc-lait",
+              "name": {
+                "fr": "Chocolat au lait",
+                "en": "Milk chocolate"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Nappages",
+                "en": "Sauces"
+              }
+            },
+            {
+              "id": "coulis-fr",
+              "name": {
+                "fr": "Coulis de fruits rouges",
+                "en": "Mixed berry coulis"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Nappages",
+                "en": "Sauces"
+              }
+            },
+            {
+              "id": "creme-speculoos",
+              "name": {
+                "fr": "Crème de spéculoos",
+                "en": "Spéculoos cream"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Nappages",
+                "en": "Sauces"
+              }
+            },
+            {
+              "id": "oreo",
+              "name": {
+                "fr": "Oreo concassés",
+                "en": "Crushed Oreo"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Gourmandises",
+                "en": "Treats"
+              }
+            },
+            {
+              "id": "speculoos",
+              "name": {
+                "fr": "Spéculoos concassés",
+                "en": "Crushed spéculoos"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Gourmandises",
+                "en": "Treats"
+              }
+            },
+            {
+              "id": "amandes",
+              "name": {
+                "fr": "Amandes effilées torréfiées",
+                "en": "Toasted sliced almonds"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Gourmandises",
+                "en": "Treats"
+              }
+            },
+            {
+              "id": "bananes",
+              "name": {
+                "fr": "Bananes fraîches",
+                "en": "Fresh bananas"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Fruits",
+                "en": "Fruits"
+              }
+            },
+            {
+              "id": "fraises",
+              "name": {
+                "fr": "Fraises fraîches",
+                "en": "Fresh strawberries"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Fruits",
+                "en": "Fruits"
+              }
+            },
+            {
+              "id": "framboises",
+              "name": {
+                "fr": "Framboises",
+                "en": "Raspberries"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Fruits",
+                "en": "Fruits"
+              }
+            },
+            {
+              "id": "pomme-caramel",
+              "name": {
+                "fr": "Pommes caramélisées",
+                "en": "Caramelized apples"
+              },
+              "price": 0,
+              "available": true,
+              "section": {
+                "fr": "Fruits",
+                "en": "Fruits"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gsig-artisan-royal",
+      "category_id": "glaces",
+      "name": {
+        "fr": "L'Artisan Royal",
+        "en": "L'Artisan Royal"
+      },
+      "image": "/shared/dishes/gsig-artisan-royal.jpg",
+      "description": {
+        "fr": "Signature exclusive — introuvable ailleurs. Glace vanille bourbon, caramel beurre salé maison, crème spéculoos, crumble croustillant, chocolat noir intense, crème Chantilly.",
+        "en": "Exclusive signature. Bourbon vanilla ice cream, house salted butter caramel, spéculoos cream, crunchy crumble, intense dark chocolate, whipped cream."
+      },
+      "price": 12.99,
+      "available": true,
+      "sort": 35,
+      "badge": {
+        "fr": "Exclusif",
+        "en": "Exclusive"
+      },
+      "variants": [],
+      "option_groups": [
+        {
+          "id": "version",
+          "name": {
+            "fr": "Votre version",
+            "en": "Your version"
+          },
+          "type": "single",
+          "required": true,
+          "min": 1,
+          "max": 1,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "coupe",
+              "name": {
+                "fr": "Coupe glacée",
+                "en": "Ice cream cup"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "milkshake",
+              "name": {
+                "fr": "Milkshake",
+                "en": "Milkshake"
+              },
+              "price": 0,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gsig-bueno-crush",
+      "category_id": "glaces",
+      "name": {
+        "fr": "Bueno Crush",
+        "en": "Bueno Crush"
+      },
+      "image": "/shared/dishes/gsig-bueno-crush.jpg",
+      "description": {
+        "fr": "Glace vanille, Nutella, Kinder Bueno croquant, crème Chantilly.",
+        "en": "Vanilla ice cream, Nutella, crunchy Kinder Bueno, whipped cream."
+      },
+      "price": 12.99,
+      "available": true,
+      "sort": 36,
+      "badge": {
+        "fr": "Best-seller",
+        "en": "Best-seller"
+      },
+      "variants": [],
+      "option_groups": [
+        {
+          "id": "version",
+          "name": {
+            "fr": "Votre version",
+            "en": "Your version"
+          },
+          "type": "single",
+          "required": true,
+          "min": 1,
+          "max": 1,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "coupe",
+              "name": {
+                "fr": "Coupe glacée",
+                "en": "Ice cream cup"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "milkshake",
+              "name": {
+                "fr": "Milkshake",
+                "en": "Milkshake"
+              },
+              "price": 0,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gsig-oreo-cloud",
+      "category_id": "glaces",
+      "name": {
+        "fr": "Oreo Cloud",
+        "en": "Oreo Cloud"
+      },
+      "image": "/shared/dishes/gsig-oreo-cloud.jpg",
+      "description": {
+        "fr": "Glace vanille, chocolat au lait onctueux, Oreo concassés, crème Chantilly.",
+        "en": "Vanilla ice cream, milk chocolate sauce, crushed Oreos, whipped cream."
+      },
+      "price": 12.99,
+      "available": true,
+      "sort": 37,
+      "badge": {
+        "fr": "Best-seller",
+        "en": "Best-seller"
+      },
+      "variants": [],
+      "option_groups": [
+        {
+          "id": "version",
+          "name": {
+            "fr": "Votre version",
+            "en": "Your version"
+          },
+          "type": "single",
+          "required": true,
+          "min": 1,
+          "max": 1,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "coupe",
+              "name": {
+                "fr": "Coupe glacée",
+                "en": "Ice cream cup"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "milkshake",
+              "name": {
+                "fr": "Milkshake",
+                "en": "Milkshake"
+              },
+              "price": 0,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gsig-mango-sunset",
+      "category_id": "glaces",
+      "name": {
+        "fr": "Mango Sunset",
+        "en": "Mango Sunset"
+      },
+      "image": "/shared/dishes/gsig-mango-sunset.jpg",
+      "description": {
+        "fr": "Sorbet mangue, coulis passion, mangue fraîche, crème Chantilly.",
+        "en": "Mango sorbet, passion fruit coulis, fresh mango, whipped cream."
+      },
+      "price": 12.99,
+      "available": true,
+      "sort": 38,
+      "badge": {
+        "fr": "Best-seller",
+        "en": "Best-seller"
+      },
+      "variants": [],
+      "option_groups": [
+        {
+          "id": "version",
+          "name": {
+            "fr": "Votre version",
+            "en": "Your version"
+          },
+          "type": "single",
+          "required": true,
+          "min": 1,
+          "max": 1,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "coupe",
+              "name": {
+                "fr": "Coupe glacée",
+                "en": "Ice cream cup"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "milkshake",
+              "name": {
+                "fr": "Milkshake",
+                "en": "Milkshake"
+              },
+              "price": 0,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gsig-strawberry-bliss",
+      "category_id": "glaces",
+      "name": {
+        "fr": "Strawberry Bliss",
+        "en": "Strawberry Bliss"
+      },
+      "image": "/shared/dishes/gsig-strawberry-bliss.jpg",
+      "description": {
+        "fr": "Sorbet fraise, coulis de fruits rouges, fraises fraîches, crème Chantilly.",
+        "en": "Strawberry sorbet, mixed berry coulis, fresh strawberries, whipped cream."
+      },
+      "price": 12.99,
+      "available": true,
+      "sort": 39,
+      "badge": null,
+      "variants": [],
+      "option_groups": [
+        {
+          "id": "version",
+          "name": {
+            "fr": "Votre version",
+            "en": "Your version"
+          },
+          "type": "single",
+          "required": true,
+          "min": 1,
+          "max": 1,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "coupe",
+              "name": {
+                "fr": "Coupe glacée",
+                "en": "Ice cream cup"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "milkshake",
+              "name": {
+                "fr": "Milkshake",
+                "en": "Milkshake"
+              },
+              "price": 0,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gsig-banana-gold",
+      "category_id": "glaces",
+      "name": {
+        "fr": "Banana Gold",
+        "en": "Banana Gold"
+      },
+      "image": "/shared/dishes/gsig-banana-gold.jpg",
+      "description": {
+        "fr": "Glace vanille, bananes fraîches, Nutella, caramel beurre salé, crème Chantilly.",
+        "en": "Vanilla ice cream, fresh bananas, Nutella, salted butter caramel, whipped cream."
+      },
+      "price": 12.99,
+      "available": true,
+      "sort": 40,
+      "badge": null,
+      "variants": [],
+      "option_groups": [
+        {
+          "id": "version",
+          "name": {
+            "fr": "Votre version",
+            "en": "Your version"
+          },
+          "type": "single",
+          "required": true,
+          "min": 1,
+          "max": 1,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "coupe",
+              "name": {
+                "fr": "Coupe glacée",
+                "en": "Ice cream cup"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "milkshake",
+              "name": {
+                "fr": "Milkshake",
+                "en": "Milkshake"
+              },
+              "price": 0,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gsig-pistachio-luxe",
+      "category_id": "glaces",
+      "name": {
+        "fr": "Pistachio Luxe",
+        "en": "Pistachio Luxe"
+      },
+      "image": "/shared/dishes/gsig-pistachio-luxe.jpg",
+      "description": {
+        "fr": "Glace pistache, coulis de fruits rouges, spéculoos croquant, crème Chantilly.",
+        "en": "Pistachio ice cream, mixed berry coulis, crunchy spéculoos, whipped cream."
+      },
+      "price": 12.99,
+      "available": true,
+      "sort": 41,
+      "badge": null,
+      "variants": [],
+      "option_groups": [
+        {
+          "id": "version",
+          "name": {
+            "fr": "Votre version",
+            "en": "Your version"
+          },
+          "type": "single",
+          "required": true,
+          "min": 1,
+          "max": 1,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "coupe",
+              "name": {
+                "fr": "Coupe glacée",
+                "en": "Ice cream cup"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "milkshake",
+              "name": {
+                "fr": "Milkshake",
+                "en": "Milkshake"
+              },
+              "price": 0,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hot-espresso",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "Espresso",
+        "en": "Espresso"
+      },
+      "image": "/shared/dishes/hot-espresso.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 3,
+      "available": true,
+      "sort": 42,
+      "badge": null,
+      "variants": [
+        {
+          "id": "single",
+          "name": {
+            "fr": "Simple",
+            "en": "Single"
+          },
+          "price": 3
+        },
+        {
+          "id": "double",
+          "name": {
+            "fr": "Double",
+            "en": "Double"
+          },
+          "price": 3.5
+        }
+      ],
+      "option_groups": []
+    },
+    {
+      "id": "hot-americano",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "Americano",
+        "en": "Americano"
+      },
+      "image": "/shared/dishes/hot-americano.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 3.95,
+      "available": true,
+      "sort": 43,
+      "badge": null,
+      "variants": [
+        {
+          "id": "single",
+          "name": {
+            "fr": "Simple",
+            "en": "Single"
+          },
+          "price": 3.95
+        },
+        {
+          "id": "double",
+          "name": {
+            "fr": "Double",
+            "en": "Double"
+          },
+          "price": 4.25
+        }
+      ],
+      "option_groups": []
+    },
+    {
+      "id": "hot-macchiato",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "Macchiato",
+        "en": "Macchiato"
+      },
+      "image": "/shared/dishes/hot-macchiato.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 3.75,
+      "available": true,
+      "sort": 44,
+      "badge": null,
+      "variants": [
+        {
+          "id": "single",
+          "name": {
+            "fr": "Simple",
+            "en": "Single"
+          },
+          "price": 3.75
+        },
+        {
+          "id": "double",
+          "name": {
+            "fr": "Double",
+            "en": "Double"
+          },
+          "price": 4.25
+        }
+      ],
+      "option_groups": []
+    },
+    {
+      "id": "hot-flat-white",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "Flat White",
+        "en": "Flat White"
+      },
+      "image": "/shared/dishes/hot-flat-white.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 4.75,
+      "available": true,
+      "sort": 45,
+      "badge": null,
+      "variants": [
+        {
+          "id": "single",
+          "name": {
+            "fr": "Simple",
+            "en": "Single"
+          },
+          "price": 4.75
+        },
+        {
+          "id": "double",
+          "name": {
+            "fr": "Double",
+            "en": "Double"
+          },
+          "price": 5.55
+        }
+      ],
+      "option_groups": []
+    },
+    {
+      "id": "hot-cortado",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "Cortado",
+        "en": "Cortado"
+      },
+      "image": "/shared/dishes/hot-cortado.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 4.25,
+      "available": true,
+      "sort": 46,
+      "badge": null,
+      "variants": [
+        {
+          "id": "single",
+          "name": {
+            "fr": "Simple",
+            "en": "Single"
+          },
+          "price": 4.25
+        },
+        {
+          "id": "double",
+          "name": {
+            "fr": "Double",
+            "en": "Double"
+          },
+          "price": 4.75
+        }
+      ],
+      "option_groups": []
+    },
+    {
+      "id": "hot-cafe-bonbon",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "Café Bonbon",
+        "en": "Café Bonbon"
+      },
+      "image": "/shared/dishes/hot-cafe-bonbon.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 5,
+      "available": true,
+      "sort": 47,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "hot-affogato",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "Affogato",
+        "en": "Affogato"
+      },
+      "image": "/shared/dishes/hot-affogato.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 6.55,
+      "available": true,
+      "sort": 48,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "hot-cafe-filtre",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "Café filtre",
+        "en": "Filtered coffee"
+      },
+      "image": "/shared/dishes/hot-cafe-filtre.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 2.55,
+      "available": true,
+      "sort": 49,
+      "badge": null,
+      "variants": [
+        {
+          "id": "s",
+          "name": {
+            "fr": "Petit (S)",
+            "en": "Small (S)"
+          },
+          "price": 2.55
+        },
+        {
+          "id": "m",
+          "name": {
+            "fr": "Moyen (M)",
+            "en": "Medium (M)"
+          },
+          "price": 2.95
+        },
+        {
+          "id": "l",
+          "name": {
+            "fr": "Grand (L)",
+            "en": "Large (L)"
+          },
+          "price": 3.45
+        }
+      ],
+      "option_groups": []
+    },
+    {
+      "id": "hot-cappuccino",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "Cappuccino",
+        "en": "Cappuccino"
+      },
+      "image": "/shared/dishes/hot-cappuccino.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 4.75,
+      "available": true,
+      "sort": 50,
+      "badge": null,
+      "variants": [
+        {
+          "id": "s",
+          "name": {
+            "fr": "Petit (S)",
+            "en": "Small (S)"
+          },
+          "price": 4.75
+        },
+        {
+          "id": "m",
+          "name": {
+            "fr": "Moyen (M)",
+            "en": "Medium (M)"
+          },
+          "price": 5.25
+        },
+        {
+          "id": "l",
+          "name": {
+            "fr": "Grand (L)",
+            "en": "Large (L)"
+          },
+          "price": 5.75
+        }
+      ],
+      "option_groups": [
+        {
+          "id": "lait",
+          "name": {
+            "fr": "Lait végétal",
+            "en": "Plant milk"
+          },
+          "type": "single",
+          "required": false,
+          "min": 0,
+          "max": null,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "avoine",
+              "name": {
+                "fr": "Lait d'avoine",
+                "en": "Oat milk"
+              },
+              "price": 0.75,
+              "available": true
+            },
+            {
+              "id": "amande",
+              "name": {
+                "fr": "Lait d'amande",
+                "en": "Almond milk"
+              },
+              "price": 0.75,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hot-latte",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "Latté",
+        "en": "Latte"
+      },
+      "image": "/shared/dishes/hot-latte.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 4.75,
+      "available": true,
+      "sort": 51,
+      "badge": null,
+      "variants": [
+        {
+          "id": "s",
+          "name": {
+            "fr": "Petit (S)",
+            "en": "Small (S)"
+          },
+          "price": 4.75
+        },
+        {
+          "id": "m",
+          "name": {
+            "fr": "Moyen (M)",
+            "en": "Medium (M)"
+          },
+          "price": 5.25
+        },
+        {
+          "id": "l",
+          "name": {
+            "fr": "Grand (L)",
+            "en": "Large (L)"
+          },
+          "price": 5.75
+        }
+      ],
+      "option_groups": [
+        {
+          "id": "lait",
+          "name": {
+            "fr": "Lait végétal",
+            "en": "Plant milk"
+          },
+          "type": "single",
+          "required": false,
+          "min": 0,
+          "max": null,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "avoine",
+              "name": {
+                "fr": "Lait d'avoine",
+                "en": "Oat milk"
+              },
+              "price": 0.75,
+              "available": true
+            },
+            {
+              "id": "amande",
+              "name": {
+                "fr": "Lait d'amande",
+                "en": "Almond milk"
+              },
+              "price": 0.75,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hot-latte-aromatise",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "Latté aromatisé",
+        "en": "Flavoured latte"
+      },
+      "image": "/shared/dishes/hot-latte-aromatise.jpg",
+      "description": {
+        "fr": "Vanille, noisette ou caramel",
+        "en": "Vanilla, hazelnut or caramel"
+      },
+      "price": 5.45,
+      "available": true,
+      "sort": 52,
+      "badge": null,
+      "variants": [
+        {
+          "id": "s",
+          "name": {
+            "fr": "Petit (S)",
+            "en": "Small (S)"
+          },
+          "price": 5.45
+        },
+        {
+          "id": "m",
+          "name": {
+            "fr": "Moyen (M)",
+            "en": "Medium (M)"
+          },
+          "price": 5.95
+        },
+        {
+          "id": "l",
+          "name": {
+            "fr": "Grand (L)",
+            "en": "Large (L)"
+          },
+          "price": 6.45
+        }
+      ],
+      "option_groups": [
+        {
+          "id": "saveur",
+          "name": {
+            "fr": "Saveur",
+            "en": "Flavour"
+          },
+          "type": "single",
+          "required": true,
+          "min": 1,
+          "max": 1,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "vanille",
+              "name": {
+                "fr": "Vanille",
+                "en": "Vanilla"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "noisette",
+              "name": {
+                "fr": "Noisette",
+                "en": "Hazelnut"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "caramel",
+              "name": {
+                "fr": "Caramel",
+                "en": "Caramel"
+              },
+              "price": 0,
+              "available": true
+            }
+          ]
+        },
+        {
+          "id": "lait",
+          "name": {
+            "fr": "Lait végétal",
+            "en": "Plant milk"
+          },
+          "type": "single",
+          "required": false,
+          "min": 0,
+          "max": null,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "avoine",
+              "name": {
+                "fr": "Lait d'avoine",
+                "en": "Oat milk"
+              },
+              "price": 0.75,
+              "available": true
+            },
+            {
+              "id": "amande",
+              "name": {
+                "fr": "Lait d'amande",
+                "en": "Almond milk"
+              },
+              "price": 0.75,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hot-moccaccino",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "Moccaccino",
+        "en": "Moccaccino"
+      },
+      "image": "/shared/dishes/hot-moccaccino.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 5.45,
+      "available": true,
+      "sort": 53,
+      "badge": null,
+      "variants": [
+        {
+          "id": "s",
+          "name": {
+            "fr": "Petit (S)",
+            "en": "Small (S)"
+          },
+          "price": 5.45
+        },
+        {
+          "id": "m",
+          "name": {
+            "fr": "Moyen (M)",
+            "en": "Medium (M)"
+          },
+          "price": 5.95
+        },
+        {
+          "id": "l",
+          "name": {
+            "fr": "Grand (L)",
+            "en": "Large (L)"
+          },
+          "price": 6.45
+        }
+      ],
+      "option_groups": [
+        {
+          "id": "lait",
+          "name": {
+            "fr": "Lait végétal",
+            "en": "Plant milk"
+          },
+          "type": "single",
+          "required": false,
+          "min": 0,
+          "max": null,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "avoine",
+              "name": {
+                "fr": "Lait d'avoine",
+                "en": "Oat milk"
+              },
+              "price": 0.75,
+              "available": true
+            },
+            {
+              "id": "amande",
+              "name": {
+                "fr": "Lait d'amande",
+                "en": "Almond milk"
+              },
+              "price": 0.75,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hot-latte-macchiato",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "Latté Macchiato",
+        "en": "Latte Macchiato"
+      },
+      "image": "/shared/dishes/hot-latte-macchiato.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 5.45,
+      "available": true,
+      "sort": 54,
+      "badge": null,
+      "variants": [
+        {
+          "id": "s",
+          "name": {
+            "fr": "Petit (S)",
+            "en": "Small (S)"
+          },
+          "price": 5.45
+        },
+        {
+          "id": "m",
+          "name": {
+            "fr": "Moyen (M)",
+            "en": "Medium (M)"
+          },
+          "price": 5.95
+        },
+        {
+          "id": "l",
+          "name": {
+            "fr": "Grand (L)",
+            "en": "Large (L)"
+          },
+          "price": 6.45
+        }
+      ],
+      "option_groups": [
+        {
+          "id": "lait",
+          "name": {
+            "fr": "Lait végétal",
+            "en": "Plant milk"
+          },
+          "type": "single",
+          "required": false,
+          "min": 0,
+          "max": null,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "avoine",
+              "name": {
+                "fr": "Lait d'avoine",
+                "en": "Oat milk"
+              },
+              "price": 0.75,
+              "available": true
+            },
+            {
+              "id": "amande",
+              "name": {
+                "fr": "Lait d'amande",
+                "en": "Almond milk"
+              },
+              "price": 0.75,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hot-chocolat-chaud",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "Chocolat chaud (vanille)",
+        "en": "Hot chocolate (vanilla)"
+      },
+      "image": "/shared/dishes/hot-chocolat-chaud.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 4.25,
+      "available": true,
+      "sort": 55,
+      "badge": null,
+      "variants": [
+        {
+          "id": "s",
+          "name": {
+            "fr": "Petit (S)",
+            "en": "Small (S)"
+          },
+          "price": 4.25
+        },
+        {
+          "id": "m",
+          "name": {
+            "fr": "Moyen (M)",
+            "en": "Medium (M)"
+          },
+          "price": 4.59
+        },
+        {
+          "id": "l",
+          "name": {
+            "fr": "Grand (L)",
+            "en": "Large (L)"
+          },
+          "price": 5
+        }
+      ],
+      "option_groups": [
+        {
+          "id": "lait",
+          "name": {
+            "fr": "Lait végétal",
+            "en": "Plant milk"
+          },
+          "type": "single",
+          "required": false,
+          "min": 0,
+          "max": null,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "avoine",
+              "name": {
+                "fr": "Lait d'avoine",
+                "en": "Oat milk"
+              },
+              "price": 0.75,
+              "available": true
+            },
+            {
+              "id": "amande",
+              "name": {
+                "fr": "Lait d'amande",
+                "en": "Almond milk"
+              },
+              "price": 0.75,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hot-spanish-latte",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "Spanish Latté",
+        "en": "Spanish Latte"
+      },
+      "image": "/shared/dishes/hot-spanish-latte.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 5.25,
+      "available": true,
+      "sort": 56,
+      "badge": null,
+      "variants": [
+        {
+          "id": "s",
+          "name": {
+            "fr": "Petit (S)",
+            "en": "Small (S)"
+          },
+          "price": 5.25
+        },
+        {
+          "id": "m",
+          "name": {
+            "fr": "Moyen (M)",
+            "en": "Medium (M)"
+          },
+          "price": 6.25
+        },
+        {
+          "id": "l",
+          "name": {
+            "fr": "Grand (L)",
+            "en": "Large (L)"
+          },
+          "price": 6.95
+        }
+      ],
+      "option_groups": [
+        {
+          "id": "lait",
+          "name": {
+            "fr": "Lait végétal",
+            "en": "Plant milk"
+          },
+          "type": "single",
+          "required": false,
+          "min": 0,
+          "max": null,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "avoine",
+              "name": {
+                "fr": "Lait d'avoine",
+                "en": "Oat milk"
+              },
+              "price": 0.75,
+              "available": true
+            },
+            {
+              "id": "amande",
+              "name": {
+                "fr": "Lait d'amande",
+                "en": "Almond milk"
+              },
+              "price": 0.75,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hot-caramel-macchiato",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "Caramel Macchiato",
+        "en": "Caramel Macchiato"
+      },
+      "image": "/shared/dishes/hot-caramel-macchiato.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 5.3,
+      "available": true,
+      "sort": 57,
+      "badge": null,
+      "variants": [
+        {
+          "id": "s",
+          "name": {
+            "fr": "Petit (S)",
+            "en": "Small (S)"
+          },
+          "price": 5.3
+        },
+        {
+          "id": "m",
+          "name": {
+            "fr": "Moyen (M)",
+            "en": "Medium (M)"
+          },
+          "price": 6.35
+        },
+        {
+          "id": "l",
+          "name": {
+            "fr": "Grand (L)",
+            "en": "Large (L)"
+          },
+          "price": 7.09
+        }
+      ],
+      "option_groups": [
+        {
+          "id": "lait",
+          "name": {
+            "fr": "Lait végétal",
+            "en": "Plant milk"
+          },
+          "type": "single",
+          "required": false,
+          "min": 0,
+          "max": null,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "avoine",
+              "name": {
+                "fr": "Lait d'avoine",
+                "en": "Oat milk"
+              },
+              "price": 0.75,
+              "available": true
+            },
+            {
+              "id": "amande",
+              "name": {
+                "fr": "Lait d'amande",
+                "en": "Almond milk"
+              },
+              "price": 0.75,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hot-matcha-latte",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "Matcha Latté",
+        "en": "Matcha Latte"
+      },
+      "image": "/shared/dishes/hot-matcha-latte.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 5.4,
+      "available": true,
+      "sort": 58,
+      "badge": null,
+      "variants": [
+        {
+          "id": "s",
+          "name": {
+            "fr": "Petit (S)",
+            "en": "Small (S)"
+          },
+          "price": 5.4
+        },
+        {
+          "id": "m",
+          "name": {
+            "fr": "Moyen (M)",
+            "en": "Medium (M)"
+          },
+          "price": 5.95
+        },
+        {
+          "id": "l",
+          "name": {
+            "fr": "Grand (L)",
+            "en": "Large (L)"
+          },
+          "price": 6.55
+        }
+      ],
+      "option_groups": [
+        {
+          "id": "lait",
+          "name": {
+            "fr": "Lait végétal",
+            "en": "Plant milk"
+          },
+          "type": "single",
+          "required": false,
+          "min": 0,
+          "max": null,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "avoine",
+              "name": {
+                "fr": "Lait d'avoine",
+                "en": "Oat milk"
+              },
+              "price": 0.75,
+              "available": true
+            },
+            {
+              "id": "amande",
+              "name": {
+                "fr": "Lait d'amande",
+                "en": "Almond milk"
+              },
+              "price": 0.75,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hot-chai-latte",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "Chaï Latté",
+        "en": "Chai Latte"
+      },
+      "image": "/shared/dishes/hot-chai-latte.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 5.35,
+      "available": true,
+      "sort": 59,
+      "badge": null,
+      "variants": [
+        {
+          "id": "s",
+          "name": {
+            "fr": "Petit (S)",
+            "en": "Small (S)"
+          },
+          "price": 5.35
+        },
+        {
+          "id": "m",
+          "name": {
+            "fr": "Moyen (M)",
+            "en": "Medium (M)"
+          },
+          "price": 5.95
+        },
+        {
+          "id": "l",
+          "name": {
+            "fr": "Grand (L)",
+            "en": "Large (L)"
+          },
+          "price": 6.45
+        }
+      ],
+      "option_groups": [
+        {
+          "id": "lait",
+          "name": {
+            "fr": "Lait végétal",
+            "en": "Plant milk"
+          },
+          "type": "single",
+          "required": false,
+          "min": 0,
+          "max": null,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "avoine",
+              "name": {
+                "fr": "Lait d'avoine",
+                "en": "Oat milk"
+              },
+              "price": 0.75,
+              "available": true
+            },
+            {
+              "id": "amande",
+              "name": {
+                "fr": "Lait d'amande",
+                "en": "Almond milk"
+              },
+              "price": 0.75,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hot-golden-chai",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "Golden Chaï Latté à l'érable",
+        "en": "Golden Maple Chai Latte"
+      },
+      "image": "/shared/dishes/hot-golden-chai.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 6.05,
+      "available": true,
+      "sort": 60,
+      "badge": null,
+      "variants": [
+        {
+          "id": "s",
+          "name": {
+            "fr": "Petit (S)",
+            "en": "Small (S)"
+          },
+          "price": 6.05
+        },
+        {
+          "id": "m",
+          "name": {
+            "fr": "Moyen (M)",
+            "en": "Medium (M)"
+          },
+          "price": 7.05
+        },
+        {
+          "id": "l",
+          "name": {
+            "fr": "Grand (L)",
+            "en": "Large (L)"
+          },
+          "price": 7.59
+        }
+      ],
+      "option_groups": [
+        {
+          "id": "lait",
+          "name": {
+            "fr": "Lait végétal",
+            "en": "Plant milk"
+          },
+          "type": "single",
+          "required": false,
+          "min": 0,
+          "max": null,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "avoine",
+              "name": {
+                "fr": "Lait d'avoine",
+                "en": "Oat milk"
+              },
+              "price": 0.75,
+              "available": true
+            },
+            {
+              "id": "amande",
+              "name": {
+                "fr": "Lait d'amande",
+                "en": "Almond milk"
+              },
+              "price": 0.75,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hot-dirty-chai",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "Dirty Chaï",
+        "en": "Dirty Chai"
+      },
+      "image": "/shared/dishes/hot-dirty-chai.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 5.95,
+      "available": true,
+      "sort": 61,
+      "badge": null,
+      "variants": [
+        {
+          "id": "s",
+          "name": {
+            "fr": "Petit (S)",
+            "en": "Small (S)"
+          },
+          "price": 5.95
+        },
+        {
+          "id": "m",
+          "name": {
+            "fr": "Moyen (M)",
+            "en": "Medium (M)"
+          },
+          "price": 6.95
+        },
+        {
+          "id": "l",
+          "name": {
+            "fr": "Grand (L)",
+            "en": "Large (L)"
+          },
+          "price": 8.05
+        }
+      ],
+      "option_groups": [
+        {
+          "id": "lait",
+          "name": {
+            "fr": "Lait végétal",
+            "en": "Plant milk"
+          },
+          "type": "single",
+          "required": false,
+          "min": 0,
+          "max": null,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "avoine",
+              "name": {
+                "fr": "Lait d'avoine",
+                "en": "Oat milk"
+              },
+              "price": 0.75,
+              "available": true
+            },
+            {
+              "id": "amande",
+              "name": {
+                "fr": "Lait d'amande",
+                "en": "Almond milk"
+              },
+              "price": 0.75,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hot-london-fog",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "London Fog",
+        "en": "London Fog"
+      },
+      "image": "/shared/dishes/hot-london-fog.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 5.05,
+      "available": true,
+      "sort": 62,
+      "badge": null,
+      "variants": [
+        {
+          "id": "s",
+          "name": {
+            "fr": "Petit (S)",
+            "en": "Small (S)"
+          },
+          "price": 5.05
+        },
+        {
+          "id": "m",
+          "name": {
+            "fr": "Moyen (M)",
+            "en": "Medium (M)"
+          },
+          "price": 5.55
+        },
+        {
+          "id": "l",
+          "name": {
+            "fr": "Grand (L)",
+            "en": "Large (L)"
+          },
+          "price": 6.05
+        }
+      ],
+      "option_groups": [
+        {
+          "id": "lait",
+          "name": {
+            "fr": "Lait végétal",
+            "en": "Plant milk"
+          },
+          "type": "single",
+          "required": false,
+          "min": 0,
+          "max": null,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "avoine",
+              "name": {
+                "fr": "Lait d'avoine",
+                "en": "Oat milk"
+              },
+              "price": 0.75,
+              "available": true
+            },
+            {
+              "id": "amande",
+              "name": {
+                "fr": "Lait d'amande",
+                "en": "Almond milk"
+              },
+              "price": 0.75,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hot-matcha-pistache",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "Matcha à la pistache",
+        "en": "Pistachio Matcha"
+      },
+      "image": "/shared/dishes/hot-matcha-pistache.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 5.65,
+      "available": true,
+      "sort": 63,
+      "badge": null,
+      "variants": [
+        {
+          "id": "s",
+          "name": {
+            "fr": "Petit (S)",
+            "en": "Small (S)"
+          },
+          "price": 5.65
+        },
+        {
+          "id": "m",
+          "name": {
+            "fr": "Moyen (M)",
+            "en": "Medium (M)"
+          },
+          "price": 6.25
+        },
+        {
+          "id": "l",
+          "name": {
+            "fr": "Grand (L)",
+            "en": "Large (L)"
+          },
+          "price": 6.85
+        }
+      ],
+      "option_groups": [
+        {
+          "id": "lait",
+          "name": {
+            "fr": "Lait végétal",
+            "en": "Plant milk"
+          },
+          "type": "single",
+          "required": false,
+          "min": 0,
+          "max": null,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "avoine",
+              "name": {
+                "fr": "Lait d'avoine",
+                "en": "Oat milk"
+              },
+              "price": 0.75,
+              "available": true
+            },
+            {
+              "id": "amande",
+              "name": {
+                "fr": "Lait d'amande",
+                "en": "Almond milk"
+              },
+              "price": 0.75,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hot-latte-pistache",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "Latté pistache maison",
+        "en": "House pistachio latte"
+      },
+      "image": "/shared/dishes/hot-latte-pistache.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 6.25,
+      "available": true,
+      "sort": 64,
+      "badge": null,
+      "variants": [],
+      "option_groups": [
+        {
+          "id": "lait",
+          "name": {
+            "fr": "Lait végétal",
+            "en": "Plant milk"
+          },
+          "type": "single",
+          "required": false,
+          "min": 0,
+          "max": null,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "avoine",
+              "name": {
+                "fr": "Lait d'avoine",
+                "en": "Oat milk"
+              },
+              "price": 0.75,
+              "available": true
+            },
+            {
+              "id": "amande",
+              "name": {
+                "fr": "Lait d'amande",
+                "en": "Almond milk"
+              },
+              "price": 0.75,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hot-moka-noir",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "Moka chocolat noir maison",
+        "en": "House dark chocolate mocha"
+      },
+      "image": "/shared/dishes/hot-moka-noir.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 6.25,
+      "available": true,
+      "sort": 65,
+      "badge": null,
+      "variants": [],
+      "option_groups": [
+        {
+          "id": "lait",
+          "name": {
+            "fr": "Lait végétal",
+            "en": "Plant milk"
+          },
+          "type": "single",
+          "required": false,
+          "min": 0,
+          "max": null,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "avoine",
+              "name": {
+                "fr": "Lait d'avoine",
+                "en": "Oat milk"
+              },
+              "price": 0.75,
+              "available": true
+            },
+            {
+              "id": "amande",
+              "name": {
+                "fr": "Lait d'amande",
+                "en": "Almond milk"
+              },
+              "price": 0.75,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hot-the-infusion",
+      "category_id": "boissons-chaudes",
+      "name": {
+        "fr": "Thé / Infusion",
+        "en": "Tea / Infusion"
+      },
+      "image": "/shared/dishes/hot-the-infusion.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 3.5,
+      "available": true,
+      "sort": 66,
+      "badge": null,
+      "variants": [],
+      "option_groups": [
+        {
+          "id": "the",
+          "name": {
+            "fr": "Votre thé",
+            "en": "Your tea"
+          },
+          "type": "single",
+          "required": true,
+          "min": 1,
+          "max": 1,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "menthe",
+              "name": {
+                "fr": "Menthe",
+                "en": "Mint"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "jasmin",
+              "name": {
+                "fr": "Jasmin",
+                "en": "Jasmine"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "camomille",
+              "name": {
+                "fr": "Camomille",
+                "en": "Chamomile"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "the-vert",
+              "name": {
+                "fr": "Thé vert",
+                "en": "Green tea"
+              },
+              "price": 0,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cold-the-vert-glace",
+      "category_id": "boissons-froides",
+      "name": {
+        "fr": "Thé vert glacé maison — 36 cl",
+        "en": "House iced green tea — 36 cl"
+      },
+      "image": "/shared/dishes/cold-the-vert-glace.jpg",
+      "description": {
+        "fr": "Citron vert, menthe fraîche, cassonade",
+        "en": "Lime, fresh mint, brown sugar"
+      },
+      "price": 5.49,
+      "available": true,
+      "sort": 67,
+      "badge": null,
+      "variants": [],
+      "option_groups": [
+        {
+          "id": "saveur",
+          "name": {
+            "fr": "Choisis ta saveur",
+            "en": "Choose your flavour"
+          },
+          "type": "single",
+          "required": true,
+          "min": 1,
+          "max": 1,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "original",
+              "name": {
+                "fr": "Original",
+                "en": "Original"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "passion",
+              "name": {
+                "fr": "Passion",
+                "en": "Passion fruit"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "peche",
+              "name": {
+                "fr": "Pêche",
+                "en": "Peach"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "hibiscus",
+              "name": {
+                "fr": "Hibiscus",
+                "en": "Hibiscus"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "fraise",
+              "name": {
+                "fr": "Fraise",
+                "en": "Strawberry"
+              },
+              "price": 0,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cold-citronnade",
+      "category_id": "boissons-froides",
+      "name": {
+        "fr": "Citronnade maison — 36 cl",
+        "en": "House lemonade — 36 cl"
+      },
+      "image": "/shared/dishes/cold-citronnade.jpg",
+      "description": {
+        "fr": "Citron jaune pressé, citron vert, eau minérale, menthe fraîche, cassonade",
+        "en": "Pressed lemon, lime, mineral water, fresh mint, brown sugar"
+      },
+      "price": 5.49,
+      "available": true,
+      "sort": 68,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "cold-sunny-red",
+      "category_id": "boissons-froides",
+      "name": {
+        "fr": "Sunny Red — 36 cl",
+        "en": "Sunny Red — 36 cl"
+      },
+      "image": "/shared/dishes/cold-sunny-red.jpg",
+      "description": {
+        "fr": "Jus d'orange, jus d'ananas, sirop de grenadine",
+        "en": "Orange juice, pineapple juice, grenadine syrup"
+      },
+      "price": 5.49,
+      "available": true,
+      "sort": 69,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "cold-pink-yuzu",
+      "category_id": "boissons-froides",
+      "name": {
+        "fr": "Pink Yuzu Fizz — 36 cl",
+        "en": "Pink Yuzu Fizz — 36 cl"
+      },
+      "image": "/shared/dishes/cold-pink-yuzu.jpg",
+      "description": {
+        "fr": "Citron jaune pressé, yuzu, fruit du dragon, eau pétillante, citron vert et menthe fraîche",
+        "en": "Pressed lemon, yuzu, dragon fruit, sparkling water, lime and fresh mint"
+      },
+      "price": 5.49,
+      "available": true,
+      "sort": 70,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "cold-oranges-pressees",
+      "category_id": "boissons-froides",
+      "name": {
+        "fr": "Oranges pressées — 36 cl",
+        "en": "Fresh-squeezed orange juice — 36 cl"
+      },
+      "image": "/shared/dishes/cold-oranges-pressees.jpg",
+      "description": {
+        "fr": "Jus frais pressé sur place",
+        "en": "Squeezed fresh on site"
+      },
+      "price": 6.49,
+      "available": true,
+      "sort": 71,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "cold-virgin-mojito",
+      "category_id": "boissons-froides",
+      "name": {
+        "fr": "Virgin Mojito — 40 cl",
+        "en": "Virgin Mojito — 40 cl"
+      },
+      "image": "/shared/dishes/cold-virgin-mojito.jpg",
+      "description": {
+        "fr": "Citron vert pressé, menthe fraîche, cassonade, eau pétillante",
+        "en": "Pressed lime, fresh mint, brown sugar, sparkling water"
+      },
+      "price": 7.95,
+      "available": true,
+      "sort": 72,
+      "badge": {
+        "fr": "Sans alcool",
+        "en": "Alcohol-free"
+      },
+      "variants": [],
+      "option_groups": [
+        {
+          "id": "saveur",
+          "name": {
+            "fr": "Choisis ta saveur",
+            "en": "Choose your flavour"
+          },
+          "type": "single",
+          "required": true,
+          "min": 1,
+          "max": 1,
+          "included": 0,
+          "extra_price": 0,
+          "options": [
+            {
+              "id": "original",
+              "name": {
+                "fr": "Original",
+                "en": "Original"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "passion",
+              "name": {
+                "fr": "Passion",
+                "en": "Passion fruit"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "peche",
+              "name": {
+                "fr": "Pêche",
+                "en": "Peach"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "hibiscus",
+              "name": {
+                "fr": "Hibiscus",
+                "en": "Hibiscus"
+              },
+              "price": 0,
+              "available": true
+            },
+            {
+              "id": "fraise",
+              "name": {
+                "fr": "Fraise",
+                "en": "Strawberry"
+              },
+              "price": 0,
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cold-maracuja",
+      "category_id": "boissons-froides",
+      "name": {
+        "fr": "Virgin Maracuja Dream — 30 cl",
+        "en": "Virgin Maracuja Dream — 30 cl"
+      },
+      "image": "/shared/dishes/cold-maracuja.jpg",
+      "description": {
+        "fr": "Passion, pêche, vanille, eau pétillante",
+        "en": "Passion fruit, peach, vanilla, sparkling water"
+      },
+      "price": 7.95,
+      "available": true,
+      "sort": 73,
+      "badge": {
+        "fr": "Sans alcool",
+        "en": "Alcohol-free"
+      },
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "cold-cosmo-bloom",
+      "category_id": "boissons-froides",
+      "name": {
+        "fr": "Virgin Cosmo Bloom — 30 cl",
+        "en": "Virgin Cosmo Bloom — 30 cl"
+      },
+      "image": "/shared/dishes/cold-cosmo-bloom.jpg",
+      "description": {
+        "fr": "Fleur de sakura, pamplemousse, fruit du dragon",
+        "en": "Sakura blossom, grapefruit, dragon fruit"
+      },
+      "price": 7.95,
+      "available": true,
+      "sort": 74,
+      "badge": {
+        "fr": "Sans alcool",
+        "en": "Alcohol-free"
+      },
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "cold-tropical-punch",
+      "category_id": "boissons-froides",
+      "name": {
+        "fr": "Virgin Tropical Punch — 30 cl",
+        "en": "Virgin Tropical Punch — 30 cl"
+      },
+      "image": "/shared/dishes/cold-tropical-punch.jpg",
+      "description": {
+        "fr": "Ananas, baie de passion, grenade, hibiscus",
+        "en": "Pineapple, passion fruit, pomegranate, hibiscus"
+      },
+      "price": 7.95,
+      "available": true,
+      "sort": 75,
+      "badge": {
+        "fr": "Sans alcool",
+        "en": "Alcohol-free"
+      },
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "cold-miss-red",
+      "category_id": "boissons-froides",
+      "name": {
+        "fr": "Smoothie Miss Red — 30 cl",
+        "en": "Miss Red Smoothie — 30 cl"
+      },
+      "image": "/shared/dishes/cold-miss-red.jpg",
+      "description": {
+        "fr": "Fraise · Banane · Orange",
+        "en": "Strawberry · Banana · Orange"
+      },
+      "price": 7.49,
+      "available": true,
+      "sort": 76,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "cold-mango-island",
+      "category_id": "boissons-froides",
+      "name": {
+        "fr": "Smoothie Mango Island — 30 cl",
+        "en": "Mango Island Smoothie — 30 cl"
+      },
+      "image": "/shared/dishes/cold-mango-island.jpg",
+      "description": {
+        "fr": "Mangue · Ananas · Vanille",
+        "en": "Mango · Pineapple · Vanilla"
+      },
+      "price": 7.49,
+      "available": true,
+      "sort": 77,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "cold-tropical-dream",
+      "category_id": "boissons-froides",
+      "name": {
+        "fr": "Smoothie Tropical Dream — 30 cl",
+        "en": "Tropical Dream Smoothie — 30 cl"
+      },
+      "image": "/shared/dishes/cold-tropical-dream.jpg",
+      "description": {
+        "fr": "Passion · Mangue · Coco",
+        "en": "Passion fruit · Mango · Coconut"
+      },
+      "price": 7.95,
+      "available": true,
+      "sort": 78,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "cold-dragon-kiss",
+      "category_id": "boissons-froides",
+      "name": {
+        "fr": "Smoothie Dragon Kiss — 30 cl",
+        "en": "Dragon Kiss Smoothie — 30 cl"
+      },
+      "image": "/shared/dishes/cold-dragon-kiss.jpg",
+      "description": {
+        "fr": "Framboise · Fruit du dragon · Citron pressé",
+        "en": "Raspberry · Dragon fruit · Pressed lemon"
+      },
+      "price": 7.49,
+      "available": true,
+      "sort": 79,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    },
+    {
+      "id": "cold-eska",
+      "category_id": "boissons-froides",
+      "name": {
+        "fr": "Eau Eska",
+        "en": "Eska water"
+      },
+      "image": "/shared/dishes/cold-eska.jpg",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "price": 2.5,
+      "available": true,
+      "sort": 80,
+      "badge": null,
+      "variants": [],
+      "option_groups": []
+    }
+  ],
+  "version": 2,
+  "updated_at": "2026-09-08T04:22:04.448Z",
+  "settings": {
+    "cafe_name": "Fusion L'Artisan",
+    "tax_gst": 5,
+    "tax_qst": 9.975,
+    "currency": "CAD",
+    "default_lang": "fr",
+    "ask_customer_name": false,
+    "ask_service_type": true,
+    "thank_you_seconds": 12
+  }
+}

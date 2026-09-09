@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#a05a4a">
+<title>L'Artisan — Menu</title>
+<link rel="icon" href="/shared/logo-mark.png">
+<link rel="apple-touch-icon" href="/shared/logo-mark.png">
+<link rel="stylesheet" href="tablet.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand" id="brand"><img src="/shared/logo-mark.png" alt=""><div><div class="brand-name" id="cafeName">L'Artisan</div><div class="brand-sub" data-i18n="tagline">Crêperie & Café</div></div></div>
+  <div class="hint" id="hint" data-i18n="hint">💡 Choisissez une section, ajoutez vos articles puis validez votre commande.</div>
+  <div class="top-right">
+    <span class="conn" id="conn" title="Serveur"></span>
+    <div class="lang"><button data-lang="fr">FR</button><button data-lang="en">EN</button></div>
+  </div>
+</header>
+<nav class="tabs" id="tabs"></nav>
+<main class="layout">
+  <section class="menu" id="menu"></section>
+  <aside class="cart">
+    <div class="cart-head"><h2 data-i18n="yourOrder">Votre commande</h2><button class="link" id="cartClear" data-i18n="clear">Vider</button></div>
+    <div class="cart-lines" id="cartLines"></div>
+    <div class="cart-totals" id="cartTotals"></div>
+    <button class="primary big" id="reviewBtn" disabled data-i18n="review">Vérifier la commande</button>
+  </aside>
+</main>
+
+<div id="sheet" class="sheet hidden"><div class="sheet-card" id="sheetCard"></div></div>
+<div id="toast" class="toast hidden"></div>
+<script type="module" src="tablet.js"></script>
+</body>
+</html>

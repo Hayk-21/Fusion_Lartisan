@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'Artisan — Administration</title>
+<link rel="icon" href="/shared/logo-mark.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============================================================ LOGIN -->
+<div id="login" class="login hidden">
+  <div class="login-card">
+    <img src="/shared/logo-full.png" alt="L'Artisan" class="login-logo">
+    <h1 data-i18n="login.title">Espace administration</h1>
+    <p class="muted" data-i18n="login.hint">Entrez votre code PIN pour continuer</p>
+    <div class="pin-dots" id="pinDots"><span></span><span></span><span></span><span></span></div>
+    <div class="pin-pad" id="pinPad">
+      <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+      <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+      <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+      <button data-k="clear" class="ghost" data-i18n="login.clear">Effacer</button><button data-k="0">0</button><button data-k="ok" class="primary">OK</button>
+    </div>
+    <p id="loginError" class="error"></p>
+    <div class="lang-switch"><button data-lang="fr">FR</button><button data-lang="en">EN</button></div>
+  </div>
+</div>
+
+<!-- ============================================================ APP -->
+<div id="app" class="app hidden">
+  <aside class="sidebar">
+    <div class="brand">
+      <img src="/shared/logo-mark.png" alt="">
+      <div><div class="brand-name" id="brandName">L'Artisan</div><div class="brand-sub" data-i18n="app.admin">Administration</div></div>
+    </div>
+    <nav>
+      <a href="#live" data-view="live"><span class="ico">🔔</span><span data-i18n="nav.live">Commandes en direct</span><span class="badge" id="liveBadge">0</span></a>
+      <a href="#history" data-view="history"><span class="ico">🧾</span><span data-i18n="nav.history">Historique</span></a>
+      <a href="#menu" data-view="menu"><span class="ico">📖</span><span data-i18n="nav.menu">Menu</span></a>
+      <a href="#stats" data-view="stats"><span class="ico">📈</span><span data-i18n="nav.stats">Statistiques</span></a>
+      <a href="#site" data-view="site"><span class="ico">🌐</span><span data-i18n="nav.site">Site web</span></a>
+      <a href="#devices" data-view="devices"><span class="ico">📱</span><span data-i18n="nav.devices">Tablettes</span></a>
+      <a href="#settings" data-view="settings"><span class="ico">⚙️</span><span data-i18n="nav.settings">Paramètres</span></a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="conn" id="connStatus"><span class="dot"></span><span data-i18n="app.connecting">Connexion…</span></div>
+      <div class="lang-switch small"><button data-lang="fr">FR</button><button data-lang="en">EN</button></div>
+      <button class="ghost small" id="logoutBtn" data-i18n="app.logout">Déconnexion</button>
+    </div>
+  </aside>
+
+  <main class="content">
+    <!-- -------------------------------------------------- LIVE ORDERS -->
+    <section id="view-live" class="view">
+      <header class="view-head">
+        <div>
+          <h1 data-i18n="live.title">Commandes en direct</h1>
+          <p class="muted" id="liveSummary"></p>
+        </div>
+        <div class="head-actions">
+          <button id="openCafeBtn" class="primary big"><span data-i18n="live.open">☕ Ouvrir le café</span></button>
+          <button id="closeCafeBtn" class="danger big hidden"><span data-i18n="live.close">Fermer le mode café</span></button>
+          <button id="fullscreenBtn" class="ghost" title="Plein écran">⛶</button>
+        </div>
+      </header>
+      <div id="cafeClosedNote" class="note">
+        <strong data-i18n="live.closedTitle">Le mode café est fermé.</strong>
+        <span data-i18n="live.closedHint">Cliquez sur « Ouvrir le café » pour activer l'alerte sonore et afficher les commandes en temps réel. (Le navigateur exige un clic avant de pouvoir jouer un son.)</span>
+      </div>
+      <div class="kanban" id="kanban">
+        <div class="col" data-status="new"><h2><span data-i18n="status.new">Nouvelles</span> <span class="count" id="cnt-new">0</span></h2><div class="cards" id="col-new"></div></div>
+        <div class="col" data-status="preparing"><h2><span data-i18n="status.preparing">En préparation</span> <span class="count" id="cnt-preparing">0</span></h2><div class="cards" id="col-preparing"></div></div>
+        <div class="col" data-status="ready"><h2><span data-i18n="status.ready">Prêtes</span> <span class="count" id="cnt-ready">0</span></h2><div class="cards" id="col-ready"></div></div>
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------- HISTORY -->
+    <section id="view-history" class="view hidden">
+      <header class="view-head">
+        <div><h1 data-i18n="history.title">Historique des commandes</h1><p class="muted" data-i18n="history.sub">Toutes les commandes, terminées ou annulées.</p></div>
+        <div class="head-actions">
+          <input type="date" id="histFrom"> <span>→</span> <input type="date" id="histTo">
+          <select id="histStatus">
+            <option value="" data-i18n="history.all">Tous les statuts</option>
+            <option value="completed" data-i18n="status.completed">Terminées</option>
+            <option value="cancelled" data-i18n="status.cancelled">Annulées</option>
+            <option value="active" data-i18n="status.active">En cours</option>
+          </select>
+          <button id="histRefresh" class="ghost" data-i18n="common.refresh">Actualiser</button>
+          <button id="histCsv" class="ghost" data-i18n="history.csv">Exporter CSV</button>
+        </div>
+      </header>
+      <div class="table-wrap"><table class="table" id="histTable">
+        <thead><tr><th>#</th><th data-i18n="history.time">Heure</th><th data-i18n="history.customer">Client</th><th data-i18n="history.type">Type</th><th data-i18n="history.items">Articles</th><th data-i18n="history.total">Total</th><th data-i18n="history.status">Statut</th><th></th></tr></thead>
+        <tbody></tbody></table></div>
+    </section>
+
+    <!-- -------------------------------------------------- MENU EDITOR -->
+    <section id="view-menu" class="view hidden">
+      <header class="view-head">
+        <div><h1 data-i18n="menu.title">Menu</h1><p class="muted" id="menuVersionLabel"></p></div>
+        <div class="head-actions">
+          <span id="menuDirty" class="pill warn hidden" data-i18n="menu.unsaved">Modifications non enregistrées</span>
+          <button id="menuSave" class="primary big" data-i18n="menu.save">💾 Enregistrer & envoyer aux tablettes</button>
+          <div class="dropdown">
+            <button class="ghost">⋯</button>
+            <div class="dropdown-menu">
+              <button id="menuExport" data-i18n="menu.export">Exporter le menu (JSON)</button>
+              <button id="menuImport" data-i18n="menu.import">Importer un menu (JSON)</button>
+              <button id="menuPush" data-i18n="menu.push">Renvoyer le menu aux tablettes</button>
+              <button id="menuReset" class="danger-text" data-i18n="menu.reset">Rétablir le menu d'origine</button>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div class="menu-layout">
+        <div class="panel cats">
+          <div class="panel-head"><h3 data-i18n="menu.categories">Catégories</h3><button id="catAdd" class="small primary">+ <span data-i18n="menu.addCategory">Catégorie</span></button></div>
+          <ul id="catList" class="list"></ul>
+        </div>
+        <div class="panel items">
+          <div class="panel-head"><h3 id="itemsTitle" data-i18n="menu.items">Articles</h3><button id="itemAdd" class="small primary">+ <span data-i18n="menu.addItem">Article</span></button></div>
+          <div id="catEditor" class="cat-editor"></div>
+          <ul id="itemList" class="list"></ul>
+        </div>
+        <div class="panel editor" id="itemEditor">
+          <div class="empty" data-i18n="menu.selectItem">Sélectionnez un article pour le modifier, ou créez-en un nouveau.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------- STATS -->
+    <section id="view-stats" class="view hidden">
+      <header class="view-head">
+        <div><h1 data-i18n="stats.title">Statistiques de ventes</h1><p class="muted" data-i18n="stats.sub">Seules les commandes terminées sont comptées comme ventes.</p></div>
+        <div class="head-actions">
+          <div class="seg" id="statsPresets">
+            <button data-preset="today" class="active" data-i18n="stats.today">Aujourd'hui</button>
+            <button data-preset="yesterday" data-i18n="stats.yesterday">Hier</button>
+            <button data-preset="7" data-i18n="stats.7d">7 jours</button>
+            <button data-preset="30" data-i18n="stats.30d">30 jours</button>
+            <button data-preset="month" data-i18n="stats.month">Ce mois</button>
+          </div>
+          <input type="date" id="statFrom"> <span>→</span> <input type="date" id="statTo">
+          <button id="statsRefresh" class="ghost" data-i18n="common.refresh">Actualiser</button>
+          <button id="statsCsv" class="ghost" data-i18n="history.csv">Exporter CSV</button>
+        </div>
+      </header>
+      <div class="kpis" id="kpis"></div>
+      <div class="charts">
+        <div class="card"><h3 data-i18n="stats.revenueByDay">Chiffre d'affaires par jour</h3><canvas id="chDay"></canvas></div>
+        <div class="card"><h3 data-i18n="stats.ordersByHour">Commandes par heure</h3><canvas id="chHour"></canvas></div>
+        <div class="card"><h3 data-i18n="stats.topItems">Articles les plus vendus</h3><canvas id="chItems"></canvas></div>
+        <div class="card"><h3 data-i18n="stats.byCategory">Ventes par catégorie</h3><canvas id="chCat"></canvas></div>
+      </div>
+      <div class="two-col">
+        <div class="card"><h3 data-i18n="stats.topItemsTable">Détail des articles</h3><div class="table-wrap"><table class="table" id="topItemsTable"><thead><tr><th data-i18n="stats.item">Article</th><th data-i18n="stats.qty">Qté</th><th data-i18n="stats.revenue">Revenu</th></tr></thead><tbody></tbody></table></div></div>
+        <div class="card"><h3 data-i18n="stats.serviceDevices">Service & tablettes</h3><div class="table-wrap"><table class="table" id="serviceTable"><tbody></tbody></table></div></div>
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------- WEBSITE -->
+    <section id="view-site" class="view hidden">
+      <header class="view-head"><div><h1 data-i18n="site.title">Site web & commandes en ligne</h1><p class="muted" id="siteUrlLine"></p></div>
+        <div class="head-actions"><a id="siteOpen" class="ghost" target="_blank" rel="noopener" data-i18n="site.open">Voir le site ↗</a><button id="siteSave" class="primary big" data-i18n="settings.save">💾 Enregistrer</button></div></header>
+      <div class="two-col">
+        <div class="card">
+          <h3 data-i18n="site.status">État actuel</h3>
+          <div id="siteState" class="site-state">…</div>
+          <label class="check"><input type="checkbox" id="wOrdering"><span data-i18n="site.ordering">Accepter les commandes en ligne</span></label>
+          <label class="check"><input type="checkbox" id="wTempClosed"><span data-i18n="site.tempClosed">Fermé exceptionnellement (aujourd'hui) — le site affiche « fermé » et refuse les commandes</span></label>
+          <div class="row2"><label><span data-i18n="site.closedMsgFr">Message de fermeture (FR)</span><input id="wClosedFr" placeholder="Fermé pour vacances jusqu'au 12 août"></label><label><span data-i18n="site.closedMsgEn">Message (EN)</span><input id="wClosedEn"></label></div>
+          <h3 data-i18n="site.hours">Heures d'ouverture</h3>
+          <div class="hours-grid" id="hoursGrid"></div>
+          <label><span data-i18n="site.timezone">Fuseau horaire</span><input id="wTz" placeholder="America/Toronto"></label>
+          <h3 data-i18n="site.pickup">Ramassage</h3>
+          <div class="row3">
+            <label><span data-i18n="site.lead">Délai « dès que possible » (min)</span><input type="number" id="wLead" min="5" max="120"></label>
+            <label><span data-i18n="site.slot">Créneaux (min)</span><input type="number" id="wSlot" min="5" max="60"></label>
+            <label><span data-i18n="site.lastOrder">Dernière commande avant fermeture (min)</span><input type="number" id="wLast" min="0" max="120"></label>
+          </div>
+          <h3 data-i18n="site.payment">Paiement</h3>
+          <label><span data-i18n="site.paymentMode">Mode</span><select id="wPayMode"><option value="counter" data-i18n="site.payCounter">Paiement au comptoir lors du ramassage</option><option value="stripe" data-i18n="site.payStripe">Paiement en ligne (Stripe : cartes, Apple Pay, Google Pay)</option><option value="both" data-i18n="site.payBoth">Les deux — le client choisit</option></select></label>
+          <div id="stripeBox" class="hidden">
+            <label><span>Stripe — Publishable key (pk_…)</span><input id="wStripePk"></label>
+            <label><span>Stripe — Secret key (sk_…)</span><input id="wStripeSk" type="password" placeholder="••••••••"></label>
+            <label><span>Stripe — Webhook signing secret (whsec_…)</span><input id="wStripeWh" type="password" placeholder="••••••••"></label>
+            <p class="muted"><span data-i18n="site.stripeHint">Webhook Stripe : ajoutez l'URL ci-dessous avec l'événement checkout.session.completed (voir docs/SITE_WEB.md).</span><br><code id="stripeWebhookUrl"></code></p>
+          </div>
+          <label class="check"><input type="checkbox" id="wTips"><span data-i18n="site.tips">Proposer un pourboire</span></label>
+          <label><span data-i18n="site.tipOptions">Options de pourboire (%)</span><input id="wTipOptions" placeholder="0, 10, 15, 20"></label>
+        </div>
+        <div class="card">
+          <h3 data-i18n="site.info">Informations du café</h3>
+          <label><span data-i18n="site.address">Adresse</span><input id="wAddress"></label>
+          <div class="row2"><label><span data-i18n="site.phone">Téléphone</span><input id="wPhone" placeholder="514 …"></label><label><span data-i18n="site.email">Courriel</span><input id="wEmail"></label></div>
+          <div class="row2"><label><span>Instagram</span><input id="wInstagram" placeholder="fusionlartisan"></label><label><span>Facebook (URL)</span><input id="wFacebook"></label></div>
+          <div class="row2"><label><span data-i18n="site.taglineFr">Slogan (FR)</span><input id="wTagFr"></label><label><span data-i18n="site.taglineEn">Slogan (EN)</span><input id="wTagEn"></label></div>
+          <label><span data-i18n="site.aboutFr">Présentation (FR)</span><textarea id="wAboutFr" rows="4"></textarea></label>
+          <label><span data-i18n="site.aboutEn">Présentation (EN)</span><textarea id="wAboutEn" rows="4"></textarea></label>
+          <label><span data-i18n="site.mapsUrl">Lien Google Maps du café</span><input id="wMapsUrl"></label>
+          <label><span data-i18n="site.publicUrl">Adresse publique du site (https://…)</span><input id="wPublicUrl" placeholder="https://lartisan.up.railway.app"></label>
+          <h3 data-i18n="site.featured">Plats mis en avant sur la page d'accueil</h3>
+          <div class="featured-list" id="featuredList"></div>
+          <h3 data-i18n="site.reviews">Avis Google</h3>
+          <label><span>Google Places API key</span><input id="wGoogleKey" type="password" placeholder="••••••••"></label>
+          <label><span>Place ID <span class="muted" data-i18n="site.placeIdHint">(trouvé automatiquement, laissez vide)</span></span><input id="wPlaceId"></label>
+          <div style="display:flex;gap:8px;align-items:center"><button id="reviewsRefresh" class="ghost" data-i18n="site.reviewsRefresh">⟳ Recharger les avis</button><span id="reviewsInfo" class="muted"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------- DEVICES -->
+    <section id="view-devices" class="view hidden">
+      <header class="view-head"><div><h1 data-i18n="devices.title">Tablettes & réseau</h1><p class="muted" data-i18n="devices.sub">Les tablettes connectées à ce serveur et l'adresse à saisir dans l'application.</p></div>
+        <div class="head-actions"><button id="devRefresh" class="ghost" data-i18n="common.refresh">Actualiser</button></div></header>
+      <div class="two-col">
+        <div class="card"><h3 data-i18n="devices.network">Adresse du serveur</h3><p class="muted" data-i18n="devices.networkHint">Entrez cette adresse dans l'application tablette (appui long sur le logo → PIN). Sur le même Wi-Fi, la détection automatique fonctionne aussi.</p><div id="netUrls"></div></div>
+        <div class="card"><h3 data-i18n="devices.list">Tablettes</h3><div class="table-wrap"><table class="table" id="devTable"><thead><tr><th data-i18n="devices.name">Nom</th><th data-i18n="devices.status">État</th><th data-i18n="devices.menuVersion">Version du menu</th><th data-i18n="devices.lastSeen">Dernier contact</th></tr></thead><tbody></tbody></table></div></div>
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------- SETTINGS -->
+    <section id="view-settings" class="view hidden">
+      <header class="view-head"><div><h1 data-i18n="settings.title">Paramètres</h1></div>
+        <div class="head-actions"><button id="settingsSave" class="primary big" data-i18n="settings.save">💾 Enregistrer</button></div></header>
+      <div class="two-col">
+        <div class="card">
+          <h3 data-i18n="settings.general">Général</h3>
+          <label><span data-i18n="settings.cafeName">Nom du café</span><input id="sCafeName"></label>
+          <div style="display:flex;gap:12px;align-items:center;margin:10px 0">
+            <img id="sLogoPrev" class="img-preview" src="/shared/logo-mark.png" alt="" style="object-fit:contain;background:#fff">
+            <div><div class="muted" style="font-size:13px;margin-bottom:6px" data-i18n="settings.logo">Logo (affiché sur les tablettes et dans ce panneau)</div>
+              <button id="logoUp" class="small ghost">📷 <span data-i18n="settings.logoChoose">Choisir un logo</span></button>
+              <button id="logoReset" class="small ghost" data-i18n="settings.logoReset">Rétablir le logo d'origine</button></div>
+          </div>
+          <label><span data-i18n="settings.defaultLang">Langue par défaut des tablettes</span><select id="sDefaultLang"><option value="fr">Français</option><option value="en">English</option></select></label>
+          <label class="check"><input type="checkbox" id="sAskName"><span data-i18n="settings.askName">Demander le prénom du client avant confirmation</span></label>
+          <label class="check"><input type="checkbox" id="sAskService"><span data-i18n="settings.askService">Demander sur place / à emporter</span></label>
+          <label><span data-i18n="settings.thankYou">Durée de l'écran « Merci » sur la tablette (secondes)</span><input type="number" id="sThankYou" min="3" max="120"></label>
+          <label><span data-i18n="settings.numbering">Numérotation des commandes</span><select id="sNumbering"><option value="daily" data-i18n="settings.numberingDaily">Recommence à 1 chaque jour</option><option value="never" data-i18n="settings.numberingNever">Continue indéfiniment</option></select></label>
+        </div>
+        <div class="card">
+          <h3 data-i18n="settings.taxes">Taxes</h3>
+          <label><span>TPS / GST (%)</span><input type="number" step="0.001" id="sGst"></label>
+          <label><span>TVQ / QST (%)</span><input type="number" step="0.001" id="sQst"></label>
+          <p class="muted" data-i18n="settings.taxHint">Les prix du menu sont hors taxes. Les deux taxes sont calculées sur le sous-total.</p>
+          <h3 data-i18n="settings.sound">Alerte sonore</h3>
+          <label><span data-i18n="settings.soundChoice">Son</span><select id="sSound"><option value="chime">Carillon</option><option value="bell">Cloche</option><option value="ding">Ding</option></select></label>
+          <label><span data-i18n="settings.volume">Volume</span><input type="range" id="sVolume" min="0" max="1" step="0.05"></label>
+          <label class="check"><input type="checkbox" id="sRepeat"><span data-i18n="settings.repeat">Répéter le son toutes les 20 s tant qu'une commande est « Nouvelle »</span></label>
+          <button id="soundTest" class="ghost" data-i18n="settings.testSound">▶ Tester le son</button>
+        </div>
+        <div class="card">
+          <h3 data-i18n="settings.printer">🖨 Imprimante à tickets</h3>
+          <label class="check"><input type="checkbox" id="pEnabled"><span data-i18n="settings.printEnabled">Imprimer automatiquement chaque nouvelle commande</span></label>
+          <label><span data-i18n="settings.printMode">Connexion</span><select id="pMode">
+            <option value="windows" data-i18n="settings.printWindows">Imprimante installée sur cet ordinateur (USB — pilote Star)</option>
+            <option value="network" data-i18n="settings.printNetwork">Imprimante réseau (adresse IP, port 9100)</option>
+            <option value="agent" data-i18n="settings.printAgent">Agent d'impression sur l'ordinateur du café (serveur hébergé en ligne)</option>
+          </select></label>
+          <div id="pAgentBox" class="hidden">
+            <p class="muted" data-i18n="settings.printAgentHint">Le serveur est en ligne (Railway) et l'imprimante est branchée à l'ordinateur du café : lancez <b>start-print-agent.bat</b> sur cet ordinateur avec le jeton ci-dessous (voir docs/IMPRIMANTE.md).</p>
+            <label><span data-i18n="settings.agentToken">Jeton de l'agent</span><div class="token-box"><code id="pToken">—</code><button id="pTokenCopy" class="small ghost" title="Copier">📋</button><button id="pTokenNew" class="small ghost" data-i18n="settings.agentTokenNew">Générer</button></div></label>
+            <div id="pAgents" class="muted"></div>
+            <label><span data-i18n="settings.printerName">Imprimante</span><input id="pAgentPrinter" placeholder="Star TSP650"></label>
+          </div>
+          <div id="pWinBox"><label><span data-i18n="settings.printerName">Imprimante</span><div style="display:flex;gap:6px"><select id="pName" style="flex:1"></select><button id="pRefresh" class="small ghost" title="Actualiser">⟳</button></div></label></div>
+          <div id="pNetBox" class="hidden"><div class="row2"><label><span data-i18n="settings.printHost">Adresse IP de l'imprimante</span><input id="pHost" placeholder="192.168.1.50"></label><label><span>Port</span><input id="pPort" type="number" value="9100"></label></div></div>
+          <div class="row3">
+            <label><span data-i18n="settings.printCmd">Langage</span><select id="pCmd"><option value="star">Star Line Mode (TSP650, TSP700…)</option><option value="escpos">ESC/POS (Epson & compatibles)</option></select></label>
+            <label><span data-i18n="settings.printWidth">Caractères par ligne</span><input id="pWidth" type="number" min="24" max="64" value="42"></label>
+            <label><span data-i18n="settings.printCopies">Copies</span><input id="pCopies" type="number" min="1" max="5" value="1"></label>
+          </div>
+          <label class="check"><input type="checkbox" id="pPrices"><span data-i18n="settings.printPrices">Imprimer les prix et les taxes</span></label>
+          <label class="check"><input type="checkbox" id="pCut"><span data-i18n="settings.printCut">Couper le papier après chaque ticket</span></label>
+          <label><span data-i18n="settings.printFooter">Texte en bas du ticket</span><input id="pFooter"></label>
+          <button id="pTest" class="ghost" data-i18n="settings.printTest">🖨 Imprimer un ticket de test</button>
+          <p class="muted" data-i18n="settings.printHint">USB : installez d'abord le pilote Star (l'imprimante apparaît alors dans la liste). Cliquez ensuite sur Enregistrer.</p>
+        </div>
+        <div class="card">
+          <h3 data-i18n="settings.security">Sécurité</h3>
+          <label><span data-i18n="settings.newPin">Nouveau code PIN (4 à 8 chiffres)</span><input id="sPin" inputmode="numeric" placeholder="••••"></label>
+          <label><span data-i18n="settings.newPin2">Confirmer le PIN</span><input id="sPin2" inputmode="numeric" placeholder="••••"></label>
+          <p class="muted" data-i18n="settings.pinHint">Laissez vide pour conserver le PIN actuel.</p>
+          <h3 data-i18n="settings.data">Données</h3>
+          <button id="backupBtn" class="ghost" data-i18n="settings.backup">Créer une sauvegarde maintenant</button>
+          <p class="muted" data-i18n="settings.backupHint">Une sauvegarde automatique est faite chaque nuit à 3 h dans le dossier server/data/backups.</p>
+        </div>
+        <div class="card">
+          <h3 data-i18n="settings.audit">Journal d'activité</h3>
+          <div class="table-wrap audit"><table class="table small" id="auditTable"><tbody></tbody></table></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ============================================================ MODAL + TOAST -->
+<div id="modal" class="modal hidden"><div class="modal-card"><div id="modalBody"></div></div></div>
+<div id="toasts" class="toasts"></div>
+<input type="file" id="importFile" accept="application/json" class="hidden">
+<input type="file" id="imageFile" accept="image/*" class="hidden">
+<audio id="alertAudio" preload="auto"></audio>
+
+<script src="vendor/chart.umd.js"></script>
+<script src="i18n.js"></script>
+<script src="app.js"></script>
+<script src="live.js"></script>
+<script src="menu-editor.js"></script>
+<script src="stats.js"></script>
+<script src="settings.js"></script>
+<script src="site-admin.js"></script>
+</body>
+</html>
