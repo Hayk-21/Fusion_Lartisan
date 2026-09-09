@@ -66,3 +66,19 @@
 .rev-tot{display:flex;justify-content:space-between;padding:3px 0;color:var(--muted)}.rev-tot.big{font-size:22px;font-weight:900;color:var(--ink)}
 .pay-note{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:13px;color:var(--muted)}
 .success{text-align:center;padding:30px 20px}.success .num{font-family:"Playfair Display",serif;font-size:90px;color:var(--brand);line-height:1}
+
+/* counter mode (/local) */
+.pin-gate{position:fixed;inset:0;background:var(--bg);z-index:80;display:flex;align-items:center;justify-content:center;padding:20px}
+.pin-card{background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:0 10px 40px rgba(0,0,0,.1);padding:28px 26px;width:360px;max-width:100%;text-align:center}
+.pin-logo{height:90px;margin-bottom:6px}
+.pin-dots{display:flex;justify-content:center;gap:12px;margin:14px 0}
+.pin-dots span{width:16px;height:16px;border-radius:50%;border:2px solid var(--brand);background:transparent}
+.pin-dots span.on{background:var(--brand)}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pin-pad button{font:inherit;font-size:22px;font-weight:700;padding:14px 0;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--brand2);cursor:pointer}
+.pin-pad button.ghost{font-size:14px}.pin-pad button.primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+.pin-error{color:var(--danger);font-weight:600;min-height:20px;margin:10px 0 0}
+.success-card{text-align:center;padding:30px 20px}
+.success-card .num{font-family:"Playfair Display",serif;font-size:110px;color:var(--brand);line-height:1;margin:8px 0}
+body.local .nav .brand{pointer-events:none}
+body.local #fsBtn{display:inline-flex;padding:8px 12px}

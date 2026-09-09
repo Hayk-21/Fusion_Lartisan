@@ -2,6 +2,7 @@
 import { priceLine, priceOrder } from '/shared/pricing.js';
 
 const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 const STR = {
@@ -14,7 +15,7 @@ const STR = {
     back: 'Retour', confirm: 'Confirmer la commande', confirmPay: 'Payer {t}', sending: 'Envoi…',
     open: 'Ouvert · ferme à {t}', closed: 'Fermé', closedTemp: 'Fermé exceptionnellement', opensTomorrow: 'ouvre demain à {t}', opensToday: 'ouvre à {t}',
     bannerClosed: 'Le café est fermé · la commande en ligne reprend {when}. Vous pouvez consulter le menu.', bannerLate: "Trop tard pour commander aujourd'hui · à demain ! Vous pouvez consulter le menu.", bannerOff: 'La commande en ligne est temporairement désactivée.',
-    closedBtn: 'Café fermé · commande impossible', service: 'Sur place ou à emporter ?', takeout: 'À emporter', dineIn: 'Sur place', arrival: "Heure d'arrivée", lateBtn: "Trop tard pour aujourd'hui", menuUpdated: 'Le menu a été mis à jour', errNet: 'Connexion impossible, réessayez.', cancelled: 'Paiement annulé · votre panier est conservé.', max: 'Maximum {n}' },
+    closedBtn: 'Café fermé · commande impossible', localTitle: 'Mode comptoir', localHint: 'Entrez le code PIN pour ouvrir le menu du café.', clear: 'Effacer', wrongPin: 'Code PIN incorrect', counterMode: 'Comptoir', localSub: 'Commande prise au comptoir · paiement sur place', nameOpt: 'Prénom du client (facultatif)', thanks: 'Commande envoyée en cuisine', giveNumber: 'Numéro de commande', newOrder: 'Nouvelle commande', autoBack: 'Retour au menu dans {s} s', fullscreen: 'Plein écran', service: 'Sur place ou à emporter ?', takeout: 'À emporter', dineIn: 'Sur place', arrival: "Heure d'arrivée", lateBtn: "Trop tard pour aujourd'hui", menuUpdated: 'Le menu a été mis à jour', errNet: 'Connexion impossible, réessayez.', cancelled: 'Paiement annulé · votre panier est conservé.', max: 'Maximum {n}' },
   en: { orderOnline: 'Order online', yourOrder: 'Your order', clear: 'Clear', checkout: 'Checkout', viewCart: 'View order', empty: 'Your order is empty.\nTap a dish to start.',
     from: 'from', add: 'Add', included: 'included', includedOf: '{c}/{n} included', extra: 'extra', required: 'Required', choose: 'Choose', qty: 'Quantity', note: 'Note for the kitchen (allergies, no onion…)',
     subtotal: 'Subtotal', gst: 'GST ({r}%)', qst: 'QST ({r}%)', tip: 'Tip', total: 'Total', items: '{n} item(s)',
@@ -24,7 +25,7 @@ const STR = {
     back: 'Back', confirm: 'Confirm order', confirmPay: 'Pay {t}', sending: 'Sending…',
     open: 'Open · closes at {t}', closed: 'Closed', closedTemp: 'Exceptionally closed', opensTomorrow: 'opens tomorrow at {t}', opensToday: 'opens at {t}',
     bannerClosed: 'The café is closed · online ordering resumes {when}. You can still browse the menu.', bannerLate: 'Too late to order today · see you tomorrow! You can still browse the menu.', bannerOff: 'Online ordering is temporarily disabled.',
-    closedBtn: 'Café closed · ordering unavailable', service: 'Dine in or take out?', takeout: 'Take out', dineIn: 'Dine in', arrival: 'Arrival time', lateBtn: 'Too late for today', menuUpdated: 'The menu was updated', errNet: 'Cannot connect, please retry.', cancelled: 'Payment cancelled · your cart was kept.', max: 'Maximum {n}' },
+    closedBtn: 'Café closed · ordering unavailable', localTitle: 'Counter mode', localHint: 'Enter the PIN to open the café menu.', clear: 'Clear', wrongPin: 'Wrong PIN', counterMode: 'Counter', localSub: 'Order taken at the counter · pay in person', nameOpt: 'Customer first name (optional)', thanks: 'Order sent to the kitchen', giveNumber: 'Order number', newOrder: 'New order', autoBack: 'Back to the menu in {s} s', fullscreen: 'Full screen', service: 'Dine in or take out?', takeout: 'Take out', dineIn: 'Dine in', arrival: 'Arrival time', lateBtn: 'Too late for today', menuUpdated: 'The menu was updated', errNet: 'Cannot connect, please retry.', cancelled: 'Payment cancelled · your cart was kept.', max: 'Maximum {n}' },
 };
 let lang = localStorage.getItem('site_lang') || ((navigator.language || 'fr').toLowerCase().startsWith('en') ? 'en' : 'fr');
 const t = (k, v = {}) => { let s = STR[lang][k] ?? STR.fr[k] ?? k; for (const [a, b] of Object.entries(v)) s = s.replace('{' + a + '}', b); return s; };
@@ -37,6 +38,37 @@ let menu = null, site = null, settings = { tax_gst: 5, tax_qst: 9.975 };
 let cat = null;
 let cart = JSON.parse(localStorage.getItem('web_cart') || '[]');
 const saveCart = () => localStorage.setItem('web_cart', JSON.stringify(cart));
+
+// ---------------------------------------------------------------- counter mode (/local): PIN gate, fullscreen, orders straight to the kitchen
+const LOCAL = location.pathname.startsWith('/local');
+if (LOCAL) {
+  document.body.classList.add('local');
+  document.querySelector('.brand small').setAttribute('data-i18n', 'counterMode');
+  const gate = $('#pinGate'); let pin = '';
+  const dots = () => $$('#pinDots span').forEach((d, i) => d.classList.toggle('on', i < pin.length));
+  const unlock = () => { gate.classList.add('hidden'); };
+  async function submitPin() {
+    if (pin.length < 4) return;
+    try {
+      const r = await fetch('/api/admin/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pin }) });
+      if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d.error || t('wrongPin')); }
+      unlock();
+    } catch (e) { $('#pinError').textContent = e.message === 'Failed to fetch' ? t('errNet') : t('wrongPin'); }
+    pin = ''; dots();
+  }
+  $('#pinPad').addEventListener('click', e => {
+    const b = e.target.closest('button[data-k]'); if (!b) return; const k = b.dataset.k; $('#pinError').textContent = '';
+    if (k === 'clear') pin = ''; else if (k === 'ok') return submitPin(); else if (pin.length < 8) pin += k;
+    dots(); if (pin.length === 4) submitPin();
+  });
+  document.addEventListener('keydown', e => { if (gate.classList.contains('hidden')) return; if (/^\d$/.test(e.key) && pin.length < 8) { pin += e.key; dots(); if (pin.length === 4) submitPin(); } else if (e.key === 'Backspace') { pin = pin.slice(0, -1); dots(); } else if (e.key === 'Enter') submitPin(); });
+  // already logged in (admin session cookie) → no PIN
+  fetch('/api/admin/session').then(r => r.json()).then(j => { if (!j.logged_in) gate.classList.remove('hidden'); }).catch(() => gate.classList.remove('hidden'));
+  // fullscreen toggle
+  const fs = $('#fsBtn'); fs.classList.remove('hidden');
+  fs.onclick = () => { if (document.fullscreenElement) document.exitFullscreen?.(); else document.documentElement.requestFullscreen?.().catch(() => {}); };
+  document.addEventListener('fullscreenchange', () => { fs.textContent = document.fullscreenElement ? '✕ ⛶' : '⛶'; });
+}
 
 function applyLang() {
   document.documentElement.lang = lang;
@@ -71,6 +103,7 @@ function renderState() {
     banner.textContent = st.reason === 'temporarily_closed' && txt(site.closed_message) ? txt(site.closed_message) : !st.open ? t('bannerClosed', { when: hint }) : (st.open && !st.slots.length ? t('bannerLate') : t('bannerOff'));
   } else banner.classList.add('hidden');
   const btn = $('#reviewBtn');
+  if (LOCAL) { banner.classList.add('hidden'); btn.disabled = !cart.length; btn.textContent = t('checkout'); return; }
   btn.disabled = !cart.length || !st.ordering;
   btn.textContent = st.ordering ? t('checkout') : (st.open && !st.slots.length ? t('lateBtn') : t('closedBtn'));
 }
@@ -161,6 +194,7 @@ $('#reviewBtn').onclick = async () => {
   drawCheckout();
 };
 function drawCheckout() {
+  if (LOCAL) return drawLocalCheckout();
   const st = site.state; const p = priceOrder(menu, cart, settings, lang); if (!p.ok) return toast(p.error, 'err');
   const tips = st.tips; if (form.tip == null) form.tip = tips ? (tips.includes(10) ? 10 : tips[0]) : 0;
   if (!form.payment || !st.payment_modes.includes(form.payment)) form.payment = st.payment_modes[0];
@@ -191,6 +225,47 @@ function drawCheckout() {
   $('#fPickup').onchange = saveForm;
   $('#confirmBtn').onclick = submit;
   $('#sheet').classList.remove('hidden');
+}
+// counter mode: service + tip (+ optional first name), no contact details, no pickup time, no payment step
+function drawLocalCheckout() {
+  const p = priceOrder(menu, cart, settings, lang); if (!p.ok) return toast(p.error, 'err');
+  const tips = settings.tips_enabled !== false && Array.isArray(settings.tip_options) && settings.tip_options.length ? settings.tip_options : null;
+  if (form.tip == null || (tips && !tips.includes(form.tip))) form.tip = tips ? (tips.includes(10) ? 10 : tips[0]) : 0;
+  const tipAmt = tips ? Math.round(p.subtotal * form.tip) / 100 : 0;
+  const total = Math.round((p.total + tipAmt) * 100) / 100;
+  $('#sheetCard').innerHTML = `<div class="sheet-head"><div><h2>${t('coTitle')}</h2><p>${t('localSub')}</p></div><button class="close" id="sheetClose">✕</button></div>
+    <div class="sheet-body">
+      ${p.lines.map(l => `<div class="rev-line"><div><b>${l.qty}× ${esc(l.name)}${l.variant_name ? ' · ' + esc(l.variant_name) : ''}</b><span class="opts">${l.options.map(o => esc(o.name)).join(', ')}${l.note ? ' · ✎ ' + esc(l.note) : ''}</span></div><div><b>${money(l.line_total)}</b></div></div>`).join('')}
+      <div class="field"><label>${t('nameOpt')}</label><input id="fName" value="${esc(form.name)}" maxlength="40"></div>
+      <div class="field"><label>${t('service')}</label><div class="seg" id="svcSeg"><button data-svc="dine_in" class="${form.service !== 'takeout' ? 'on' : ''}">🍽️ ${t('dineIn')}</button><button data-svc="takeout" class="${form.service === 'takeout' ? 'on' : ''}">🥡 ${t('takeout')}</button></div></div>
+      ${tips ? `<div class="field"><label>${t('tipLabel')}</label><div class="seg" id="tipSeg">${tips.map(x => `<button data-tip="${x}" class="${x === form.tip ? 'on' : ''}">${x === 0 ? t('noTip') : x + ' %'}</button>`).join('')}</div></div>` : ''}
+      <div style="margin-top:14px"><div class="rev-tot"><span>${t('subtotal')}</span><span>${money(p.subtotal)}</span></div><div class="rev-tot"><span>${t('gst', { r: rate(settings.tax_gst) })}</span><span>${money(p.tax_gst)}</span></div><div class="rev-tot"><span>${t('qst', { r: rate(settings.tax_qst) })}</span><span>${money(p.tax_qst)}</span></div>${tipAmt ? `<div class="rev-tot"><span>${t('tip')}</span><span>${money(tipAmt)}</span></div>` : ''}<div class="rev-tot big"><span>${t('total')}</span><span>${money(total)}</span></div></div>
+    </div>
+    <div class="sheet-foot"><button class="btn" id="backBtn">${t('back')}</button><button class="btn primary big" id="confirmBtn">✓ ${t('confirm')}</button></div>`;
+  $('#sheetClose').onclick = closeSheet; $('#backBtn').onclick = closeSheet;
+  $('#svcSeg').addEventListener('click', e => { const b = e.target.closest('[data-svc]'); if (!b) return; form.service = b.dataset.svc; form.name = $('#fName').value; drawLocalCheckout(); });
+  $('#tipSeg')?.addEventListener('click', e => { const b = e.target.closest('[data-tip]'); if (!b) return; form.tip = Number(b.dataset.tip); form.name = $('#fName').value; drawLocalCheckout(); });
+  $('#confirmBtn').onclick = submitLocal;
+  $('#sheet').classList.remove('hidden');
+}
+async function submitLocal() {
+  form.name = $('#fName')?.value || '';
+  const btn = $('#confirmBtn'); btn.disabled = true; const label = btn.textContent; btn.textContent = t('sending');
+  try {
+    const r = await fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ device_id: 'local-pc', device_name: 'Comptoir', customer_name: form.name.trim(), service_type: form.service === 'takeout' ? 'takeout' : 'dine_in', lang, lines: cart, tip_percent: form.tip }) });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'error');
+    cart = []; saveCart(); form.name = ''; form.service = 'dine_in'; form.tip = null; renderCart(); renderState();
+    let secs = Math.max(3, Math.min(120, Number(settings.thank_you_seconds) || 12));
+    const draw = () => { $('#sheetCard').innerHTML = `<div class="success-card"><h2>${t('thanks')}</h2><p class="muted">${t('giveNumber')}</p><div class="num">#${data.number}</div><p><button class="btn primary big" id="newOrderBtn">${t('newOrder')}</button></p><p class="muted">${t('autoBack', { s: secs })}</p></div>`; $('#newOrderBtn').onclick = () => { clearInterval(tm); closeSheet(); }; };
+    draw();
+    const tm = setInterval(() => { secs--; if (secs <= 0) { clearInterval(tm); closeSheet(); } else { const p = $('#sheetCard .muted:last-child'); if (p) p.textContent = t('autoBack', { s: secs }); } }, 1000);
+  } catch (e) {
+    toast(e.message === 'Failed to fetch' ? t('errNet') : e.message, 'err');
+    btn.disabled = false; btn.textContent = label;
+    if (e.message !== 'Failed to fetch') load();
+  }
 }
 const minToHHMM = m => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
 function saveForm() { form.name = $('#fName')?.value ?? form.name; form.phone = $('#fPhone')?.value ?? form.phone; form.email = $('#fEmail')?.value ?? form.email; form.pickup = $('#fPickup')?.value ?? form.pickup; localStorage.setItem('web_customer', JSON.stringify({ name: form.name, phone: form.phone, email: form.email })); }

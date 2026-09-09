@@ -67,6 +67,8 @@ app.get(['/api/app/lartisan.apk', '/app/lartisan.apk'], (req, res) => {
   res.sendFile(APK_PATH);
 });
 app.get('/app', (req, res) => res.sendFile(path.join(PUBLIC, 'site', 'app.html')));
+// café PC / counter: same ordering page as the website, PIN-protected, orders go straight to the kitchen (pay at counter)
+app.get(['/local', '/local/'], (req, res) => res.sendFile(path.join(PUBLIC, 'site', 'commander', 'index.html')));
 app.post('/api/admin/app/apk', express.raw({ type: () => true, limit: '120mb' }), (req, res) => {
   if (!isValid(tokenFromRequest(req))) return fail(res, 401, 'Unauthorized');
   const buf = req.body;

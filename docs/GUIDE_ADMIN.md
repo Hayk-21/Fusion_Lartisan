@@ -83,6 +83,8 @@ Les commandes du site apparaissent dans *Commandes en direct* avec le badge **�
 
 ## 5. Tablettes
 
+**Mode comptoir (`/local`)** : sur l'ordinateur du café, ouvrez `https://VOTRE-SERVEUR/local`. La page demande le PIN admin une fois, puis affiche le même menu que le site web avec un bouton ⛶ plein écran. Les commandes prises là partent directement en cuisine (nom facultatif, sur place / à emporter, pourboire, paiement au comptoir), sans heure de ramassage ni coordonnées ; le café est toujours considéré ouvert sur cette page. Pratique pour prendre une commande au téléphone ou pour un client au comptoir.
+
 Le panneau fonctionne aussi sur un téléphone ou une tablette (menu ☰ en haut à gauche). La carte **Application tablette** permet de téléverser l'APK une fois, puis de l'installer sur les tablettes via l'adresse `/app` ou le code QR (voir [TABLETTES.md](TABLETTES.md)).
 
 

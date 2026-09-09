@@ -16,6 +16,7 @@
   <a class="brand" href="/"><img id="navLogo" src="/shared/logo-mark.png" alt=""><span><b id="navName">L'Artisan</b><small data-i18n="orderOnline">Commander en ligne</small></span></a>
   <nav>
     <span class="badge" id="openBadge"><span class="dot"></span><span id="openText">…</span></span>
+    <button class="btn hidden" id="fsBtn" title="Plein écran">⛶</button>
     <div class="lang"><button data-lang="fr">FR</button><button data-lang="en">EN</button></div>
   </nav>
 </div></header>
@@ -33,6 +34,21 @@
 <div class="cart-bar" id="cartBar"><div><div class="muted" id="barCount"></div><b id="barTotal"></b></div><button class="btn primary" id="barOpen" data-i18n="viewCart">Voir la commande</button></div>
 
 <div id="sheet" class="sheet hidden"><div class="sheet-card" id="sheetCard"></div></div>
+<div id="pinGate" class="pin-gate hidden">
+  <div class="pin-card">
+    <img src="/shared/logo-full.png" alt="" class="pin-logo">
+    <h2 data-i18n="localTitle">Mode comptoir</h2>
+    <p class="muted" data-i18n="localHint">Entrez le code PIN pour ouvrir le menu du café.</p>
+    <div class="pin-dots" id="pinDots"><span></span><span></span><span></span><span></span></div>
+    <div class="pin-pad" id="pinPad">
+      <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+      <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+      <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+      <button data-k="clear" class="ghost" data-i18n="clear">Effacer</button><button data-k="0">0</button><button data-k="ok" class="primary">OK</button>
+    </div>
+    <p id="pinError" class="pin-error"></p>
+  </div>
+</div>
 <div id="toast" class="toast hidden"></div>
 <script type="module" src="/commander/order.js"></script>
 </body>
