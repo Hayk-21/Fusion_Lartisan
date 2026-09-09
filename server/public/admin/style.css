@@ -210,3 +210,5 @@ legend{color:var(--brand2);font-weight:700;padding:0 6px;font-size:13px}
 .featured-list label{display:flex;flex-direction:row;gap:6px;align-items:center;font-size:13px;margin:0;color:var(--ink)}
 .url-big.small{font-size:14px}
 .test-mode{background:#fff3d6;border:1px solid #f0d9a0;border-radius:10px;padding:8px 10px;color:#8a5a00;font-weight:700}
+a.btn{display:inline-block;text-decoration:none;font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--brand2);padding:9px 14px;border-radius:12px;font-weight:600}
+a.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}

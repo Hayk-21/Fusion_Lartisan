@@ -1,0 +1,33 @@
+Fusion L'Artisan - agent d'impression pour Windows
+===================================================
+
+Ce dossier fait imprimer les commandes du site web / des tablettes sur l'imprimante
+branchee a CET ordinateur (USB, Bluetooth ou reseau), a partir du serveur en ligne.
+
+AVANT : l'imprimante doit apparaitre dans Windows -> Parametres -> Imprimantes
+(pilote Star installe ; en Bluetooth, jumelez d'abord l'imprimante, le pilote Star
+cree alors "TSP654II - BT:COMx").
+
+INSTALLATION AUTOMATIQUE (recommandee) :
+  Panneau d'administration -> Parametres -> Imprimante -> Connexion "Agent d'impression"
+  -> bouton "Telecharger l'installateur Windows". Copiez le fichier .bat obtenu sur l'ordinateur
+  et double-cliquez-le : aucune question, tout se configure et un ticket "Tout est connecte" sort.
+
+INSTALLATION MANUELLE (ce dossier) :
+  1. Copiez ce dossier sur l'ordinateur (ex. C:\lartisan-print-agent), pas sur une cle USB.
+  2. Double-cliquez INSTALLER.bat et repondez aux questions :
+       - adresse du serveur (deja proposee)      - code PIN du panneau d'administration
+       - numero de l'imprimante dans la liste     - nom de l'ordinateur
+     Le script installe Node.js s'il manque, regle le panneau en mode "agent",
+     ecrit print-agent.json, ajoute l'agent au demarrage de Windows et imprime un ticket de test.
+  3. C'est tout : la fenetre "Agent d'impression" s'ouvre et reste ouverte (reduite) pendant le service.
+
+ENSUITE :
+  - L'agent demarre tout seul avec Windows. Pour le lancer a la main : start-print-agent.bat
+  - Pour changer d'imprimante ou de serveur : relancez INSTALLER.bat
+  - Panneau -> Parametres -> Imprimante montre "Agent connecte : <nom>" quand tout va bien.
+
+DEPANNAGE :
+  - "bad token" dans la fenetre : relancez INSTALLER.bat (le jeton du serveur a change).
+  - Rien ne s'imprime, pas d'erreur : imprimante eteinte, plus de papier, Bluetooth hors de portee.
+  - "Aucune imprimante installee" : installez le pilote Star puis relancez.

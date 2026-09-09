@@ -67,7 +67,15 @@ Si une impression automatique échoue (imprimante éteinte, plus de papier), le 
 
 Quand le serveur tourne sur Railway (voir `DEPLOIEMENT_RAILWAY.md`), il ne peut pas voir l'imprimante USB du café. Un petit programme, **l'agent d'impression**, tourne sur l'ordinateur du café, reste connecté au serveur et imprime chaque ticket qu'il reçoit (délai < 1 s).
 
-### Installation (une fois, sur l'ordinateur du café)
+### Installation automatique (recommandée)
+
+1. Panneau → **Paramètres → 🖨 Imprimante** → *Connexion* = **Agent d'impression** → cliquez **⬇ Télécharger l'installateur Windows (.bat)**. Le fichier contient l'adresse du serveur et le jeton.
+2. Copiez ce fichier sur l'ordinateur relié à l'imprimante (l'imprimante doit déjà apparaître dans Windows → Paramètres → Imprimantes, pilote Star installé ; en Bluetooth, jumelez-la d'abord).
+3. Double-cliquez-le. Aucune question : il installe Node.js s'il manque, choisit l'imprimante Star, règle le panneau, s'ajoute au démarrage de Windows, imprime un ticket **« TOUT EST CONNECTÉ »** et démarre l'agent (fenêtre réduite dans la barre des tâches). Si Windows SmartScreen s'affiche : *Informations complémentaires → Exécuter quand même*.
+
+Pour changer d'ordinateur : téléchargez à nouveau l'installateur et lancez-le sur le nouveau PC (l'ancien agent est déconnecté). Le jeton change si vous cliquez **Générer** dans le panneau : il faut alors retélécharger l'installateur.
+
+### Installation manuelle (une fois, sur l'ordinateur du café)
 
 1. Le dossier `server/` du projet doit être présent sur cet ordinateur (comme pour le mode local), avec Node.js installé.
 2. Panneau d'administration (en ligne) → **Paramètres → 🖨 Imprimante** → *Connexion* = **Agent d'impression sur l'ordinateur du café** → bouton **Générer** → copiez le jeton (📋). Cochez *Imprimer automatiquement*, **Enregistrer**.

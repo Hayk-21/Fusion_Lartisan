@@ -267,6 +267,8 @@
           </select></label>
           <div id="pAgentBox" class="hidden">
             <p class="muted" data-i18n="settings.printAgentHint">Le serveur est en ligne (Railway) et l'imprimante est branchée à l'ordinateur du café : lancez <b>start-print-agent.bat</b> sur cet ordinateur avec le jeton ci-dessous (voir docs/IMPRIMANTE.md).</p>
+            <p><a id="pInstaller" class="btn primary" href="/api/admin/print/agent-installer" download>⬇ <span data-i18n="settings.agentInstaller">Télécharger l'installateur Windows (.bat)</span></a></p>
+            <p class="muted" data-i18n="settings.agentInstallerHint">Copiez ce fichier sur l'ordinateur relié à l'imprimante et double-cliquez-le : aucune question, tout se configure et un ticket « Tout est connecté » sort de l'imprimante.</p>
             <label><span data-i18n="settings.agentToken">Jeton de l'agent</span><div class="token-box"><code id="pToken">—</code><button id="pTokenCopy" class="small ghost" title="Copier">📋</button><button id="pTokenNew" class="small ghost" data-i18n="settings.agentTokenNew">Générer</button></div></label>
             <div id="pAgents" class="muted"></div>
             <label><span data-i18n="settings.printerName">Imprimante</span><input id="pAgentPrinter" placeholder="Star TSP650"></label>

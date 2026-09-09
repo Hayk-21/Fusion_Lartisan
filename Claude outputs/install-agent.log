@@ -1,0 +1,35 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260909010236
+Username: Hayk\sakoy
+RunAs User: Hayk\sakoy
+Configuration Name: 
+Machine: HAYK (Microsoft Windows NT 10.0.26200.0)
+Host Application: powershell -NoProfile -ExecutionPolicy Bypass -File C:\Users\sakoy\AppData\Local\LArtisan-PrintAgent\setup.ps1
+Process ID: 5504
+PSVersion: 5.1.26100.9444
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.9444
+BuildVersion: 10.0.26100.9444
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Node.js v22.19.0
+
+Serveur trouvé : Fusion L'Artisan (version 1.4.0)
+
+Imprimantes trouvées :
+  1. TSP654II - BT:COM6
+  2. TSP654II - BT:COM7
+  3. Xprinter XP-235B
+Imprimante : TSP654II - BT:COM7
+Configuration enregistrée : C:\Users\sakoy\AppData\Local\LArtisan-PrintAgent\print-agent.json
+Démarrage automatique ajouté : C:\Users\sakoy\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\L'Artisan - Agent d'impression.lnk
+
+Ticket de test envoyé : il doit sortir de l'imprimante.
+**********************
+Windows PowerShell transcript end
+End time: 20260909010258
+**********************

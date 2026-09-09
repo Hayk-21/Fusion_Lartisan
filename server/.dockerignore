@@ -6,3 +6,7 @@ test
 *.bat
 *.command
 print-agent/print-agent.json
+
+# the Windows print-agent template must ship with the server (installer download)
+!print-agent-windows/**
+!print-agent-windows/*.bat

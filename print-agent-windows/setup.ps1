@@ -6,6 +6,9 @@ $ErrorActionPreference = 'Stop'
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $here
+$logPath = if ($env:LARTISAN_LOG) { $env:LARTISAN_LOG } else { Join-Path $here 'install.log' }
+try { Start-Transcript -Path $logPath -Force | Out-Null } catch {}
+trap { Write-Host $_ -ForegroundColor Red; try { Stop-Transcript | Out-Null } catch {}; exit 1 }
 $cfgPath = Join-Path $here 'print-agent.json'
 $old = $null
 if (Test-Path $cfgPath) { try { $old = Get-Content $cfgPath -Raw | ConvertFrom-Json } catch {} }
@@ -37,12 +40,6 @@ if (-not $node -or ([int]((& node -v).TrimStart('v').Split('.')[0]) -lt 22)) {
   if (-not (Get-Command node -ErrorAction SilentlyContinue)) { throw "Node.js n'a pas pu être installé. Installez-le depuis https://nodejs.org (version LTS) puis relancez INSTALLER.bat." }
 }
 Write-Host ("Node.js " + (& node -v)) -ForegroundColor Green
-
-# ---------------------------------------------------------------- 2. dépendances
-if (-not (Test-Path (Join-Path $here 'node_modules\ws'))) {
-  Write-Host 'Installation des dépendances...'
-  & npm install --omit=dev --no-audit --no-fund | Out-Null
-}
 
 # ---------------------------------------------------------------- 3. serveur + PIN
 Write-Host ''
@@ -79,7 +76,11 @@ if (-not $agentToken -or (-not $reuse -and $ag.agents.Count -eq 0)) {
 }
 
 # ---------------------------------------------------------------- 5. imprimante
-$printers = @(& node agent.js --printers 2>$null | Where-Object { $_ -and $_ -notmatch '^(Fax|Microsoft Print to PDF|Microsoft XPS|OneNote)' })
+$ErrorActionPreference = 'Continue'
+$rawList = cmd /c "node agent.js --printers 2>&1"
+$ErrorActionPreference = 'Stop'
+if ($LASTEXITCODE -ne 0) { throw ("La liste des imprimantes a échoué : " + ($rawList -join ' ')) }
+$printers = @($rawList | Where-Object { $_ -and $_ -notmatch '^(Fax|Microsoft Print to PDF|Microsoft XPS|OneNote)' })
 Write-Host ''
 if ($printers.Count -eq 0) { throw "Aucune imprimante installée dans Windows. Installez d'abord le pilote Star (l'imprimante doit apparaître dans Paramètres → Imprimantes), puis relancez." }
 Write-Host 'Imprimantes trouvées :'
@@ -98,8 +99,8 @@ $patch = @{ print_enabled = $true; print_mode = 'agent'; print_printer_name = $p
 Invoke-RestMethod -Method Put -Uri "$server/api/admin/settings" -Headers $h -ContentType 'application/json' -Body $patch | Out-Null
 
 # ---------------------------------------------------------------- 7. print-agent.json
-@{ server_url = $server; token = $agentToken; printer_name = $printer; print_mode = 'windows'; agent_name = $agentName } |
-  ConvertTo-Json | Set-Content -Path $cfgPath -Encoding UTF8
+$json = @{ server_url = $server; token = $agentToken; printer_name = $printer; print_mode = 'windows'; agent_name = $agentName } | ConvertTo-Json
+[IO.File]::WriteAllText($cfgPath, $json, (New-Object System.Text.UTF8Encoding $false))
 Write-Host "Configuration enregistrée : $cfgPath" -ForegroundColor Green
 
 # ---------------------------------------------------------------- 8. démarrage automatique
@@ -118,7 +119,7 @@ Write-Host ''
 $r = Ask "Imprimer un ticket de test maintenant ? (O/n)" 'O'
 if ($r -match '^[oOyY]') {
   $job = Start-Process -FilePath 'node' -ArgumentList 'agent.js' -WorkingDirectory $here -PassThru -WindowStyle Hidden
-  Start-Sleep -Seconds 4
+  Start-Sleep -Seconds 6
   try {
     $body = @{ print_mode = 'agent'; print_printer_name = $printer; print_cmd = 'star'; print_width = 42; print_copies = 1; print_cut = $true; print_prices = $true } | ConvertTo-Json
     Invoke-RestMethod -Method Post -Uri "$server/api/admin/print/test" -Headers $h -ContentType 'application/json' -Body $body | Out-Null
@@ -127,4 +128,5 @@ if ($r -match '^[oOyY]') {
   Start-Sleep -Seconds 3
   try { Stop-Process -Id $job.Id -Force } catch {}
 }
+try { Stop-Transcript | Out-Null } catch {}
 exit 0

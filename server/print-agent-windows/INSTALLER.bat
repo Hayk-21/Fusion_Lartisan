@@ -13,6 +13,6 @@ if "%LARTISAN_LOG%"=="" set "LARTISAN_LOG=%~dp0install.log"
 if not "%RC%"=="0" (echo. & echo  L'installation a echoue. Journal : %LARTISAN_LOG% & pause & exit /b 1)
 echo.
 echo  Installation terminee. L'agent demarre maintenant (et a chaque demarrage de Windows).
-timeout /t 3 >nul
-start "" "%~dp0start-print-agent.bat"
+start "" /min "%~dp0start-print-agent.bat"
+if "%LARTISAN_TOKEN%"=="" (pause) else (timeout /t 8 >nul)
 exit /b 0

@@ -3,6 +3,7 @@
 import express from 'express';
 import http from 'node:http';
 import crypto from 'node:crypto';
+import { buildInstallerBat } from './agentInstaller.js';
 import path from 'node:path';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -14,7 +15,7 @@ import { computeStats } from './stats.js';
 import { login, logout, requireAdmin, tokenFromRequest, isValid, COOKIE } from './auth.js';
 import { attachHub, broadcast, connectedDevices, broadcastDevices, printViaAgent, agentsConnected } from './hub.js';
 import { startDiscovery, localAddresses, DISCOVERY_PORT } from './discovery.js';
-import { buildTicket, buildTestTicket, printRaw, listPrinters, warmUpPrinter, setAgentSender } from './printer.js';
+import { buildTicket, buildTestTicket, buildWelcomeTicket, printRaw, listPrinters, warmUpPrinter, setAgentSender } from './printer.js';
 import { createOnlineOrder, confirmStripePayment, refundIfPaid, siteState, featuredItems, publicOrder } from './online.js';
 import { getReviews } from './google.js';
 import { verifyWebhook } from './stripe.js';
@@ -69,9 +70,10 @@ const ok = (res, data) => res.json(data);
 const fail = (res, status, error, extra = {}) => res.status(status).json({ error, ...extra });
 
 // ---------------------------------------------------------------- public API (tablets)
+function isMounted(dir) { try { return fs.readFileSync('/proc/mounts', 'utf8').split('\n').some(l => l.split(' ')[1] === dir); } catch { return null; } }
 app.get('/api/health', (req, res) => {
   const m = getMenu();
-  ok(res, { service: 'lartisan-cafe', version: APP_VERSION, cafe_name: getSettings().cafe_name, menu_version: m.version, server_time: new Date().toISOString(), day: localDay(), data_dir: DATA_DIR, persistent: !!process.env.LARTISAN_DATA_DIR });
+  ok(res, { service: 'lartisan-cafe', version: APP_VERSION, cafe_name: getSettings().cafe_name, menu_version: m.version, server_time: new Date().toISOString(), day: localDay(), data_dir: DATA_DIR, persistent: !!process.env.LARTISAN_DATA_DIR, volume_mounted: isMounted(DATA_DIR) });
 });
 
 app.get('/api/menu', (req, res) => {
@@ -208,6 +210,33 @@ admin.post('/orders/:id/print', wrap(async (req, res) => {
 admin.get('/printers', wrap(async (req, res) => ok(res, { platform: process.platform, printers: await listPrinters(), agents: agentsConnected() })));
 admin.post('/print/agent-token', (req, res) => { const token = crypto.randomBytes(16).toString('hex'); setSettings({ print_agent_token: token }); audit('print.agent.token', 'regenerated'); ok(res, { token }); });
 admin.get('/print/agent-token', (req, res) => ok(res, { token: getSettings().print_agent_token || '', agents: agentsConnected() }));
+// one-file Windows installer with the server address + agent token baked in (Paramètres → Imprimante → Télécharger)
+admin.get('/print/agent-installer', (req, res) => {
+  const s = getSettings();
+  let token = s.print_agent_token;
+  if (!token) { token = crypto.randomBytes(16).toString('hex'); setSettings({ print_agent_token: token }); audit('print.agent.token', 'generated for installer'); }
+  const serverUrl = (s.public_url || baseUrlOf(req)).replace(/\/+$/, '');
+  audit('print.agent.installer', 'downloaded');
+  res.setHeader('Content-Type', 'application/octet-stream');
+  res.setHeader('Content-Disposition', 'attachment; filename="Installer-Imprimante-LArtisan.bat"');
+  res.send(buildInstallerBat({ serverUrl, token, cafeName: s.cafe_name }));
+});
+// ---- print agent (token-authenticated, no PIN): used by the automatic installer
+function agentAuth(req, res) { const s = getSettings(); const t = req.body?.token || req.get('X-Agent-Token'); if (!s.print_agent_token || t !== s.print_agent_token) { fail(res, 401, 'bad token'); return null; } return s; }
+app.post('/api/print-agent/register', (req, res) => {
+  const s = agentAuth(req, res); if (!s) return;
+  const patch = { print_enabled: true, print_mode: 'agent' };
+  if (req.body.printer_name) patch.print_printer_name = String(req.body.printer_name).slice(0, 120);
+  const out = setSettings(patch);
+  audit('print.agent.registered', `${req.body.agent_name || '?'} · ${out.print_printer_name}`);
+  broadcast({ type: 'settings_updated', settings: publicSettings() });
+  ok(res, { ok: true, printer_name: out.print_printer_name, cafe_name: out.cafe_name });
+});
+app.post('/api/print-agent/welcome', wrap(async (req, res) => {   // prints the "everything is connected" ticket through the agent
+  const s = agentAuth(req, res); if (!s) return;
+  try { await printRaw(buildWelcomeTicket(s, { agentName: req.body.agent_name, printerName: s.print_printer_name, serverUrl: s.public_url || baseUrlOf(req) }), { ...s, print_mode: 'agent' }); ok(res, { ok: true }); }
+  catch (e) { fail(res, 502, e.message); }
+}));
 admin.post('/print/test', wrap(async (req, res) => {
   const s = { ...getSettings(), ...(req.body || {}) };   // lets the panel test unsaved settings
   try { await printRaw(buildTestTicket(s), s); audit('print.test', s.print_mode + ' ' + (s.print_printer_name || s.print_host)); ok(res, { ok: true }); }
