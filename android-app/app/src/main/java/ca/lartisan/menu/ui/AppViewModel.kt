@@ -39,6 +39,7 @@ class AppViewModel(private val app: App) : ViewModel() {
     var submitting by mutableStateOf(false); private set
     var customerName by mutableStateOf("")
     var serviceType by mutableStateOf("dine_in")
+    var tipPercent by mutableStateOf(-1.0)      // -1 = not chosen yet → default from settings (10 % when offered)
     var showAdmin by mutableStateOf(false)
 
     private var socket: WebSocket? = null
@@ -138,7 +139,9 @@ class AppViewModel(private val app: App) : ViewModel() {
         if (q <= 0) cart.removeAt(index) else cart[index] = cart[index].copy(qty = q)
         touch()
     }
-    fun clearCart() { cart.clear(); customerName = ""; serviceType = "dine_in" }
+    fun clearCart() { cart.clear(); customerName = ""; serviceType = "dine_in"; tipPercent = -1.0 }
+    /** Tip actually applied (settings may disable tips). */
+    fun effectiveTip(): Double { val st = menu?.settings ?: return 0.0; if (!st.tipsEnabled) return 0.0; val opts = st.tipOptions; return if (tipPercent >= 0 && tipPercent in opts) tipPercent else (if (10.0 in opts) 10.0 else opts.firstOrNull() ?: 0.0) }
     fun pricedOrder(): Pricing.PricedOrder? = menu?.let { Pricing.priceOrder(it, cart, lang, s) }
 
     /** Any interaction resets the idle timer; an abandoned cart is cleared after 5 minutes. */
@@ -160,7 +163,7 @@ class AppViewModel(private val app: App) : ViewModel() {
         viewModelScope.launch {
             try {
                 val res = client.submitOrder(
-                    OrderRequest(prefs.deviceId, prefs.deviceName, customerName.trim(), serviceType, lang, cart.toList())
+                    OrderRequest(prefs.deviceId, prefs.deviceName, customerName.trim(), serviceType, lang, cart.toList(), effectiveTip())
                 )
                 clearCart()
                 submitting = false   // release before the thank-you countdown so a new order can be confirmed right away

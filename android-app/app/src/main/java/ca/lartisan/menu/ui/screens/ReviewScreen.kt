@@ -59,7 +59,7 @@ fun ReviewScreen(vm: AppViewModel) {
                         HorizontalDivider(color = Line)
                         Row(Modifier.padding(vertical = 8.dp)) {
                             Column(Modifier.weight(1f)) {
-                                Text("${l.line.qty}× ${l.name}" + (l.variantName?.let { " — $it" } ?: ""), fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Ink)
+                                Text("${l.line.qty}× ${l.name}" + (l.variantName?.let { " · $it" } ?: ""), fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Ink)
                                 val opts = l.options.joinToString(", ") { it.name } + (if (l.line.note.isNotBlank()) " · ✎ ${l.line.note}" else "")
                                 if (opts.isNotBlank()) Text(opts, color = Muted, fontSize = 13.sp)
                             }
@@ -70,9 +70,22 @@ fun ReviewScreen(vm: AppViewModel) {
                     TotalRow(s.subtotal, Pricing.money(priced.subtotal, lang))
                     TotalRow(s.gst(menu.settings.taxGst), Pricing.money(priced.gst, lang))
                     TotalRow(s.qst(menu.settings.taxQst), Pricing.money(priced.qst, lang))
+                    val tipPct = vm.effectiveTip()
+                    val tipAmount = if (menu.settings.tipsEnabled) Math.round(priced.subtotal * tipPct) / 100.0 else 0.0
+                    if (menu.settings.tipsEnabled) {
+                        Spacer(Modifier.height(10.dp))
+                        Text(s.tipLabel, color = Muted, fontSize = 13.sp)
+                        Row(Modifier.fillMaxWidth().padding(top = 6.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            menu.settings.tipOptions.forEach { pct ->
+                                val label = if (pct == 0.0) s.noTip else "${pct.toInt()} %"
+                                Pill(label, tipPct == pct, { vm.tipPercent = pct; vm.touch() }, Modifier.weight(1f), big = true)
+                            }
+                        }
+                        if (tipAmount > 0) TotalRow(s.tip, Pricing.money(tipAmount, lang))
+                    }
                     Row(Modifier.fillMaxWidth().padding(top = 4.dp)) {
                         Text(s.total, fontWeight = FontWeight.ExtraBold, fontSize = 24.sp, color = Ink, modifier = Modifier.weight(1f))
-                        Text(Pricing.money(priced.total, lang), fontWeight = FontWeight.ExtraBold, fontSize = 24.sp, color = Ink)
+                        Text(Pricing.money(priced.total + tipAmount, lang), fontWeight = FontWeight.ExtraBold, fontSize = 24.sp, color = Ink)
                     }
                     if (menu.settings.askCustomerName) {
                         Spacer(Modifier.height(14.dp))

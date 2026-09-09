@@ -92,6 +92,8 @@ data class MenuSettings(
     @SerialName("ask_service_type") val askServiceType: Boolean = true,
     @SerialName("thank_you_seconds") val thankYouSeconds: Int = 12,
     @SerialName("logo_url") val logoUrl: String = "",
+    @SerialName("tips_enabled") val tipsEnabled: Boolean = false,
+    @SerialName("tip_options") val tipOptions: List<Double> = listOf(0.0, 5.0, 10.0, 15.0),
 )
 
 @Serializable
@@ -134,6 +136,7 @@ data class OrderRequest(
     @SerialName("service_type") val serviceType: String = "dine_in",
     val lang: String = "fr",
     val lines: List<CartLine>,
+    @SerialName("tip_percent") val tipPercent: Double = 0.0,
 )
 
 @Serializable

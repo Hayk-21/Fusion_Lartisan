@@ -12,6 +12,7 @@ import { db, getMenu, saveMenu, seedMenuIfEmpty, resetMenuToSeed, getSettings, s
 import { normalizeMenu } from './menuSchema.js';
 import { createOrder, getOrder, listOrders, updateOrderStatus, orderToText, STATUSES } from './orders.js';
 import { computeStats } from './stats.js';
+import { priceOrder } from './pricing.js';
 import { login, logout, requireAdmin, tokenFromRequest, isValid, COOKIE } from './auth.js';
 import { attachHub, broadcast, connectedDevices, broadcastDevices, printViaAgent, agentsConnected } from './hub.js';
 import { startDiscovery, localAddresses, DISCOVERY_PORT } from './discovery.js';
@@ -103,7 +104,8 @@ app.get('/api/menu', (req, res) => {
   const m = getMenu();
   const s = publicSettings();
   ok(res, { ...m, settings: { cafe_name: s.cafe_name, tax_gst: s.tax_gst, tax_qst: s.tax_qst, currency: s.currency, default_lang: s.default_lang,
-    ask_customer_name: s.ask_customer_name, ask_service_type: s.ask_service_type, thank_you_seconds: s.thank_you_seconds, logo_url: s.logo_url } });
+    ask_customer_name: s.ask_customer_name, ask_service_type: s.ask_service_type, thank_you_seconds: s.thank_you_seconds, logo_url: s.logo_url,
+    tips_enabled: s.tips_enabled !== false, tip_options: s.tip_options || [0, 5, 10, 15] } });
 });
 app.get('/api/menu/version', (req, res) => ok(res, { version: getMenu().version }));
 app.get('/api/settings/public', (req, res) => ok(res, publicSettings()));
@@ -117,7 +119,15 @@ app.post('/api/devices/hello', (req, res) => {
 });
 
 app.post('/api/orders', wrap((req, res) => {
-  const r = createOrder(req.body || {});
+  const body = req.body || {};
+  // tip chosen on the tablet: a percent from the allowed list, applied to the subtotal (recomputed server-side)
+  let tip = 0;
+  const st = getSettings();
+  if (st.tips_enabled !== false && body.tip_percent != null) {
+    const pct = Number(body.tip_percent);
+    if ((st.tip_options || []).includes(pct) && pct > 0) { const pr = priceOrder(getMenu(), body.lines || [], st, body.lang); if (pr.ok) tip = Math.round(pr.subtotal * pct) / 100; }
+  }
+  const r = createOrder(body, { tip });
   if (!r.ok) return fail(res, r.status, r.error);
   broadcast({ type: 'new_order', order: r.order });
   ok(res, r.order);

@@ -1,4 +1,4 @@
-/* L'Artisan — customer menu (web version for tablets). Same behaviour as the Android app. */
+/* L'Artisan · customer menu (web version for tablets). Same behaviour as the Android app. */
 import { priceLine, priceOrder, name as nameOf } from '/shared/pricing.js';
 
 const $ = (s, r = document) => r.querySelector(s);
@@ -7,14 +7,14 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': 
 const STR = {
   fr: { tagline: 'Crêperie & Café', hint: '💡 Choisissez une section, ajoutez vos articles puis validez votre commande.', yourOrder: 'Votre commande', clear: 'Vider', review: 'Vérifier la commande',
     empty: 'Votre commande est vide.\nTouchez un article pour commencer.', from: 'à partir de', add: 'Ajouter', included: '{n} inclus', includedOf: '{c}/{n} inclus', extra: 'suppl.', required: 'Requis', choose: 'Choisir',
-    qty: 'Quantité', note: 'Note pour la cuisine (allergies, sans oignon…)', subtotal: 'Sous-total', gst: 'TPS ({r} %)', qst: 'TVQ ({r} %)', total: 'Total', reviewTitle: 'Vérifiez votre commande', reviewSub: 'Tout est bon ? Confirmez et présentez-vous au comptoir pour payer.',
+    qty: 'Quantité', note: 'Note pour la cuisine (allergies, sans oignon…)', subtotal: 'Sous-total', gst: 'TPS ({r} %)', qst: 'TVQ ({r} %)', total: 'Total', reviewTitle: 'Vérifiez votre commande', tipLabel: 'Pourboire pour l\'équipe', noTip: 'Sans', tip: 'Pourboire', reviewSub: 'Tout est bon ? Confirmez et présentez-vous au comptoir pour payer.',
     back: 'Modifier', confirm: 'Confirmer la commande', yourName: 'Votre prénom (facultatif)', service: 'Où mangez-vous ?', dineIn: 'Sur place', takeout: 'À emporter', sending: 'Envoi…',
     thanks: 'Merci !', orderNo: 'Votre numéro de commande', payHint: 'Présentez-vous au comptoir pour régler votre commande. On vous appelle dès qu\'elle est prête.', newOrder: 'Nouvelle commande',
     offline: 'Impossible de joindre le comptoir. Veuillez commander directement au comptoir.', unavailable: 'Cet article n\'est plus disponible', chooseVariant: 'Veuillez choisir une option', min: 'Choisissez au moins {n}', max: 'Maximum {n}',
     menuUpdated: 'Le menu a été mis à jour', taxesIncl: 'taxes en sus' },
   en: { tagline: 'Crêperie & Café', hint: '💡 Pick a section, add your items, then review your order.', yourOrder: 'Your order', clear: 'Clear', review: 'Review order',
     empty: 'Your order is empty.\nTap an item to start.', from: 'from', add: 'Add', included: '{n} included', includedOf: '{c}/{n} included', extra: 'extra', required: 'Required', choose: 'Choose',
-    qty: 'Quantity', note: 'Note for the kitchen (allergies, no onion…)', subtotal: 'Subtotal', gst: 'GST ({r}%)', qst: 'QST ({r}%)', total: 'Total', reviewTitle: 'Review your order', reviewSub: 'All good? Confirm and come to the counter to pay.',
+    qty: 'Quantity', note: 'Note for the kitchen (allergies, no onion…)', subtotal: 'Subtotal', gst: 'GST ({r}%)', qst: 'QST ({r}%)', total: 'Total', reviewTitle: 'Review your order', tipLabel: 'Tip for the team', noTip: 'None', tip: 'Tip', reviewSub: 'All good? Confirm and come to the counter to pay.',
     back: 'Edit', confirm: 'Confirm order', yourName: 'Your first name (optional)', service: 'Where are you eating?', dineIn: 'Dine in', takeout: 'Take out', sending: 'Sending…',
     thanks: 'Thank you!', orderNo: 'Your order number', payHint: 'Please come to the counter to pay. We\'ll call you as soon as it\'s ready.', newOrder: 'New order',
     offline: 'Cannot reach the counter. Please order directly at the counter.', unavailable: 'This item is no longer available', chooseVariant: 'Please choose an option', min: 'Choose at least {n}', max: 'Maximum {n}',
@@ -106,7 +106,7 @@ function renderCart() {
   if (!cart.length) { box.innerHTML = `<div class="cart-empty">${esc(t('empty')).replace('\n', '<br>')}</div>`; $('#cartTotals').innerHTML = ''; $('#reviewBtn').disabled = true; return; }
   const priced = priceOrder(menu, cart, settings, lang);
   if (!priced.ok) { cart = cart.filter(l => priceLine(menu, l, lang).ok); toast(priced.error, 'err'); return renderCart(); }
-  box.innerHTML = priced.lines.map((l, i) => `<div class="cline"><div class="info"><div class="nm">${esc(l.name)}${l.variant_name ? ' — ' + esc(l.variant_name) : ''}</div>
+  box.innerHTML = priced.lines.map((l, i) => `<div class="cline"><div class="info"><div class="nm">${esc(l.name)}${l.variant_name ? ' · ' + esc(l.variant_name) : ''}</div>
       <div class="opts">${l.options.map(o => esc(o.name)).join(', ')}</div>${l.note ? `<div class="note">✎ ${esc(l.note)}</div>` : ''}
       <div class="qty" style="margin-top:6px"><button data-q="-1" data-i="${i}">−</button><span>${l.qty}</span><button data-q="1" data-i="${i}">+</button></div></div>
       <div class="pr">${money(l.line_total)}</div></div>`).join('');
@@ -169,12 +169,14 @@ function closeSheet() { $('#sheet').classList.add('hidden'); }
 $('#sheet').onclick = e => { if (e.target === $('#sheet')) closeSheet(); };
 
 // ---------------------------------------------------------------- review & confirm
-let service = 'dine_in', customer = '';
+let service = 'dine_in', customer = '', tipPct = null;
+function tipsOn() { return settings.tips_enabled !== false && Array.isArray(settings.tip_options) && settings.tip_options.length; }
+function curTip() { if (!tipsOn()) return 0; const o = settings.tip_options; return (tipPct != null && o.includes(tipPct)) ? tipPct : (o.includes(10) ? 10 : o[0]); }
 $('#reviewBtn').onclick = () => {
   const p = priceOrder(menu, cart, settings, lang); if (!p.ok) return toast(p.error, 'err');
   $('#sheetCard').innerHTML = `<div class="sheet-head"><div><h2>${t('reviewTitle')}</h2><p>${t('reviewSub')}</p></div><button class="close" id="sheetClose">✕</button></div>
-    <div class="sheet-body">${p.lines.map(l => `<div class="rev-line"><div><b>${l.qty}× ${esc(l.name)}${l.variant_name ? ' — ' + esc(l.variant_name) : ''}</b><span class="opts">${l.options.map(o => esc(o.name)).join(', ')}${l.note ? ' · ✎ ' + esc(l.note) : ''}</span></div><div><b>${money(l.line_total)}</b></div></div>`).join('')}
-      <div style="margin-top:12px"><div class="rev-tot"><span>${t('subtotal')}</span><span>${money(p.subtotal)}</span></div><div class="rev-tot"><span>${t('gst', { r: rate(settings.tax_gst) })}</span><span>${money(p.tax_gst)}</span></div><div class="rev-tot"><span>${t('qst', { r: rate(settings.tax_qst) })}</span><span>${money(p.tax_qst)}</span></div><div class="rev-tot big"><span>${t('total')}</span><span>${money(p.total)}</span></div></div>
+    <div class="sheet-body">${p.lines.map(l => `<div class="rev-line"><div><b>${l.qty}× ${esc(l.name)}${l.variant_name ? ' · ' + esc(l.variant_name) : ''}</b><span class="opts">${l.options.map(o => esc(o.name)).join(', ')}${l.note ? ' · ✎ ' + esc(l.note) : ''}</span></div><div><b>${money(l.line_total)}</b></div></div>`).join('')}
+      <div style="margin-top:12px"><div class="rev-tot"><span>${t('subtotal')}</span><span>${money(p.subtotal)}</span></div><div class="rev-tot"><span>${t('gst', { r: rate(settings.tax_gst) })}</span><span>${money(p.tax_gst)}</span></div><div class="rev-tot"><span>${t('qst', { r: rate(settings.tax_qst) })}</span><span>${money(p.tax_qst)}</span></div>${tipsOn() ? `<div class="field" style="margin-top:8px"><label>${t('tipLabel')}</label><div class="seg" id="tipSeg">${settings.tip_options.map(x => `<button data-tip="${x}" class="${x === curTip() ? 'on' : ''}">${x === 0 ? t('noTip') : x + ' %'}</button>`).join('')}</div></div>${curTip() > 0 ? `<div class="rev-tot"><span>${t('tip')}</span><span>${money(Math.round(p.subtotal * curTip()) / 100)}</span></div>` : ''}` : ''}<div class="rev-tot big"><span>${t('total')}</span><span>${money(Math.round((p.total + (tipsOn() ? Math.round(p.subtotal * curTip()) / 100 : 0)) * 100) / 100)}</span></div></div>
       ${settings.ask_customer_name !== false ? `<div class="field"><label>${t('yourName')}</label><input id="custName" maxlength="40" value="${esc(customer)}"></div>` : ''}
       ${settings.ask_service_type !== false ? `<div class="field"><label>${t('service')}</label><div class="seg"><button id="svcIn" class="${service === 'dine_in' ? 'on' : ''}">🍽️ ${t('dineIn')}</button><button id="svcOut" class="${service === 'takeout' ? 'on' : ''}">🥡 ${t('takeout')}</button></div></div>` : ''}
     </div>
@@ -182,6 +184,7 @@ $('#reviewBtn').onclick = () => {
   $('#sheetClose').onclick = closeSheet; $('#backBtn').onclick = closeSheet;
   $('#svcIn')?.addEventListener('click', () => { service = 'dine_in'; $('#svcIn').classList.add('on'); $('#svcOut').classList.remove('on'); });
   $('#svcOut')?.addEventListener('click', () => { service = 'takeout'; $('#svcOut').classList.add('on'); $('#svcIn').classList.remove('on'); });
+  $('#tipSeg')?.addEventListener('click', e => { const b = e.target.closest('[data-tip]'); if (!b) return; tipPct = Number(b.dataset.tip); customer = $('#custName')?.value.trim() || customer; $('#reviewBtn').onclick(); });
   $('#confirmBtn').onclick = submit;
   $('#sheet').classList.remove('hidden');
 };
@@ -190,10 +193,10 @@ async function submit() {
   customer = $('#custName')?.value.trim() || '';
   try {
     const r = await fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ device_id: deviceId, device_name: deviceName, customer_name: customer, service_type: service, lang, lines: cart }) });
+      body: JSON.stringify({ device_id: deviceId, device_name: deviceName, customer_name: customer, service_type: service, lang, lines: cart, tip_percent: curTip() }) });
     const data = await r.json();
     if (!r.ok) throw new Error(data.error || 'error');
-    cart = []; customer = ''; service = 'dine_in'; renderCart();
+    cart = []; customer = ''; service = 'dine_in'; tipPct = null; renderCart();
     $('#sheetCard').innerHTML = `<div class="success"><h2>${t('thanks')}</h2><p>${t('orderNo')}</p><div class="num">#${data.number}</div><p>${t('payHint')}</p><p style="margin-top:20px"><button class="primary" id="newOrderBtn">${t('newOrder')}</button></p></div>`;
     $('#newOrderBtn').onclick = closeSheet;
     setTimeout(closeSheet, (settings.thank_you_seconds || 12) * 1000);
