@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,8 +43,8 @@ fun SetupScreen(vm: AppViewModel, firstRun: Boolean, onDone: (() -> Unit)? = nul
     var statusOk by remember { mutableStateOf(false) }
     var busy by remember { mutableStateOf(false) }
 
-    Box(Modifier.fillMaxSize().background(Bg), contentAlignment = Alignment.Center) {
-        Surface(Modifier.width(560.dp), shape = RoundedCornerShape(22.dp), color = CardBg, border = BorderStroke(1.dp, Line), shadowElevation = 6.dp) {
+    Box(Modifier.fillMaxSize().background(Bg).imePadding().padding(12.dp), contentAlignment = Alignment.Center) {
+        Surface(Modifier.fillMaxWidth().widthIn(max = 560.dp), shape = RoundedCornerShape(22.dp), color = CardBg, border = BorderStroke(1.dp, Line), shadowElevation = 6.dp) {
             Column(Modifier.padding(30.dp).verticalScroll(rememberScrollState()), horizontalAlignment = Alignment.CenterHorizontally) {
                 if (firstRun) { Image(painterResource(R.drawable.logo_full), null, Modifier.height(130.dp), contentScale = ContentScale.Fit); Spacer(Modifier.height(8.dp)) }
                 Text(s.setupTitle, color = Brand, fontWeight = FontWeight.ExtraBold, fontSize = 22.sp)
@@ -92,6 +93,7 @@ fun SetupScreen(vm: AppViewModel, firstRun: Boolean, onDone: (() -> Unit)? = nul
 }
 
 /** Long-press on the logo → PIN → tablet settings. */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AdminDialog(vm: AppViewModel, onExit: () -> Unit) {
     val s = vm.s
@@ -122,8 +124,8 @@ fun AdminDialog(vm: AppViewModel, onExit: () -> Unit) {
                 }
             }
         } else {
-            Surface(Modifier.fillMaxWidth(0.85f).fillMaxHeight(0.92f), shape = RoundedCornerShape(22.dp), color = Bg) {
-                Column(Modifier.padding(16.dp)) {
+            Surface(Modifier.fillMaxWidth(0.95f).fillMaxHeight(0.95f), shape = RoundedCornerShape(22.dp), color = Bg) {
+                Column(Modifier.padding(16.dp).imePadding()) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(s.adminTitle, color = Brand, fontWeight = FontWeight.ExtraBold, fontSize = 22.sp, modifier = Modifier.weight(1f))
                         Text("${s.menuVersion}: ${vm.menu?.version ?: 0}  ·  ${if (vm.connected) "● " + s.connected else "○ " + s.connectFail}", color = if (vm.connected) Ok else Danger, fontSize = 13.sp)
@@ -131,13 +133,12 @@ fun AdminDialog(vm: AppViewModel, onExit: () -> Unit) {
                         BigButton("✕", secondary = true, onClick = { vm.showAdmin = false })
                     }
                     Box(Modifier.weight(1f)) { SetupScreen(vm, firstRun = false, onDone = { vm.showAdmin = false }) }
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                    FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         BigButton("⟳ " + s.reloadMenu, secondary = true, onClick = { vm.connect() })
                         BigButton(s.useBundled, secondary = true, onClick = { vm.reloadBundledMenu() })
                         OutlinedTextField(value = newPin, onValueChange = { newPin = it.filter { c -> c.isDigit() }.take(8) }, label = { Text(s.changePin) }, singleLine = true,
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword), shape = RoundedCornerShape(12.dp), modifier = Modifier.width(220.dp))
                         BigButton(s.save, enabled = newPin.length >= 4, secondary = true, onClick = { vm.setTabletPin(newPin); newPin = "" })
-                        Spacer(Modifier.weight(1f))
                         BigButton(s.exitKiosk, secondary = true, onClick = onExit)
                     }
                 }

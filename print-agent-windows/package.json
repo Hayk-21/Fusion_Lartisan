@@ -1,0 +1,8 @@
+{
+  "name": "lartisan-print-agent",
+  "version": "1.4.0",
+  "description": "Fusion L'Artisan — print agent: prints the tickets of the online server on the café printer",
+  "private": true,
+  "type": "module",
+  "dependencies": { "ws": "^8.18.0" }
+}
