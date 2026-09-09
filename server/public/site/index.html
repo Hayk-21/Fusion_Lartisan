@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fusion L'Artisan — Crêperie & Café, Montréal</title>
-<meta name="description" content="Crêperie bretonne et café de spécialité à Montréal. Galettes de sarrasin bio, crêpes gourmandes, café barista. Commandez en ligne et ramassez au café.">
+<title>Fusion L'Artisan, Crêperie & Café, Montréal</title>
+<meta name="description" content="Crêperie et café de spécialité à Montréal. Galettes de sarrasin bio, crêpes gourmandes, café barista. Commandez en ligne et ramassez au café.">
 <link rel="icon" href="/shared/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -12,10 +12,11 @@
 </head>
 <body>
 <div id="closedBanner" class="closed-banner hidden"></div>
+<div id="testBanner" class="test-banner hidden"></div>
 <header class="nav"><div class="wrap">
   <a class="brand" href="/"><img id="navLogo" src="/shared/logo-mark.png" alt=""><span><b id="navName">L'Artisan</b><small data-i18n="tagline">Crêperie & Café</small></span></a>
   <nav>
-    <a href="#dishes" class="hide-m" data-i18n="nav.menu">Menu</a>
+    <a href="/commander/" class="hide-m" data-i18n="nav.menu">Menu</a>
     <a href="#reviews" class="hide-m" data-i18n="nav.reviews">Avis</a>
     <a href="#location" class="hide-m" data-i18n="nav.contact">Nous trouver</a>
     <a href="/commander/" class="btn primary" data-i18n="nav.order">Commander</a>
@@ -26,12 +27,11 @@
 <main>
   <section class="wrap hero">
     <div>
-      <div class="eyebrow" id="heroEyebrow">Crêpes Bretonnes · Café de spécialité</div>
+      <div class="eyebrow" id="heroEyebrow">Crêperie · Café de spécialité</div>
       <h1 id="heroTitle">Fusion L'Artisan</h1>
       <p class="lead" id="heroLead"></p>
       <div class="cta">
         <a href="/commander/" class="btn primary big" id="ctaOrder" data-i18n="hero.order">Commander en ligne</a>
-        <a href="#dishes" class="btn big" data-i18n="hero.menu">Voir le menu</a>
       </div>
       <div class="status-line"><span class="badge" id="openBadge"><span class="dot"></span><span id="openText">…</span></span> <span id="hoursToday" class="muted"></span></div>
     </div>
@@ -41,14 +41,14 @@
   <section class="alt" id="how"><div class="wrap">
     <div class="sec-head"><div><h2 data-i18n="how.title">Commandez en ligne, ramassez au café</h2><p data-i18n="how.sub">Pas d'attente : votre commande vous attend au comptoir à l'heure choisie.</p></div></div>
     <div class="steps">
-      <div class="step"><div class="n">1</div><div class="ico">🥞</div><h3 data-i18n="how.s1">Composez votre commande</h3><p class="muted" data-i18n="how.s1d">Galettes, crêpes, cafés — les mêmes options qu'au café, avec le prix en direct.</p></div>
+      <div class="step"><div class="n">1</div><div class="ico">🥞</div><h3 data-i18n="how.s1">Composez votre commande</h3><p class="muted" data-i18n="how.s1d">Galettes, crêpes, cafés · les mêmes options qu'au café, avec le prix en direct.</p></div>
       <div class="step"><div class="n">2</div><div class="ico">⏱️</div><h3 data-i18n="how.s2">Choisissez l'heure de ramassage</h3><p class="muted" data-i18n="how.s2d">« Dès que possible » (environ 15 minutes) ou un créneau plus tard dans la journée.</p></div>
       <div class="step"><div class="n">3</div><div class="ico">☕</div><h3 data-i18n="how.s3">Passez au comptoir</h3><p class="muted" id="howPay" data-i18n="how.s3d">Donnez votre numéro de commande, réglez au comptoir et savourez.</p></div>
     </div>
   </div></section>
 
   <section id="dishes"><div class="wrap">
-    <div class="sec-head"><div><h2 data-i18n="dishes.title">Quelques-unes de nos créations</h2><p data-i18n="dishes.sub">Fait maison chaque jour, avec des ingrédients simples, frais et bio.</p></div><a href="/commander/" class="btn" data-i18n="dishes.all">Tout le menu →</a></div>
+    <div class="sec-head"><div><h2 data-i18n="dishes.title">Nos spéciaux du jour</h2><p data-i18n="dishes.sub">Les favoris de la section « du jour », faits maison chaque jour.</p></div><a href="/commander/" class="btn" data-i18n="dishes.all">Tout le menu →</a></div>
     <div class="dishes" id="dishGrid"></div>
   </div></section>
 
@@ -56,7 +56,7 @@
     <div><h2 data-i18n="about.title">Notre histoire</h2><p id="aboutText" class="muted"></p><p class="serif" style="font-style:italic;color:var(--gold);font-size:20px" data-i18n="about.motto">L'art du fait maison.</p></div>
     <div class="values">
       <div>🌿 <span data-i18n="v.fresh">Produits frais et bio</span></div><div>🥄 <span data-i18n="v.home">Fait maison chaque jour</span></div>
-      <div>☕ <span data-i18n="v.coffee">Café de spécialité</span></div><div>🇫🇷 <span data-i18n="v.breton">Inspiration bretonne</span></div>
+      <div>☕ <span data-i18n="v.coffee">Café de spécialité</span></div><div>🍨 <span data-i18n="v.breton">Coupes glacées & milkshakes</span></div>
       <div>🌾 <span data-i18n="v.gf">Galettes de sarrasin sans gluten</span></div><div>❤️ <span data-i18n="v.welcome">Accueil chaleureux à Montréal</span></div>
     </div>
   </div></section>
@@ -77,12 +77,13 @@
       </ul>
       <h3 data-i18n="loc.hours">Heures d'ouverture</h3>
       <table class="hours" id="hoursTable"></table>
+      <p class="muted" id="hoursSource" style="font-size:12px"></p>
     </div>
     <iframe id="map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
   </div></section>
 </main>
 
-<footer><div class="wrap"><span>© <span id="year"></span> <span id="footName"></span> — <span data-i18n="foot.tag">Crêperie artisanale bretonne · Café de spécialité · Sur place & à emporter</span></span><span class="serif" style="font-style:italic;color:var(--gold)" data-i18n="foot.thanks">Merci de soutenir l'artisanat local !</span></div></footer>
+<footer><div class="wrap"><span>© <span id="year"></span> <span id="footName"></span> · <span data-i18n="foot.tag">Crêperie artisanale · Café de spécialité · Sur place & à emporter</span></span><span class="serif" style="font-style:italic;color:var(--gold)" data-i18n="foot.thanks">Merci de soutenir l'artisanat local !</span></div></footer>
 <div id="toast" class="toast hidden"></div>
 <script src="/site.js"></script>
 </body>

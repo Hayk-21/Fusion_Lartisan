@@ -13,14 +13,15 @@ const fmtMin = m => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m %
 
 export function todayHours(settings, now = new Date()) {
   const lp = localParts(now, settings.timezone || 'America/Toronto');
-  const h = (settings.hours || {})[lp.day] || { closed: true };
+  // Test mode (admin): the café counts as open all day so orders can be tried outside opening hours.
+  const h = settings.test_mode ? { open: '00:00', close: '23:59', closed: false } : ((settings.hours || {})[lp.day] || { closed: true });
   return { ...lp, open: h.open, close: h.close, closed: !!h.closed };
 }
 
 /** Open right now? Considers weekly hours and the manual "temporarily closed" switch. */
 export function openState(settings, now = new Date()) {
   const t = todayHours(settings, now);
-  const manual = !!settings.temporarily_closed;
+  const manual = !!settings.temporarily_closed && !settings.test_mode;
   let open = false, reason = 'closed';
   if (manual) reason = 'temporarily_closed';
   else if (t.closed) reason = 'closed_today';
@@ -40,7 +41,7 @@ export function openState(settings, now = new Date()) {
       break;
     }
   }
-  return { open, reason, today: { day: t.day, date: t.date, open: t.open, close: t.close, closed: t.closed }, now_local: fmtMin(t.minutes), next };
+  return { open, reason, today: { day: t.day, date: t.date, open: t.open, close: t.close, closed: t.closed }, now_local: fmtMin(t.minutes), next, test_mode: !!settings.test_mode };
 }
 
 /**

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Confirmation — Fusion L'Artisan</title>
+<title>Confirmation, Fusion L'Artisan</title>
 <link rel="icon" href="/shared/logo-mark.png">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/site.css">
@@ -31,11 +31,11 @@
   const $ = s => document.querySelector(s);
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const STR = {
-    fr: { thanks: 'Merci, {n} !', sub: 'Votre commande est confirmée.', num: 'Votre numéro de commande', pickup: 'Ramassage vers', addr: 'au comptoir — {a}', paid: 'Payée en ligne ✓', unpaid: 'À régler au comptoir lors du ramassage', pending: 'Paiement en attente…',
-      st: { new: 'Reçue — en attente en cuisine', preparing: 'En préparation', ready: 'Prête ! Venez la chercher 🎉', completed: 'Récupérée — bon appétit !', cancelled: 'Annulée', pending_payment: 'En attente du paiement' },
+    fr: { thanks: 'Merci, {n} !', sub: 'Votre commande est confirmée.', num: 'Votre numéro de commande', pickup: 'Ramassage vers', addr: 'au comptoir · {a}', paid: 'Payée en ligne ✓', unpaid: 'À régler au comptoir lors du ramassage', pending: 'Paiement en attente…',
+      st: { new: 'Reçue · en attente en cuisine', preparing: 'En préparation', ready: 'Prête ! Venez la chercher 🎉', completed: 'Récupérée · bon appétit !', cancelled: 'Annulée', pending_payment: 'En attente du paiement' },
       subtotal: 'Sous-total', tax: 'Taxes', tip: 'Pourboire', total: 'Total', again: 'Commander à nouveau', home: 'Retour au site', notfound: 'Commande introuvable.', refresh: 'Cette page se met à jour automatiquement.' },
-    en: { thanks: 'Thank you, {n}!', sub: 'Your order is confirmed.', num: 'Your order number', pickup: 'Pickup around', addr: 'at the counter — {a}', paid: 'Paid online ✓', unpaid: 'Pay at the counter when you pick up', pending: 'Payment pending…',
-      st: { new: 'Received — waiting in the kitchen', preparing: 'Being prepared', ready: 'Ready! Come and get it 🎉', completed: 'Picked up — enjoy!', cancelled: 'Cancelled', pending_payment: 'Waiting for payment' },
+    en: { thanks: 'Thank you, {n}!', sub: 'Your order is confirmed.', num: 'Your order number', pickup: 'Pickup around', addr: 'at the counter · {a}', paid: 'Paid online ✓', unpaid: 'Pay at the counter when you pick up', pending: 'Payment pending…',
+      st: { new: 'Received · waiting in the kitchen', preparing: 'Being prepared', ready: 'Ready! Come and get it 🎉', completed: 'Picked up · enjoy!', cancelled: 'Cancelled', pending_payment: 'Waiting for payment' },
       subtotal: 'Subtotal', tax: 'Taxes', tip: 'Tip', total: 'Total', again: 'Order again', home: 'Back to the site', notfound: 'Order not found.', refresh: 'This page refreshes automatically.' },
   };
   let lang = localStorage.getItem('site_lang') || ((navigator.language || 'fr').toLowerCase().startsWith('en') ? 'en' : 'fr');
@@ -54,7 +54,7 @@
       <div class="steps">${steps.slice(0, 3).map((s, i) => `<span class="${i <= idx ? 'on' : ''}"></span>`).join('')}</div>
       <div class="pickup">🕒 ${t('pickup')} ${fmtT(order.pickup_time)}</div><p class="muted">${t('addr', { a: esc(site?.address || '') })}</p>
       <p><b>${order.payment_status === 'paid' ? t('paid') : (order.status === 'pending_payment' ? t('pending') : t('unpaid'))}</b></p>
-      <div class="lines">${order.lines.map(l => `<div><span>${l.qty}× ${esc(l.name)}${l.variant_name ? ' — ' + esc(l.variant_name) : ''}${l.options?.length ? ' <small class="muted">(' + l.options.map(o => esc(o.name)).join(', ') + ')</small>' : ''}</span><span>${money(l.line_total)}</span></div>`).join('')}
+      <div class="lines">${order.lines.map(l => `<div><span>${l.qty}× ${esc(l.name)}${l.variant_name ? ' · ' + esc(l.variant_name) : ''}${l.options?.length ? ' <small class="muted">(' + l.options.map(o => esc(o.name)).join(', ') + ')</small>' : ''}</span><span>${money(l.line_total)}</span></div>`).join('')}
         <div><span>${t('subtotal')}</span><span>${money(order.subtotal)}</span></div><div><span>${t('tax')}</span><span>${money(order.tax_gst + order.tax_qst)}</span></div>${order.tip ? `<div><span>${t('tip')}</span><span>${money(order.tip)}</span></div>` : ''}<div class="tot"><span>${t('total')}</span><span>${money(order.total)}</span></div></div>
       <p class="muted" style="font-size:13px">${t('refresh')}</p>
       <p><a class="btn primary" href="/commander/">${t('again')}</a> <a class="btn" href="/">${t('home')}</a></p>`;

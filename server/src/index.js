@@ -110,11 +110,12 @@ function baseUrlOf(req) { return `${req.protocol}://${req.get('host')}`; }
 app.get('/api/site', wrap(async (req, res) => {
   const s = getSettings(); const menu = getMenu();
   const reviews = s.google_api_key ? await getReviews(s) : (kvGet('google_reviews')?.value || null);
+  const about = (s.about_from_google !== false && reviews?.summary?.fr) ? { fr: reviews.summary.fr, en: reviews.summary.en || reviews.summary.fr } : s.about;
   ok(res, {
-    cafe_name: s.cafe_name, tagline: s.tagline, about: s.about, address: s.address, phone: s.phone, email: s.email, instagram: s.instagram, facebook: s.facebook,
-    logo_url: s.logo_url, hours: s.hours, timezone: s.timezone, google_maps_url: s.google_maps_url, closed_message: s.closed_message,
+    cafe_name: s.cafe_name, tagline: s.tagline, about, address: s.address, phone: s.phone, email: s.email, instagram: s.instagram, facebook: s.facebook,
+    logo_url: s.logo_url, hours: getSettings().hours, hours_from_google: s.hours_from_google !== false && !!s.google_api_key, timezone: s.timezone, google_maps_url: s.google_maps_url, closed_message: s.closed_message,
     tax_gst: s.tax_gst, tax_qst: s.tax_qst, stripe_publishable_key: s.stripe_publishable_key || '',
-    state: siteState(s), featured: featuredItems(s, menu), categories: menu.categories.filter(c => c.visible !== false).map(c => ({ id: c.id, name: c.name, icon: c.icon })),
+    state: siteState(getSettings()), featured: featuredItems(s, menu), categories: menu.categories.filter(c => c.visible !== false).map(c => ({ id: c.id, name: c.name, icon: c.icon })),
     reviews, menu_version: menu.version,
   });
 }));

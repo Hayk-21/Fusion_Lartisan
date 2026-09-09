@@ -168,11 +168,14 @@
         <div class="card">
           <h3 data-i18n="site.status">État actuel</h3>
           <div id="siteState" class="site-state">…</div>
+          <label class="check test-mode"><input type="checkbox" id="wTestMode"><span data-i18n="site.testMode">🧪 Mode test : le site est « ouvert » et accepte les commandes même hors des heures d'ouverture (à désactiver après vos essais)</span></label>
           <label class="check"><input type="checkbox" id="wOrdering"><span data-i18n="site.ordering">Accepter les commandes en ligne</span></label>
           <label class="check"><input type="checkbox" id="wTempClosed"><span data-i18n="site.tempClosed">Fermé exceptionnellement (aujourd'hui) — le site affiche « fermé » et refuse les commandes</span></label>
           <div class="row2"><label><span data-i18n="site.closedMsgFr">Message de fermeture (FR)</span><input id="wClosedFr" placeholder="Fermé pour vacances jusqu'au 12 août"></label><label><span data-i18n="site.closedMsgEn">Message (EN)</span><input id="wClosedEn"></label></div>
           <h3 data-i18n="site.hours">Heures d'ouverture</h3>
+          <label class="check"><input type="checkbox" id="wHoursGoogle"><span data-i18n="site.hoursGoogle">Prendre les heures automatiquement sur la fiche Google Maps (nécessite la clé Google ci-contre)</span></label>
           <div class="hours-grid" id="hoursGrid"></div>
+          <p class="muted" id="hoursNote" style="font-size:12px"></p>
           <label><span data-i18n="site.timezone">Fuseau horaire</span><input id="wTz" placeholder="America/Toronto"></label>
           <h3 data-i18n="site.pickup">Ramassage</h3>
           <div class="row3">
@@ -197,12 +200,14 @@
           <div class="row2"><label><span data-i18n="site.phone">Téléphone</span><input id="wPhone" placeholder="514 …"></label><label><span data-i18n="site.email">Courriel</span><input id="wEmail"></label></div>
           <div class="row2"><label><span>Instagram</span><input id="wInstagram" placeholder="fusionlartisan"></label><label><span>Facebook (URL)</span><input id="wFacebook"></label></div>
           <div class="row2"><label><span data-i18n="site.taglineFr">Slogan (FR)</span><input id="wTagFr"></label><label><span data-i18n="site.taglineEn">Slogan (EN)</span><input id="wTagEn"></label></div>
+          <label class="check"><input type="checkbox" id="wAboutGoogle"><span data-i18n="site.aboutGoogle">Utiliser la description de la fiche Google Maps quand elle existe (sinon les textes ci-dessous)</span></label>
           <label><span data-i18n="site.aboutFr">Présentation (FR)</span><textarea id="wAboutFr" rows="4"></textarea></label>
           <label><span data-i18n="site.aboutEn">Présentation (EN)</span><textarea id="wAboutEn" rows="4"></textarea></label>
-          <label><span data-i18n="site.mapsUrl">Lien Google Maps du café</span><input id="wMapsUrl"></label>
+          <label><span data-i18n="site.mapsUrl">Lien Google Maps du café</span><input id="wMapsUrl" placeholder="https://maps.app.goo.gl/…"></label>
           <label><span data-i18n="site.publicUrl">Adresse publique du site (https://…)</span><input id="wPublicUrl" placeholder="https://lartisan.up.railway.app"></label>
           <h3 data-i18n="site.featured">Plats mis en avant sur la page d'accueil</h3>
-          <div class="featured-list" id="featuredList"></div>
+          <p class="muted" data-i18n="site.featuredHint">La page d'accueil montre les meilleures ventes de la section « du jour » du menu (cochez « Section du jour » sur une catégorie dans l'onglet Menu).</p>
+          <label><span data-i18n="site.featuredCount">Nombre de plats affichés</span><input type="number" id="wFeaturedCount" min="1" max="8" value="4"></label>
           <h3 data-i18n="site.reviews">Avis Google</h3>
           <label><span>Google Places API key</span><input id="wGoogleKey" type="password" placeholder="••••••••"></label>
           <label><span>Place ID <span class="muted" data-i18n="site.placeIdHint">(trouvé automatiquement, laissez vide)</span></span><input id="wPlaceId"></label>

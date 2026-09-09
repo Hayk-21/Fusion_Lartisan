@@ -1,6 +1,6 @@
 // Online ordering (website): validation, pickup slots, tips, pay-at-pickup or Stripe Checkout.
 import crypto from 'node:crypto';
-import { getMenu, getSettings, audit } from './db.js';
+import { db, getMenu, getSettings, audit } from './db.js';
 import { createOrder, getOrder, updateOrderFields, updateOrderStatus } from './orders.js';
 import { openState, pickupSlots, resolvePickup } from './hours.js';
 import { priceOrder, round2 } from './pricing.js';
@@ -22,7 +22,7 @@ export function siteState(settings, now = new Date()) {
   const state = openState(settings, now);
   const slots = settings.online_ordering ? pickupSlots(settings, now) : [];
   return {
-    open: state.open, reason: state.reason, today: state.today, next: state.next, now_local: state.now_local,
+    open: state.open, reason: state.reason, today: state.today, next: state.next, now_local: state.now_local, test_mode: !!settings.test_mode,
     ordering: !!settings.online_ordering && state.open && slots.length > 0,
     slots, payment_modes: paymentModes(settings),
     tips: settings.tips_enabled ? (settings.tip_options || [0, 10, 15, 20]) : null,
@@ -30,14 +30,27 @@ export function siteState(settings, now = new Date()) {
   };
 }
 
+/** Home page: the best sellers (last 90 days) of the "daily special" section, 4 by default. */
 export function featuredItems(settings, menu) {
-  const ids = settings.featured_items || [];
-  const byId = Object.fromEntries(menu.items.map(i => [i.id, i]));
-  const picked = ids.map(id => byId[id]).filter(i => i && i.available !== false);
-  return (picked.length ? picked : menu.items.filter(i => i.available !== false).slice(0, 6)).map(i => ({
+  const n = Number(settings.featured_count) || 4;
+  const specials = new Set(menu.categories.filter(c => c.daily_special && c.visible !== false).map(c => c.id));
+  let pool = menu.items.filter(i => i.available !== false && specials.has(i.category_id));
+  if (!pool.length) pool = menu.items.filter(i => i.available !== false);
+  const sold = salesByItem(90);
+  pool.sort((a, b) => (sold[b.id] || 0) - (sold[a.id] || 0) || (a.sort ?? 0) - (b.sort ?? 0));
+  return pool.slice(0, n).map(i => ({
     id: i.id, name: i.name, description: i.description, image: i.image, badge: i.badge, category_id: i.category_id,
     price: i.variants?.length ? Math.min(...i.variants.map(v => v.price)) : i.price, from: !!(i.variants?.length),
   }));
+}
+function salesByItem(days) {
+  const out = {};
+  try {
+    const since = new Date(Date.now() - days * 86400000).toISOString();
+    for (const r of db.prepare("SELECT lines FROM orders WHERE status = 'completed' AND created_at >= ?").all(since))
+      for (const l of JSON.parse(r.lines)) out[l.item_id] = (out[l.item_id] || 0) + (l.qty || 1);
+  } catch {}
+  return out;
 }
 
 /**
@@ -49,8 +62,8 @@ export async function createOnlineOrder(payload, { baseUrl } = {}) {
   const lang = payload.lang === 'en' ? 'en' : 'fr';
   if (!settings.online_ordering) return { ok: false, status: 403, error: t(lang, 'La commande en ligne est désactivée pour le moment.', 'Online ordering is currently disabled.') };
   const state = siteState(settings);
-  if (!state.open) return { ok: false, status: 409, error: t(lang, 'Le café est fermé — impossible de commander pour le moment.', 'The café is closed — ordering is not possible right now.') };
-  if (!state.ordering) return { ok: false, status: 409, error: t(lang, 'Trop tard pour commander aujourd’hui — revenez demain !', 'Too late to order today — see you tomorrow!') };
+  if (!state.open) return { ok: false, status: 409, error: t(lang, 'Le café est fermé, impossible de commander pour le moment.', 'The café is closed, ordering is not possible right now.') };
+  if (!state.ordering) return { ok: false, status: 409, error: t(lang, 'Trop tard pour commander aujourd’hui, revenez demain !', 'Too late to order today, see you tomorrow!') };
 
   const name = String(payload.customer_name || '').trim().slice(0, 40);
   const phone = String(payload.customer_phone || '').replace(/[^\d+() .-]/g, '').trim().slice(0, 24);

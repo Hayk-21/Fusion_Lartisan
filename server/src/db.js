@@ -39,17 +39,20 @@ export const DEFAULT_SETTINGS = {
   temporarily_closed: false,           // manual switch: "closed today" even inside opening hours
   closed_message: { fr: '', en: '' },
   address: '1650 Avenue Lincoln, Montréal, QC H3H 1H1',
-  phone: '',
+  phone: '+1 438 932-0043',
   email: '',
   instagram: 'fusionlartisan',
   facebook: '',
-  tagline: { fr: 'Crêperie & café — l\'art du fait maison', en: 'Crêperie & café — the art of made in-house' },
-  about: { fr: "Inspirée de la tradition bretonne et portée par la passion du café, Fusion L'Artisan est une crêperie moderne où tout est fait maison avec des ingrédients simples, frais et bio. Galettes de sarrasin bio, crêpes gourmandes, café de spécialité — sur place ou à emporter.",
-           en: "Inspired by Breton tradition and driven by a passion for coffee, Fusion L'Artisan is a modern crêperie where everything is made in-house with simple, fresh, organic ingredients. Organic buckwheat galettes, indulgent crêpes, specialty coffee — dine in or take out." },
-  hours: { mon: { open: '09:00', close: '19:30', closed: false }, tue: { open: '09:00', close: '19:30', closed: false }, wed: { open: '09:00', close: '19:30', closed: false },
-           thu: { open: '09:00', close: '19:30', closed: false }, fri: { open: '09:00', close: '19:30', closed: false }, sat: { open: '09:00', close: '19:30', closed: false }, sun: { open: '09:00', close: '19:30', closed: false } },
+  tagline: { fr: 'Crêperie & café, l\'art du fait maison', en: 'Crêperie & café, the art of made in-house' },
+  about: { fr: "Fusion L'Artisan est une crêperie et un café de Montréal où tout est fait maison : galettes de sarrasin bio, crêpes gourmandes, coupes glacées, milkshakes et café de spécialité, sur place ou à emporter.",
+           en: "Fusion L'Artisan is a Montréal crêperie and café where everything is made in-house: organic buckwheat galettes, indulgent crêpes, ice-cream cups, milkshakes and specialty coffee, dine in or take out." },
+  about_from_google: true,             // use the description of the Google Maps listing when Google provides one
+  hours_from_google: true,             // opening hours are copied from Google Maps at every refresh (1 h)
+  test_mode: false,                    // admin testing: the site is "open" and accepts orders outside opening hours
+  hours: { mon: { open: '08:00', close: '20:00', closed: false }, tue: { open: '08:00', close: '20:00', closed: false }, wed: { open: '08:00', close: '20:00', closed: false },
+           thu: { open: '08:00', close: '20:00', closed: false }, fri: { open: '08:00', close: '20:00', closed: false }, sat: { open: '08:00', close: '20:00', closed: false }, sun: { open: '08:00', close: '20:00', closed: false } },
   timezone: 'America/Toronto',
-  featured_items: ['galette-composer', 'sig-nordique', 'crepe-composer', 'ssig-emeraude-pistache', 'glace-composer', 'hot-latte-pistache'],
+  featured_count: 4,                   // best sellers of the daily-special section shown on the home page
   pickup_lead_minutes: 15,
   pickup_slot_minutes: 15,
   pickup_last_order_minutes: 15,       // no pickup later than closing − this
@@ -61,8 +64,8 @@ export const DEFAULT_SETTINGS = {
   stripe_webhook_secret: '',
   google_api_key: '',
   google_place_id: '',
-  google_maps_url: 'https://www.google.com/maps/place/Fusion+L%E2%80%99artisan/@45.4954773,-73.5805995,17z',
-  public_url: '',                      // e.g. https://lartisan.up.railway.app — used for Stripe redirects
+  google_maps_url: 'https://maps.app.goo.gl/FHqjv1PPYyCbnfmu9',
+  public_url: '',                      // e.g. https://lartisan.up.railway.app (used for Stripe redirects)
 };
 
 export const db = new DatabaseSync(DB_PATH);
@@ -162,6 +165,9 @@ export function setSettings(patch) {
 }
 
 const SECRET_KEYS = ['pin', 'stripe_secret_key', 'stripe_webhook_secret', 'google_api_key', 'print_agent_token'];
+// one-off cleanup: the first website version shipped a made-up "Breton tradition" text; drop it so the neutral default (or Google's description) applies
+try { const a = getSettings().about; if (a && /tradition bretonne|Breton tradition/i.test((a.fr || '') + (a.en || ''))) db.prepare("DELETE FROM settings WHERE key IN ('about','tagline')").run(); } catch {}
+
 export function publicSettings() {
   const s = getSettings();
   const out = { ...s };

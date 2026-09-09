@@ -1,4 +1,4 @@
-/* Online ordering page — same menu & pricing rules as the tablets, plus pickup time, tip and payment. */
+/* Online ordering page · same menu & pricing rules as the tablets, plus pickup time, tip and payment. */
 import { priceLine, priceOrder } from '/shared/pricing.js';
 
 const $ = s => document.querySelector(s);
@@ -8,23 +8,23 @@ const STR = {
   fr: { orderOnline: 'Commander en ligne', yourOrder: 'Votre commande', clear: 'Vider', checkout: 'Passer la commande', viewCart: 'Voir la commande', empty: 'Votre commande est vide.\nTouchez un plat pour commencer.',
     from: 'à partir de', add: 'Ajouter', included: 'inclus', includedOf: '{c}/{n} inclus', extra: 'suppl.', required: 'Requis', choose: 'Choisir', qty: 'Quantité', note: 'Note pour la cuisine (allergies, sans oignon…)',
     subtotal: 'Sous-total', gst: 'TPS ({r} %)', qst: 'TVQ ({r} %)', tip: 'Pourboire', total: 'Total', items: '{n} article(s)',
-    coTitle: 'Finaliser la commande', coSub: 'Ramassage au café — {addr}', name: 'Votre nom', phone: 'Téléphone', email: 'Courriel (facultatif, pour la confirmation)', pickup: 'Heure de ramassage', asap: 'Dès que possible (~{m} min, vers {t})',
+    coTitle: 'Finaliser la commande', coSub: 'Ramassage au café · {addr}', name: 'Votre nom', phone: 'Téléphone', email: 'Courriel (facultatif, pour la confirmation)', pickup: 'Heure de ramassage', asap: 'Dès que possible (~{m} min, vers {t})',
     tipLabel: 'Pourboire pour l’équipe', noTip: 'Sans', payment: 'Paiement', payCounter: 'Payer au comptoir', payStripe: 'Payer en ligne (carte, Apple Pay, Google Pay)',
     payCounterNote: 'Vous réglez au comptoir (carte, débit ou comptant) en venant chercher votre commande.', payStripeNote: 'Vous serez redirigé vers une page de paiement sécurisée (Stripe).',
     back: 'Retour', confirm: 'Confirmer la commande', confirmPay: 'Payer {t}', sending: 'Envoi…',
     open: 'Ouvert · ferme à {t}', closed: 'Fermé', closedTemp: 'Fermé exceptionnellement', opensTomorrow: 'ouvre demain à {t}', opensToday: 'ouvre à {t}',
-    bannerClosed: 'Le café est fermé — la commande en ligne reprend {when}. Vous pouvez consulter le menu.', bannerLate: "Trop tard pour commander aujourd'hui — à demain ! Vous pouvez consulter le menu.", bannerOff: 'La commande en ligne est temporairement désactivée.',
-    closedBtn: 'Café fermé — commande impossible', menuUpdated: 'Le menu a été mis à jour', errNet: 'Connexion impossible, réessayez.', cancelled: 'Paiement annulé — votre panier est conservé.', max: 'Maximum {n}' },
+    bannerClosed: 'Le café est fermé · la commande en ligne reprend {when}. Vous pouvez consulter le menu.', bannerLate: "Trop tard pour commander aujourd'hui · à demain ! Vous pouvez consulter le menu.", bannerOff: 'La commande en ligne est temporairement désactivée.',
+    closedBtn: 'Café fermé · commande impossible', menuUpdated: 'Le menu a été mis à jour', errNet: 'Connexion impossible, réessayez.', cancelled: 'Paiement annulé · votre panier est conservé.', max: 'Maximum {n}' },
   en: { orderOnline: 'Order online', yourOrder: 'Your order', clear: 'Clear', checkout: 'Checkout', viewCart: 'View order', empty: 'Your order is empty.\nTap a dish to start.',
     from: 'from', add: 'Add', included: 'included', includedOf: '{c}/{n} included', extra: 'extra', required: 'Required', choose: 'Choose', qty: 'Quantity', note: 'Note for the kitchen (allergies, no onion…)',
     subtotal: 'Subtotal', gst: 'GST ({r}%)', qst: 'QST ({r}%)', tip: 'Tip', total: 'Total', items: '{n} item(s)',
-    coTitle: 'Complete your order', coSub: 'Pickup at the café — {addr}', name: 'Your name', phone: 'Phone', email: 'E-mail (optional, for the confirmation)', pickup: 'Pickup time', asap: 'As soon as possible (~{m} min, around {t})',
+    coTitle: 'Complete your order', coSub: 'Pickup at the café · {addr}', name: 'Your name', phone: 'Phone', email: 'E-mail (optional, for the confirmation)', pickup: 'Pickup time', asap: 'As soon as possible (~{m} min, around {t})',
     tipLabel: 'Tip for the team', noTip: 'None', payment: 'Payment', payCounter: 'Pay at pickup', payStripe: 'Pay online (card, Apple Pay, Google Pay)',
     payCounterNote: 'You pay at the counter (card, debit or cash) when you pick up your order.', payStripeNote: 'You will be redirected to a secure payment page (Stripe).',
     back: 'Back', confirm: 'Confirm order', confirmPay: 'Pay {t}', sending: 'Sending…',
     open: 'Open · closes at {t}', closed: 'Closed', closedTemp: 'Exceptionally closed', opensTomorrow: 'opens tomorrow at {t}', opensToday: 'opens at {t}',
-    bannerClosed: 'The café is closed — online ordering resumes {when}. You can still browse the menu.', bannerLate: 'Too late to order today — see you tomorrow! You can still browse the menu.', bannerOff: 'Online ordering is temporarily disabled.',
-    closedBtn: 'Café closed — ordering unavailable', menuUpdated: 'The menu was updated', errNet: 'Cannot connect, please retry.', cancelled: 'Payment cancelled — your cart was kept.', max: 'Maximum {n}' },
+    bannerClosed: 'The café is closed · online ordering resumes {when}. You can still browse the menu.', bannerLate: 'Too late to order today · see you tomorrow! You can still browse the menu.', bannerOff: 'Online ordering is temporarily disabled.',
+    closedBtn: 'Café closed · ordering unavailable', menuUpdated: 'The menu was updated', errNet: 'Cannot connect, please retry.', cancelled: 'Payment cancelled · your cart was kept.', max: 'Maximum {n}' },
 };
 let lang = localStorage.getItem('site_lang') || ((navigator.language || 'fr').toLowerCase().startsWith('en') ? 'en' : 'fr');
 const t = (k, v = {}) => { let s = STR[lang][k] ?? STR.fr[k] ?? k; for (const [a, b] of Object.entries(v)) s = s.replace('{' + a + '}', b); return s; };
@@ -50,7 +50,7 @@ document.querySelectorAll('.lang button').forEach(b => b.onclick = () => { lang 
 async function load() {
   const [m, s] = await Promise.all([fetch('/api/menu').then(r => r.json()), fetch('/api/site').then(r => r.json())]);
   menu = m; site = s; settings = { ...settings, ...m.settings };
-  $('#navName').textContent = s.cafe_name; $('#navLogo').src = s.logo_url || '/shared/logo-mark.png'; document.title = `${t('orderOnline')} — ${s.cafe_name}`;
+  $('#navName').textContent = s.cafe_name; $('#navLogo').src = s.logo_url || '/shared/logo-mark.png'; document.title = `${t('orderOnline')} · ${s.cafe_name}`;
   const visible = visibleCats();
   const hash = location.hash.slice(1);
   cat = visible.find(c => c.id === hash)?.id || (visible.find(c => c.id === cat)?.id) || visible[0]?.id;
@@ -99,7 +99,7 @@ function renderCart() {
   if (!cart.length) { box.innerHTML = `<div class="cart-empty">${esc(t('empty')).replace('\n', '<br>')}</div>`; $('#cartTotals').innerHTML = ''; $('#barTotal').textContent = money(0); $('#reviewBtn').disabled = true; return; }
   const priced = priceOrder(menu, cart, settings, lang);
   if (!priced.ok) { cart = cart.filter(l => priceLine(menu, l, lang).ok); saveCart(); toast(priced.error, 'err'); return renderCart(); }
-  box.innerHTML = priced.lines.map((l, i) => `<div class="cline"><div class="info"><div class="nm">${esc(l.name)}${l.variant_name ? ' — ' + esc(l.variant_name) : ''}</div><div class="opts">${l.options.map(o => esc(o.name)).join(', ')}</div>${l.note ? `<div class="note">✎ ${esc(l.note)}</div>` : ''}
+  box.innerHTML = priced.lines.map((l, i) => `<div class="cline"><div class="info"><div class="nm">${esc(l.name)}${l.variant_name ? ' · ' + esc(l.variant_name) : ''}</div><div class="opts">${l.options.map(o => esc(o.name)).join(', ')}</div>${l.note ? `<div class="note">✎ ${esc(l.note)}</div>` : ''}
     <div class="qty"><button data-q="-1" data-i="${i}">−</button><span>${l.qty}</span><button data-q="1" data-i="${i}">+</button></div></div><div class="pr">${money(l.line_total)}</div></div>`).join('');
   box.onclick = e => { const b = e.target.closest('button[data-q]'); if (!b) return; const i = +b.dataset.i; cart[i].qty += +b.dataset.q; if (cart[i].qty <= 0) cart.splice(i, 1); saveCart(); renderCart(); };
   $('#cartTotals').innerHTML = `<div><span>${t('subtotal')}</span><span>${money(priced.subtotal)}</span></div><div><span>${t('gst', { r: rate(settings.tax_gst) })}</span><span>${money(priced.tax_gst)}</span></div><div><span>${t('qst', { r: rate(settings.tax_qst) })}</span><span>${money(priced.tax_qst)}</span></div><div class="tot"><span>${t('total')}</span><span>${money(priced.total)}</span></div>`;
@@ -133,7 +133,7 @@ function openItem(id) {
     }
     body.push(`<div class="grp"><h3>${t('qty')}</h3><div class="qty big"><button data-qd="-1">−</button><span>${line.qty}</span><button data-qd="1">+</button></div></div><div class="grp"><input class="note-in" id="noteIn" maxlength="120" placeholder="${esc(t('note'))}" value="${esc(line.note)}"></div>`);
     $('#sheetCard').innerHTML = `<div class="sheet-head"><div><h2>${esc(txt(it.name))}</h2><p>${esc(txt(it.description))}</p></div><button class="close" id="sheetClose">✕</button></div><div class="sheet-body">${body.join('')}</div>
-      <div class="sheet-foot"><div class="total">${r.ok ? money(r.priced.line_total) : '—'}</div><button class="btn primary big" id="addBtn" ${r.ok ? '' : 'disabled'}>${r.ok ? t('add') : esc(r.error)}</button></div>`;
+      <div class="sheet-foot"><div class="total">${r.ok ? money(r.priced.line_total) : '-'}</div><button class="btn primary big" id="addBtn" ${r.ok ? '' : 'disabled'}>${r.ok ? t('add') : esc(r.error)}</button></div>`;
     $('#sheetClose').onclick = closeSheet;
     $('#addBtn').onclick = () => { line.note = $('#noteIn').value.trim(); const same = cart.find(c => JSON.stringify([c.item_id, c.variant_id, c.options, c.note]) === JSON.stringify([line.item_id, line.variant_id, line.options, line.note])); if (same) same.qty += line.qty; else cart.push(line); saveCart(); closeSheet(); renderCart(); toast('✓ ' + txt(it.name)); };
     $('#noteIn').oninput = e => { line.note = e.target.value; };
@@ -169,7 +169,7 @@ function drawCheckout() {
   const asap = st.slots[0];
   $('#sheetCard').innerHTML = `<div class="sheet-head"><div><h2>${t('coTitle')}</h2><p>${t('coSub', { addr: esc(site.address) })}</p></div><button class="close" id="sheetClose">✕</button></div>
     <div class="sheet-body">
-      ${p.lines.map(l => `<div class="rev-line"><div><b>${l.qty}× ${esc(l.name)}${l.variant_name ? ' — ' + esc(l.variant_name) : ''}</b><span class="opts">${l.options.map(o => esc(o.name)).join(', ')}${l.note ? ' · ✎ ' + esc(l.note) : ''}</span></div><div><b>${money(l.line_total)}</b></div></div>`).join('')}
+      ${p.lines.map(l => `<div class="rev-line"><div><b>${l.qty}× ${esc(l.name)}${l.variant_name ? ' · ' + esc(l.variant_name) : ''}</b><span class="opts">${l.options.map(o => esc(o.name)).join(', ')}${l.note ? ' · ✎ ' + esc(l.note) : ''}</span></div><div><b>${money(l.line_total)}</b></div></div>`).join('')}
       <div class="row2">
         <div class="field"><label>${t('name')} *</label><input id="fName" value="${esc(form.name)}" maxlength="40" autocomplete="name"></div>
         <div class="field"><label>${t('phone')} *</label><input id="fPhone" value="${esc(form.phone)}" maxlength="24" inputmode="tel" autocomplete="tel" placeholder="514 555 0123"></div>
