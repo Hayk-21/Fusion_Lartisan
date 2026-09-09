@@ -146,12 +146,19 @@ export function kvGet(key) { const r = db.prepare('SELECT value, updated_at FROM
 export function kvSet(key, value) { db.prepare('INSERT INTO kv(key, value, updated_at) VALUES (?, ?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at').run(key, JSON.stringify(value), new Date().toISOString()); }
 
 // ------------------------------------------------------------------ settings
+const ENV_SECRETS = {
+  google_api_key: ['GOOGLE_API', 'GOOGLE_API_KEY', 'GOOGLE_PLACES_API_KEY'],
+  stripe_secret_key: ['STRIPE_SECRET_KEY'], stripe_publishable_key: ['STRIPE_PUBLISHABLE_KEY'], stripe_webhook_secret: ['STRIPE_WEBHOOK_SECRET'],
+  public_url: ['PUBLIC_URL', 'RAILWAY_PUBLIC_DOMAIN_URL'],
+};
 export function getSettings() {
   const rows = db.prepare('SELECT key, value FROM settings').all();
   const out = { ...DEFAULT_SETTINGS };
   for (const r of rows) {
     try { out[r.key] = JSON.parse(r.value); } catch { out[r.key] = r.value; }
   }
+  // Secrets may also come from environment variables (Railway → Variables); they fill in when the panel field is empty.
+  for (const [key, envs] of Object.entries(ENV_SECRETS)) if (!out[key]) { const v = envs.map(e => process.env[e]).find(Boolean); if (v) out[key] = v.trim(); }
   return out;
 }
 
