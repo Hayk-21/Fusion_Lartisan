@@ -106,7 +106,7 @@ fun ItemSheet(vm: AppViewModel, item: MenuItem) {
                                         if (extra > 0) append((if (isNotEmpty()) " " else "") + "+" + Pricing.money(extra, lang))
                                         if (isEmpty() && !g.isSingle && included > 0) append(s.included)
                                     }
-                                    val full = !on && g.max != null && g.max > 0 && gPicks.size >= g.max
+                                    val full = !g.isSingle && !on && g.max != null && g.max > 0 && gPicks.size >= g.max   // single-choice groups are never "full": tapping another option switches
                                     OptionCard(
                                         title = o.name.get(lang), subtitle = sub, selected = on, radio = g.isSingle,
                                         enabled = o.available && !full,

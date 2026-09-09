@@ -126,7 +126,7 @@ function openItem(id) {
       const counter = g.type === 'single' ? '' : inc > 0 ? `<span class="cnt">${t('includedOf', { c: Math.min(picks.length, inc), n: inc })}${g.extra_price ? ` · +${money(g.extra_price)} ${t('extra')}` : ''}</span>` : (g.max ? `<span class="cnt">${t('max', { n: g.max })}</span>` : '');
       const optHtml = o => { const idx = picks.findIndex(p => p.option_id === o.id); const on = idx >= 0; const extra = g.type !== 'single' && on && idx >= inc ? g.extra_price : 0;
         const priceTxt = (o.price ? `+${money(o.price)}` : '') + (extra ? ` +${money(extra)}` : '') || (g.type !== 'single' && inc > 0 ? t('included') : '');
-        const dis = o.available === false || (!on && g.max && picks.length >= g.max);
+        const dis = o.available === false || (g.type !== 'single' && !on && g.max && picks.length >= g.max);   // a single-choice group is never "full": picking another option just switches
         return `<div class="opt ${g.type === 'single' ? 'radio' : ''} ${on ? 'on' : ''} ${dis ? 'dis' : ''}" data-g="${g.id}" data-o="${o.id}"><span class="box">${on ? '✓' : ''}</span><span class="txt"><span class="name">${esc(txt(o.name))}</span>${priceTxt ? `<span class="sub">${priceTxt}</span>` : ''}</span></div>`; };
       body.push(`<div class="grp"><h3><span>${esc(txt(g.name))}${g.required ? `<span class="req">${t('required')}</span>` : ''}</span>${counter}</h3>${g.hint ? `<p class="hint">${esc(txt(g.hint))}</p>` : ''}` +
         (sections.length > 1 || sections[0] ? sections.map(s => `${s ? `<h4>${esc(s)}</h4>` : ''}<div class="opts">${g.options.filter(o => txt(o.section) === s).map(optHtml).join('')}</div>`).join('') : `<div class="opts">${g.options.map(optHtml).join('')}</div>`) + '</div>');
