@@ -9,7 +9,7 @@ export function localParts(date, tz) {
   return { day: p.weekday.toLowerCase().slice(0, 3), minutes: hour * 60 + Number(p.minute), date: `${p.year}-${p.month}-${p.day}`, hour, minute: Number(p.minute) };
 }
 const toMin = hhmm => { const [h, m] = String(hhmm || '0:0').split(':').map(Number); return h * 60 + (m || 0); };
-const fmtMin = m => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+const fmtMin = m => { m = ((m % 1440) + 1440) % 1440; return `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`; };
 
 export function todayHours(settings, now = new Date()) {
   const lp = localParts(now, settings.timezone || 'America/Toronto');
@@ -53,8 +53,9 @@ export function pickupSlots(settings, now = new Date()) {
   if (!st.open) return [];
   const lead = Number(settings.pickup_lead_minutes) || 15;
   const step = Number(settings.pickup_slot_minutes) || 15;
-  const last = toMin(st.today.close) - (Number(settings.pickup_last_order_minutes) || 15);
   const t = todayHours(settings, now);
+  // Test mode: always offer 3 hours of slots, even late at night (times past midnight wrap around).
+  const last = settings.test_mode ? t.minutes + 180 : toMin(st.today.close) - (Number(settings.pickup_last_order_minutes) || 15);
   const asapAt = t.minutes + lead;
   if (asapAt > last) return [];                    // too late to order for today
   const slots = [{ value: 'asap', minutes: asapAt, label: `asap` }];

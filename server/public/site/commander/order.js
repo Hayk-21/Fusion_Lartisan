@@ -14,7 +14,7 @@ const STR = {
     back: 'Retour', confirm: 'Confirmer la commande', confirmPay: 'Payer {t}', sending: 'Envoi…',
     open: 'Ouvert · ferme à {t}', closed: 'Fermé', closedTemp: 'Fermé exceptionnellement', opensTomorrow: 'ouvre demain à {t}', opensToday: 'ouvre à {t}',
     bannerClosed: 'Le café est fermé · la commande en ligne reprend {when}. Vous pouvez consulter le menu.', bannerLate: "Trop tard pour commander aujourd'hui · à demain ! Vous pouvez consulter le menu.", bannerOff: 'La commande en ligne est temporairement désactivée.',
-    closedBtn: 'Café fermé · commande impossible', menuUpdated: 'Le menu a été mis à jour', errNet: 'Connexion impossible, réessayez.', cancelled: 'Paiement annulé · votre panier est conservé.', max: 'Maximum {n}' },
+    closedBtn: 'Café fermé · commande impossible', lateBtn: "Trop tard pour aujourd'hui", menuUpdated: 'Le menu a été mis à jour', errNet: 'Connexion impossible, réessayez.', cancelled: 'Paiement annulé · votre panier est conservé.', max: 'Maximum {n}' },
   en: { orderOnline: 'Order online', yourOrder: 'Your order', clear: 'Clear', checkout: 'Checkout', viewCart: 'View order', empty: 'Your order is empty.\nTap a dish to start.',
     from: 'from', add: 'Add', included: 'included', includedOf: '{c}/{n} included', extra: 'extra', required: 'Required', choose: 'Choose', qty: 'Quantity', note: 'Note for the kitchen (allergies, no onion…)',
     subtotal: 'Subtotal', gst: 'GST ({r}%)', qst: 'QST ({r}%)', tip: 'Tip', total: 'Total', items: '{n} item(s)',
@@ -24,7 +24,7 @@ const STR = {
     back: 'Back', confirm: 'Confirm order', confirmPay: 'Pay {t}', sending: 'Sending…',
     open: 'Open · closes at {t}', closed: 'Closed', closedTemp: 'Exceptionally closed', opensTomorrow: 'opens tomorrow at {t}', opensToday: 'opens at {t}',
     bannerClosed: 'The café is closed · online ordering resumes {when}. You can still browse the menu.', bannerLate: 'Too late to order today · see you tomorrow! You can still browse the menu.', bannerOff: 'Online ordering is temporarily disabled.',
-    closedBtn: 'Café closed · ordering unavailable', menuUpdated: 'The menu was updated', errNet: 'Cannot connect, please retry.', cancelled: 'Payment cancelled · your cart was kept.', max: 'Maximum {n}' },
+    closedBtn: 'Café closed · ordering unavailable', lateBtn: 'Too late for today', menuUpdated: 'The menu was updated', errNet: 'Cannot connect, please retry.', cancelled: 'Payment cancelled · your cart was kept.', max: 'Maximum {n}' },
 };
 let lang = localStorage.getItem('site_lang') || ((navigator.language || 'fr').toLowerCase().startsWith('en') ? 'en' : 'fr');
 const t = (k, v = {}) => { let s = STR[lang][k] ?? STR.fr[k] ?? k; for (const [a, b] of Object.entries(v)) s = s.replace('{' + a + '}', b); return s; };
@@ -72,7 +72,7 @@ function renderState() {
   } else banner.classList.add('hidden');
   const btn = $('#reviewBtn');
   btn.disabled = !cart.length || !st.ordering;
-  btn.textContent = st.ordering ? t('checkout') : t('closedBtn');
+  btn.textContent = st.ordering ? t('checkout') : (st.open && !st.slots.length ? t('lateBtn') : t('closedBtn'));
 }
 
 // ---------------------------------------------------------------- menu
