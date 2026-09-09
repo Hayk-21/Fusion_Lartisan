@@ -71,7 +71,7 @@ const fail = (res, status, error, extra = {}) => res.status(status).json({ error
 // ---------------------------------------------------------------- public API (tablets)
 app.get('/api/health', (req, res) => {
   const m = getMenu();
-  ok(res, { service: 'lartisan-cafe', version: APP_VERSION, cafe_name: getSettings().cafe_name, menu_version: m.version, server_time: new Date().toISOString(), day: localDay() });
+  ok(res, { service: 'lartisan-cafe', version: APP_VERSION, cafe_name: getSettings().cafe_name, menu_version: m.version, server_time: new Date().toISOString(), day: localDay(), data_dir: DATA_DIR, persistent: !!process.env.LARTISAN_DATA_DIR });
 });
 
 app.get('/api/menu', (req, res) => {
