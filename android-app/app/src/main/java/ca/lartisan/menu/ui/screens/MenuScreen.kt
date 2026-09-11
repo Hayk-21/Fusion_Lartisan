@@ -96,7 +96,7 @@ fun MenuScreen(vm: AppViewModel) {
                     color = if (sel) (if (c.dailySpecial) Warn else Brand) else (if (c.dailySpecial) Color(0xFFFFF3E0) else CardBg),
                     border = BorderStroke(1.dp, if (sel) (if (c.dailySpecial) Warn else Brand) else (if (c.dailySpecial) Color(0xFFE0B07A) else Line)),
                 ) {
-                    Text("${c.icon} ${c.name.get(lang)}", color = if (sel) Color.White else Brand2, fontWeight = FontWeight.Bold, fontSize = 15.sp, modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp))
+                    Text("${c.icon} ${c.name.get(lang)}", color = if (sel) Color.White else Brand2, fontWeight = FontWeight.Bold, fontSize = 16.sp, modifier = Modifier.padding(horizontal = 18.dp, vertical = 15.dp))
                 }
             }
         }

@@ -1,6 +1,6 @@
 .tabs{display:flex;gap:8px;padding:12px 20px;overflow-x:auto;scrollbar-width:none;position:sticky;top:70px;z-index:15;background:rgba(255,250,244,.95);backdrop-filter:blur(8px)}
 .tabs::-webkit-scrollbar{display:none}
-.tabs button{white-space:nowrap;flex:0 0 auto;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--brand2);font:inherit;font-weight:700;cursor:pointer}
+.tabs button{white-space:nowrap;flex:0 0 auto;padding:15px 18px;font-size:16px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--brand2);font:inherit;font-weight:700;cursor:pointer}
 .tabs button.active{background:var(--brand);color:#fff;border-color:var(--brand)}
 .tabs button.special{border-color:#e0b07a;background:#fff3e0}.tabs button.special.active{background:#c98a1b;border-color:#c98a1b}
 .layout{display:grid;grid-template-columns:1fr 360px;gap:20px;padding-top:10px;padding-bottom:90px;align-items:start}
@@ -82,3 +82,9 @@
 .success-card .num{font-family:"Playfair Display",serif;font-size:110px;color:var(--brand);line-height:1;margin:8px 0}
 body.local .nav .brand{pointer-events:none}
 body.local #fsBtn{display:inline-flex;padding:8px 12px}
+/* counter mode: use the whole screen width, more columns of dishes */
+body.local .wrap{max-width:none}
+body.local .layout{grid-template-columns:1fr 380px;gap:24px}
+body.local .grid{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+body.local .tabs button{padding:16px 20px;font-size:17px}
+@media(min-width:1700px){body.local .grid{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}}
