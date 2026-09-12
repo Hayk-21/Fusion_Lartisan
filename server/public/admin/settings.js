@@ -9,10 +9,10 @@
     $('#sGst').value = s.tax_gst; $('#sQst').value = s.tax_qst;
     $('#sSound').value = s.sound || 'chime'; $('#sVolume').value = s.sound_volume ?? 1; $('#sRepeat').checked = s.repeat_alert !== false;
     $('#sPin').value = ''; $('#sPin2').value = '';
-    $('#sLogoPrev').src = s.logo_url || '/shared/logo-mark.png';
+    $('#sLogoPrev').src = s.logo_url || '/shared/logo-mark.png'; $('#sWelcomePrev').src = s.welcome_image ? `/img/320/${s.welcome_image.split('/').pop()}` : '/shared/logo-mark.png';
     // printer
     $('#pEnabled').checked = !!s.print_enabled; $('#pMode').value = s.print_mode || 'windows'; $('#pHost').value = s.print_host || ''; $('#pPort').value = s.print_port || 9100;
-    $('#pCmd').value = s.print_cmd || 'star'; $('#pWidth').value = s.print_width || 42; $('#pCopies').value = s.print_copies || 1;
+    $('#pCmd').value = s.print_cmd || 'star'; $('#pWidth').value = s.print_width || 42; $('#pMargin').value = s.print_left_margin ?? 3; $('#pCopies').value = s.print_copies || 1;
     $('#pPrices').checked = s.print_prices !== false; $('#pCut').checked = s.print_cut !== false; $('#pFooter').value = s.print_footer || '';
     $('#pAgentPrinter').value = s.print_mode === 'agent' ? (s.print_printer_name || '') : '';
     togglePrinterBoxes(); loadPrinters(s.print_printer_name); loadAgentToken();
@@ -40,7 +40,7 @@
   function printerPatch() {
     const mode = $('#pMode').value;
     return { print_enabled: $('#pEnabled').checked, print_mode: mode, print_printer_name: mode === 'agent' ? $('#pAgentPrinter').value.trim() : ($('#pName').value || ''), print_host: $('#pHost').value.trim(),
-      print_port: Number($('#pPort').value) || 9100, print_cmd: $('#pCmd').value, print_width: Number($('#pWidth').value) || 42, print_copies: Number($('#pCopies').value) || 1,
+      print_port: Number($('#pPort').value) || 9100, print_cmd: $('#pCmd').value, print_width: Number($('#pWidth').value) || 42, print_left_margin: Math.max(0, Math.min(8, Number($('#pMargin').value) || 0)), print_copies: Number($('#pCopies').value) || 1,
       print_prices: $('#pPrices').checked, print_cut: $('#pCut').checked, print_footer: $('#pFooter').value };
   }
   function togglePrinterBoxes() { const m = $('#pMode').value; $('#pWinBox').classList.toggle('hidden', m !== 'windows'); $('#pNetBox').classList.toggle('hidden', m !== 'network'); $('#pAgentBox').classList.toggle('hidden', m !== 'agent'); }
@@ -92,6 +92,19 @@
     $('#imageFile').value = '';
   }; $('#imageFile').click(); });
   $('#logoReset').addEventListener('click', () => saveLogo('/shared/logo-mark.png'));
+  // ---- welcome page photo (counter / tablets), saved immediately and pushed to the screens
+  async function saveWelcome(url) {
+    try { await api('/admin/settings', { method: 'PUT', body: { welcome_image: url } }); $('#sWelcomePrev').src = url ? (url.startsWith('/uploads/') ? `/img/320/${url.split('/').pop()}` : url) : '/shared/logo-mark.png'; toast(t('common.saved'), 'ok'); }
+    catch (e) { toast(e.message, 'err'); }
+  }
+  $('#welcomeUp').addEventListener('click', () => { $('#imageFile').onchange = async () => {
+    const f = $('#imageFile').files[0]; if (!f) return;
+    const data = await new Promise(res => { const img = new Image(); const u = URL.createObjectURL(f); img.onload = () => { const sc = Math.min(1, 1600 / Math.max(img.width, img.height)); const c = document.createElement('canvas'); c.width = Math.round(img.width * sc); c.height = Math.round(img.height * sc); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(u); res(c.toDataURL('image/jpeg', 0.86)); }; img.src = u; });
+    try { const r = await api('/admin/upload', { method: 'POST', body: { data, name: 'accueil' } }); await saveWelcome(r.url); } catch (e) { toast(e.message, 'err'); }
+    $('#imageFile').value = '';
+  }; $('#imageFile').click(); });
+  $('#welcomeUrl').addEventListener('click', async () => { const url = prompt(t('ed.urlPrompt'), ''); if (!url) return; try { const r = await api('/admin/images/import', { method: 'POST', body: { url, name: 'accueil' } }); await saveWelcome(r.url); } catch (e) { toast(e.message, 'err'); } });
+  $('#welcomeReset').addEventListener('click', () => saveWelcome(''));
   function applyLogo(url) { document.querySelectorAll('.brand img').forEach(i => i.src = url); }
   window.applyLogo = applyLogo;
   $('#soundTest').addEventListener('click', () => {

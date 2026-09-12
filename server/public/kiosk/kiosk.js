@@ -50,6 +50,7 @@ const fmtT = hhmm => { if (!hhmm) return ''; const [h, m] = hhmm.split(':').map(
 const minToHHMM = m => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
 
 let menu = null, site = null, settings = { tax_gst: 5, tax_qst: 9.975 };
+let vkShownAt = 0;   // when the on-screen keyboard was last opened (see the keyboard section)
 let view = { page: 'best', section: null, subcat: null, tag: null };
 let heroIdx = 0, heroTimer = null;
 const CART_KEY = MODE === 'web' ? 'web_cart' : 'kiosk_cart_' + MODE;
@@ -270,7 +271,10 @@ setInterval(tickClock, 15000); tickClock();
 
 // ---------------------------------------------------------------- item sheet
 function closeSheet() { $('#sheet').classList.add('hidden'); if (typeof vkHide === 'function') vkHide(); }
-$('#sheet').onclick = e => { if (e.target === $('#sheet')) closeSheet(); };
+// tap on the dark overlay closes the sheet, but only when the tap started AND ended on the overlay
+// (a layout change during a touch, e.g. the keyboard opening, must never close the sheet by accident)
+function overlayClose(id, close) { const el = $(id); let downOn = null; el.addEventListener('pointerdown', e => { downOn = e.target; }); el.addEventListener('click', e => { if (e.target === el && downOn === el && Date.now() - vkShownAt > 600) close(); downOn = null; }); }
+overlayClose('#sheet', closeSheet);
 function openItem(id) {
   const it = byId(menu.items, id); if (!it || it.available === false) return;
   const line = { item_id: it.id, variant_id: it.variants?.[0]?.id || null, options: [], qty: 1, note: '' };
@@ -312,7 +316,7 @@ function openItem(id) {
 
 // ---------------------------------------------------------------- cart / confirm
 function closeCart() { $('#cartPanel').classList.add('hidden'); if (typeof vkHide === 'function') vkHide(); }
-$('#cartPanel').onclick = e => { if (e.target === $('#cartPanel')) closeCart(); };
+overlayClose('#cartPanel', closeCart);
 function openCart() {
   if (!cart.length) return;
   const p = priceOrder(menu, cart, settings, lang); if (!p.ok) { cart = cart.filter(l => priceLine(menu, l, lang).ok); saveCart(); toast(p.error, 'err'); renderBar(); return; }
@@ -428,7 +432,8 @@ const welcome = $('#welcome');
 function renderWelcome() {
   if (MODE === 'web' || !menu) return;
   const secs = visibleSections(); const first = secs.find(x => x.id === 'sale') || secs[0];
-  if (first?.image) $('#wBg').style.backgroundImage = `url("${pic(first.image, 1280)}")`;
+  const wimg = settings.welcome_image || first?.image || '';
+  $('#wBg').style.backgroundImage = wimg ? `url("${pic(wimg, 1280)}")` : 'none';
   $('#wLogo').src = site?.logo_url && !/\/shared\//.test(site.logo_url) ? site.logo_url : '/shared/logo-full-t.png';
   $('#wSlogan').textContent = txt(site?.tagline);
   $('#wQuestion').textContent = t('howOrder'); $('#wDine').textContent = t('wDine'); $('#wTake').textContent = t('wTake');
@@ -445,7 +450,7 @@ const VK_LAYOUTS = {
   fr: [['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '⌫'], ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'é'], ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'è', 'à'], ['⇧', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'ç', 'ê', 'ô'], ["'", '-', ' ', ',', '.', '✓']],
   en: [['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '⌫'], ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'], ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', "'"], ['⇧', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.'], ['-', ' ', '!', '?', '✓']],
 };
-let vk = null, vkTarget = null, vkShift = false, vkShownAt = 0, vkLang = null;
+let vk = null, vkTarget = null, vkShift = false, vkLang = null;
 function vkBuild() {
   if (!vk) { vk = document.createElement('div'); vk.id = 'vk'; vk.className = 'vk hidden'; document.body.appendChild(vk); }
   vkLang = lang; vkShift = false; vk.classList.remove('shift');
@@ -481,9 +486,12 @@ function vkShow(el) {
 }
 function vkHide() { if (!vk) return; vk.classList.add('hidden'); document.body.classList.remove('vk-open'); vkTarget = null; }
 if (MODE !== 'web') {
-  document.addEventListener('pointerdown', e => { const el = e.target.closest('input,textarea'); if (el && ((el.tagName === 'INPUT' && /^(text|search|tel|email|url|)$/.test(el.type || '')) || el.tagName === 'TEXTAREA')) { el.setAttribute('inputmode', 'none'); if (!vk || vk.classList.contains('hidden') || vkTarget !== el) vkShow(el); } });
-  document.addEventListener('focusin', e => { const el = e.target; if ((el.tagName === 'INPUT' && /^(text|search|tel|email|url|)$/.test(el.type || '')) || el.tagName === 'TEXTAREA') { el.setAttribute('inputmode', 'none'); vkShow(el); } else if (!el.closest('#vk')) vkHide(); });
-  document.addEventListener('click', e => { if (vk && Date.now() - vkShownAt > 400 && !e.target.closest('#vk') && !e.target.closest('input,textarea')) vkHide(); });
+  const isText = el => el && ((el.tagName === 'INPUT' && /^(text|search|tel|email|url|)$/.test(el.type || '')) || el.tagName === 'TEXTAREA');
+  document.addEventListener('pointerdown', e => { const el = e.target.closest('input,textarea'); if (el && isText(el)) { el.setAttribute('inputmode', 'none'); if (!vk || vk.classList.contains('hidden') || vkTarget !== el) vkShow(el); } });
+  document.addEventListener('focusin', e => { const el = e.target; if (isText(el)) { el.setAttribute('inputmode', 'none'); if (vkTarget !== el || vk?.classList.contains('hidden')) vkShow(el); } });
+  // the keyboard closes only when the text field really loses the focus (tap outside, ✓, sheet closed);
+  // taps on the keys never move the focus (mousedown/touchstart are prevented above)
+  document.addEventListener('focusout', () => { setTimeout(() => { if (vk && !vk.classList.contains('hidden') && !isText(document.activeElement)) vkHide(); }, 200); });
 }
 
 // ---------------------------------------------------------------- misc

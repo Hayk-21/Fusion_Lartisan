@@ -32,6 +32,7 @@ export const DEFAULT_SETTINGS = {
   ask_service_type: true,
   seed_version: 1,
   logo_url: '/shared/logo-mark.png',   // changed by the admin (Paramètres → Logo)
+  welcome_image: '',                   // photo of the welcome page (counter / tablets); empty = first section's photo
   ...PRINT_DEFAULTS,                   // receipt printer (Paramètres → Imprimante)
   print_agent_token: '',               // shared secret for the café-laptop print agent (print_mode 'agent')
   // ---- website & online ordering (Paramètres → Site web)

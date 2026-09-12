@@ -25,6 +25,7 @@ export const PRINT_DEFAULTS = {
   print_port: 9100,
   print_cmd: 'star',            // 'star' (Star Line Mode: TSP650, TSP650II…) | 'escpos'
   print_width: 42,              // characters per line (TSP650 80 mm, font A = 42)
+  print_left_margin: 3,         // blank columns on the left (the first columns are often lost at the paper edge)
   print_copies: 1,
   print_cut: true,
   print_prices: true,           // print prices/taxes on the ticket (kitchen tickets may not need them)
@@ -45,6 +46,7 @@ function cmds(kind) {
       boldOn: B(ESC, 0x45, 1), boldOff: B(ESC, 0x45, 0),
       big: B(GS, 0x21, 0x11), normal: B(GS, 0x21, 0x00), tall: B(GS, 0x21, 0x01),
       feed: n => B(ESC, 0x64, n),
+      margins: (left, cols) => B(GS, 0x4c, (left * 12) & 0xff, (left * 12) >> 8, GS, 0x57, ((cols - 2 * left) * 12) & 0xff, ((cols - 2 * left) * 12) >> 8),   // GS L (left, dots) + GS W (printable width)
       cut: B(GS, 0x56, 66, 0),                          // partial cut with feed
     };
   }
@@ -56,6 +58,7 @@ function cmds(kind) {
     boldOn: B(ESC, 0x45), boldOff: B(ESC, 0x46),
     big: B(ESC, 0x69, 1, 1), normal: B(ESC, 0x69, 0, 0), tall: B(ESC, 0x69, 1, 0),
     feed: n => B(ESC, 0x61, n),
+    margins: (left, cols) => B(ESC, 0x6c, left, ESC, 0x51, cols - left),   // ESC l (left margin, columns) + ESC Q (right margin column)
     cut: B(ESC, 0x64, 3),                               // partial cut (feeds to the cutter first)
   };
 }
@@ -94,12 +97,18 @@ function wrap(text, width, indent = 0) {
 }
 
 // ---------------------------------------------------------------- ticket
+// printable width once the left/right margins are applied (the paper edge often swallows the first columns)
+function layout(settings) {
+  const cols = Math.max(24, Math.min(64, Number(settings.print_width) || 42));
+  const m = Math.max(0, Math.min(8, Number(settings.print_left_margin ?? 3)));
+  return { cols, m, W: cols - 2 * m };
+}
 export function buildTicket(order, settings, { reprint = false } = {}) {
   const c = cmds(settings.print_cmd);
-  const W = Math.max(24, Math.min(64, Number(settings.print_width) || 42));
+  const { W, m, cols } = layout(settings);
   const lang = settings.print_lang === 'en' ? 'en' : 'fr';
   const t = (fr, en) => (lang === 'en' ? en : fr);
-  const parts = [c.init, c.codepage];
+  const parts = [c.init, c.codepage, c.margins(m, cols)];
   const line = (s = '') => { parts.push(toCP1252(s)); parts.push(B(LF)); };
   const rule = (ch = '-') => line(ch.repeat(W));
 
@@ -172,8 +181,8 @@ export function buildTestTicket(settings) {
 /** "Everything is connected" ticket, printed when a print agent finishes its installation. */
 export function buildWelcomeTicket(settings, { agentName = '', printerName = '', serverUrl = '' } = {}) {
   const c = cmds(settings.print_cmd);
-  const W = Math.max(24, Math.min(64, Number(settings.print_width) || 42));
-  const parts = [c.init, c.codepage, c.alignCenter];
+  const { W, m, cols } = layout(settings);
+  const parts = [c.init, c.codepage, c.margins(m, cols), c.alignCenter];
   const line = (s = '') => { parts.push(toCP1252(s)); parts.push(B(LF)); };
   const rule = (ch = '=') => line(ch.repeat(W));
   const now = new Date();

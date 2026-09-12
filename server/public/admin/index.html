@@ -259,6 +259,13 @@
               <button id="logoUp" class="small ghost">📷 <span data-i18n="settings.logoChoose">Choisir un logo</span></button>
               <button id="logoReset" class="small ghost" data-i18n="settings.logoReset">Rétablir le logo d'origine</button></div>
           </div>
+          <div style="display:flex;gap:12px;align-items:center;margin:10px 0">
+            <img id="sWelcomePrev" class="img-preview" src="/shared/logo-mark.png" alt="" style="width:150px">
+            <div><div class="muted" style="font-size:13px;margin-bottom:6px" data-i18n="settings.welcomeImg">Photo de la page d'accueil (comptoir et tablettes)</div>
+              <button id="welcomeUp" class="small ghost">📷 <span data-i18n="settings.welcomeChoose">Choisir une photo</span></button>
+              <button id="welcomeUrl" class="small ghost" data-i18n="settings.welcomeUrl">🌐 Depuis une adresse (URL)</button>
+              <button id="welcomeReset" class="small ghost" data-i18n="settings.welcomeReset">Photo de la première section</button></div>
+          </div>
           <label><span data-i18n="settings.defaultLang">Langue par défaut des tablettes</span><select id="sDefaultLang"><option value="fr">Français</option><option value="en">English</option></select></label>
           <label class="check"><input type="checkbox" id="sAskName"><span data-i18n="settings.askName">Demander le prénom du client avant confirmation</span></label>
           <label class="check"><input type="checkbox" id="sAskService"><span data-i18n="settings.askService">Demander sur place / à emporter</span></label>
@@ -297,6 +304,7 @@
           <div class="row3">
             <label><span data-i18n="settings.printCmd">Langage</span><select id="pCmd"><option value="star">Star Line Mode (TSP650, TSP700…)</option><option value="escpos">ESC/POS (Epson & compatibles)</option></select></label>
             <label><span data-i18n="settings.printWidth">Caractères par ligne</span><input id="pWidth" type="number" min="24" max="64" value="42"></label>
+            <label><span data-i18n="settings.printMargin">Marge gauche (caractères)</span><input id="pMargin" type="number" min="0" max="8" value="3"></label>
             <label><span data-i18n="settings.printCopies">Copies</span><input id="pCopies" type="number" min="1" max="5" value="1"></label>
           </div>
           <label class="check"><input type="checkbox" id="pPrices"><span data-i18n="settings.printPrices">Imprimer les prix et les taxes</span></label>
