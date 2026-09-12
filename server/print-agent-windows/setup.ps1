@@ -92,12 +92,27 @@ $ErrorActionPreference = 'Stop'
 if ($LASTEXITCODE -ne 0) { throw ("La liste des imprimantes a échoué : " + ($rawList -join ' ')) }
 $printers = @($rawList | Where-Object { $_ -and $_ -notmatch '^(Fax|Microsoft Print to PDF|Microsoft XPS|OneNote)' })
 if ($printers.Count -eq 0) { throw "Aucune imprimante installée dans Windows. Installez d'abord le pilote Star (l'imprimante doit apparaître dans Paramètres → Imprimantes), puis relancez." }
-# preferred: the printer already chosen on the server, then a Star (Bluetooth: the COM7-type link, not the offline COM6), then the first one
+# Which printer? Bluetooth printers often appear twice ("BT:COM3" and "BT:COM4"): only the OUTGOING Bluetooth port really
+# reaches the printer (the other is an incoming link Windows creates). Score each printer: outgoing port +4, status Normal +2, Star +1.
+$goodPorts = @()
+try { $goodPorts = @(Get-PnpDevice -Class Ports -PresentOnly -ErrorAction SilentlyContinue | Where-Object { $_.FriendlyName -match '\(COM\d+\)' -and $_.InstanceId -notmatch 'LOCALMFG' } | ForEach-Object { [regex]::Match($_.FriendlyName, 'COM\d+').Value }) } catch {}
+$winPrinters = @{}
+try { Get-Printer -ErrorAction SilentlyContinue | ForEach-Object { $winPrinters[$_.Name] = $_ } } catch {}
+function Score($name) {
+  $sc = 0
+  if ($name -match 'Star|TSP') { $sc += 1 }
+  $wp = $winPrinters[$name]
+  $port = if ($wp -and $wp.PortName) { [regex]::Match($wp.PortName, 'COM\d+').Value } else { [regex]::Match($name, 'COM\d+').Value }
+  if ($port -and ($goodPorts -contains $port)) { $sc += 4 }
+  if ($wp -and "$($wp.PrinterStatus)" -eq 'Normal') { $sc += 2 }
+  if ($name -match 'COM\d+' -and $goodPorts.Count -gt 0 -and -not ($goodPorts -contains $port)) { $sc -= 3 }   # known incoming link
+  return $sc
+}
+$ranked = $printers | Sort-Object -Property @{ Expression = { Score $_ }; Descending = $true }
 $serverPrinter = $null
 try { $serverPrinter = (Invoke-RestMethod -Uri "$server/api/settings/public").print_printer_name } catch {}
-$star = $printers | Where-Object { $_ -match 'Star|TSP' -and $_ -notmatch 'COM6' } | Select-Object -First 1
-if (-not $star) { $star = $printers | Where-Object { $_ -match 'Star|TSP' } | Select-Object -First 1 }
-$pref = if ($old -and $old.printer_name -and ($printers -contains $old.printer_name)) { $old.printer_name } elseif ($serverPrinter -and ($printers -contains $serverPrinter)) { $serverPrinter } elseif ($star) { $star } else { $printers[0] }
+$pref = if ($serverPrinter -and ($printers -contains $serverPrinter) -and (Score $serverPrinter) -ge (Score $ranked[0])) { $serverPrinter } else { $ranked[0] }
+Write-Host ("        ports Bluetooth sortants : " + ($(if ($goodPorts) { $goodPorts -join ', ' } else { 'aucun' }))) -ForegroundColor DarkGray
 $defaultIdx = [array]::IndexOf($printers, $pref) + 1
 if (-not $AUTO) {
   Write-Host '        Imprimantes trouvées :'
