@@ -69,6 +69,8 @@ const isSpecial = it => { const c = specialCat(); return (c && it.category_id ==
 const minPrice = it => it.variants?.length ? Math.min(...it.variants.map(v => v.price)) : it.price;
 const configurable = it => it.variants?.length || it.option_groups?.some(g => g.included > 0 || g.options.some(o => o.price));
 const imgOf = it => it.image || byId(menu.categories, it.category_id)?.image || (menu.sections.find(s => s.category_ids.includes(it.category_id))?.image) || '';
+// resized WebP copies served by /img/<width>/<file> (see server/src/images.js); other URLs pass through
+const pic = (u, w) => (u && String(u).startsWith('/uploads/')) ? `/img/${w}/${u.split('/').pop()}` : (u || '');
 const cartQty = id => cart.filter(l => l.item_id === id).reduce((s, l) => s + l.qty, 0);
 
 function applyLang() {
@@ -86,10 +88,18 @@ async function load() {
   menu = m; site = s; settings = { ...settings, ...m.settings };
   $('#navName').textContent = s.cafe_name; $('#navLogo').src = s.logo_url || '/shared/logo-mark.png'; document.title = `${s.cafe_name} · Menu`;
   if (view.section && !byId(menu.sections, view.section)) view = { page: 'best', section: null, subcat: null, tag: null };
-  $('#kicker').textContent = menu.sections.filter(x => catsOf(x).length).map(x => txt(x.name)).join('  ·  ');
-  $('#slogan').textContent = txt(s.tagline);
   render(); renderState();
+  prefetchPictures();
 }
+// Load every menu picture in the background (small WebP copies) so that switching sections is instant.
+let prefetched = false;
+function prefetchPictures() {
+  if (prefetched) return; prefetched = true;
+  const urls = [...new Set([...menu.sections.map(s => pic(s.image, 1280)), ...menu.items.filter(i => i.available !== false).map(i => pic(imgOf(i), 480))].filter(Boolean))];
+  let i = 0; const next = () => { if (i >= urls.length) return; const im = new Image(); im.onload = im.onerror = () => setTimeout(next, 30); im.src = urls[i++]; };
+  setTimeout(() => { next(); next(); }, 800);   // two at a time, starting after the first paint
+}
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) navigator.serviceWorker.register('/sw.js').catch(() => {});
 async function refreshState() { try { site.state = await fetch('/api/site/state').then(r => r.json()); renderState(); } catch {} }
 
 // ---------------------------------------------------------------- open / closed
@@ -118,7 +128,7 @@ function bestSellers() {
   if (list.length < 4) for (const c of menu.categories.filter(c => c.visible !== false)) { const it = itemsOfCat(c.id)[0]; if (it && !list.includes(it)) list.push(it); }
   return list.slice(0, 12);
 }
-function render() { renderNav(); renderHero(); renderGrid(); renderCart(); renderBar(); }
+function render() { $('#kicker').textContent = visibleSections().map(x => txt(x.name)).join('  ·  '); $('#slogan').textContent = txt(site?.tagline); tickClock(); renderNav(); renderHero(); renderGrid(); renderCart(); renderBar(); }
 function go(page, section = null, tag = null) { view = { page, section, subcat: null, tag }; render(); $('#main').scrollTop = 0; if (MODE === 'web' || innerWidth <= 940) window.scrollTo({ top: 0 }); }
 function goHome() { go('best'); }
 function openSection(id) { go('section', id); }
@@ -134,7 +144,7 @@ function renderNav() {
   const src = sc ? (sc.image || itemsOfCat(sc.id)[0]?.image || '') : (hot?.image || '');
   if (!sc && !hot) { promo.classList.add('hidden'); return; }
   promo.classList.remove('hidden');
-  promo.innerHTML = `${src ? `<img src="${esc(src)}" alt="">` : ''}<span class="cap"><b>${sc ? t('promoSpecial') : t('promoCoffee')}</b><small>${sc ? esc(txt(itemsOfCat(sc.id)[0]?.name)) : t('promoCoffeeSub')}</small></span>`;
+  promo.innerHTML = `${src ? `<img src="${esc(pic(src, 480))}" alt="">` : ''}<span class="cap"><b>${sc ? t('promoSpecial') : t('promoCoffee')}</b><small>${sc ? esc(txt(itemsOfCat(sc.id)[0]?.name)) : t('promoCoffeeSub')}</small></span>`;
   promo.onclick = () => sc ? go('special', null, 'special') : openSection(hot.id);
 }
 function renderHero() {
@@ -142,16 +152,16 @@ function renderHero() {
   clearInterval(heroTimer);
   if (view.page === 'best' && secs.length) {
     const draw = () => { const s = secs[heroIdx % secs.length]; const img = s.image || '';
-      hero.innerHTML = `${img ? `<img src="${esc(img)}" alt="">` : ''}<div class="cap"><span class="pill">${t('ourBest')}</span><h1>${t('heroTitle')}</h1><p>${esc(t('heroSub', { list: secs.slice(0, 3).map(x => txt(x.name).toLowerCase()).join(', ') }))}</p></div>
+      hero.innerHTML = `${img ? `<img src="${esc(pic(img, 1280))}" alt="">` : ''}<div class="cap"><span class="pill">${t('ourBest')}</span><h1>${t('heroTitle')}</h1><p>${esc(t('heroSub', { list: secs.slice(0, 3).map(x => txt(x.name).toLowerCase()).join(', ') }))}</p></div>
         <div class="dots">${secs.map((_, i) => `<span class="${i === heroIdx % secs.length ? 'on' : ''}"></span>`).join('')}</div><button class="go" data-sec="${esc(s.id)}" aria-label="${esc(txt(s.name))}"></button>`;
       hero.querySelector('.go').onclick = () => openSection(s.id); };
     draw(); heroTimer = setInterval(() => { heroIdx++; draw(); }, 6000);
   } else if (view.page === 'section') {
     const s = byId(menu.sections, view.section); const cats = catsOf(s); const n = cats.reduce((k, c) => k + itemsOfCat(c.id).length, 0);
-    hero.innerHTML = `${s.image ? `<img src="${esc(s.image)}" alt="">` : ''}<div class="cap"><span class="pill">${t('choices', { n })}</span><h1>${esc(txt(s.name))}</h1><p>${esc(cats.map(c => txt(c.name)).join(' · '))}</p></div>`;
+    hero.innerHTML = `${s.image ? `<img src="${esc(pic(s.image, 1280))}" alt="">` : ''}<div class="cap"><span class="pill">${t('choices', { n })}</span><h1>${esc(txt(s.name))}</h1><p>${esc(cats.map(c => txt(c.name)).join(' · '))}</p></div>`;
   } else {
     const c = specialCat(); const it = c ? itemsOfCat(c.id)[0] : null; const img = c?.image || it?.image || '';
-    hero.innerHTML = `${img ? `<img src="${esc(img)}" alt="">` : ''}<div class="cap"><span class="pill">${t('special')}</span><h1>${esc(it ? txt(it.name) : t('special'))}</h1>${it ? `<p>${esc(txt(it.description))}</p>` : ''}</div>`;
+    hero.innerHTML = `${img ? `<img src="${esc(pic(img, 1280))}" alt="">` : ''}<div class="cap"><span class="pill">${t('special')}</span><h1>${esc(it ? txt(it.name) : t('special'))}</h1>${it ? `<p>${esc(txt(it.description))}</p>` : ''}</div>`;
   }
 }
 function renderGrid() {
@@ -188,7 +198,7 @@ function renderGrid() {
 function card(it) {
   const img = imgOf(it); const q = cartQty(it.id);
   const tags = (it.tags || []).filter(x => ['special', 'donate', 'new'].includes(x)); if (isSpecial(it) && !tags.includes('special')) tags.unshift('special');
-  return `<div class="item" data-id="${esc(it.id)}"><div class="pic">${img ? `<img src="${esc(img)}" alt="" loading="lazy">` : ''}</div>
+  return `<div class="item" data-id="${esc(it.id)}"><div class="pic">${img ? `<img src="${esc(pic(img, 480))}" alt="" decoding="async">` : ''}</div>
     ${tags.length ? `<span class="tagline">${tags.map(x => `<span class="tag ${x}">${esc(tagName(x))}</span>`).join('')}</span>` : ''}${q ? `<span class="qty-badge">×${q}</span>` : ''}
     <div class="body"><span class="nm">${esc(txt(it.name))}</span><span class="ds">${esc(txt(it.description))}</span><span class="pr">${configurable(it) ? `<small>${t('from')}</small> ` : ''}${money(minPrice(it))}</span></div>
     <button class="add">+ ${t('addShort')}</button></div>`;
@@ -213,7 +223,7 @@ function cartTotals() {
 function renderCart() {
   const aside = $('#cartAside'); const p = cartTotals(); const count = cart.reduce((s, l) => s + l.qty, 0);
   const lines = p ? p.lines.map((l, i) => { const it = byId(menu.items, cart[i].item_id); const img = it ? imgOf(it) : '';
-    return `<div class="cline">${img ? `<img src="${esc(img)}" alt="">` : '<div class="ph"></div>'}<div class="info"><div class="nm">${esc(l.name)}${l.variant_name ? ' · ' + esc(l.variant_name) : ''}</div>${l.options.length ? `<div class="opts">${l.options.map(o => esc(o.name)).join(', ')}</div>` : ''}${l.note ? `<div class="note">✎ ${esc(l.note)}</div>` : ''}<div class="pr">${money(l.line_total)}</div></div>
+    return `<div class="cline">${img ? `<img src="${esc(pic(img, 160))}" alt="">` : '<div class="ph"></div>'}<div class="info"><div class="nm">${esc(l.name)}${l.variant_name ? ' · ' + esc(l.variant_name) : ''}</div>${l.options.length ? `<div class="opts">${l.options.map(o => esc(o.name)).join(', ')}</div>` : ''}${l.note ? `<div class="note">✎ ${esc(l.note)}</div>` : ''}<div class="pr">${money(l.line_total)}</div></div>
       <button class="rm" data-rm="${i}" aria-label="×">✕</button><div class="qty"><button data-q="-1" data-i="${i}">−</button><span>${l.qty}</span><button data-q="1" data-i="${i}">+</button></div></div>`; }).join('') : `<div class="c-empty">${t('empty')}</div>`;
   const st = site?.state; const blocked = MODE === 'web' && st && !st.ordering;
   const svc = MODE === 'web'
@@ -277,7 +287,7 @@ function openItem(id) {
     }
     body.push(`<div class="grp"><h3>${t('qty')}</h3><div class="qty"><button data-qd="-1">−</button><span>${line.qty}</span><button data-qd="1">+</button></div></div><div class="grp"><input class="note-in" id="noteIn" maxlength="120" placeholder="${esc(t('note'))}" value="${esc(line.note)}"></div>`);
     const img = imgOf(it);
-    $('#sheetCard').innerHTML = `${img ? `<div class="sheet-hero"><img src="${esc(img)}" alt=""></div>` : ''}<div class="sheet-head"><div><h2>${esc(txt(it.name))}</h2><p>${esc(txt(it.description))}</p></div><button class="close" id="sheetClose">✕</button></div><div class="sheet-body">${body.join('')}</div>
+    $('#sheetCard').innerHTML = `${img ? `<div class="sheet-hero"><img src="${esc(pic(img, 960))}" alt=""></div>` : ''}<div class="sheet-head"><div><h2>${esc(txt(it.name))}</h2><p>${esc(txt(it.description))}</p></div><button class="close" id="sheetClose">✕</button></div><div class="sheet-body">${body.join('')}</div>
       <div class="sheet-foot"><div class="total">${r.ok ? money(r.priced.line_total) : '-'}</div><button class="btn primary big" id="addBtn" ${r.ok ? '' : 'disabled'}>${r.ok ? '+ ' + t('add') : esc(r.error)}</button></div>`;
     $('#sheetClose').onclick = closeSheet;
     $('#addBtn').onclick = () => { line.note = $('#noteIn').value.trim(); closeSheet(); addLine(line, it); };
@@ -309,7 +319,7 @@ function openCart() {
   if (!form.payment || !webModes.includes(form.payment)) form.payment = webModes[0];
   const asideVisible = getComputedStyle($('#cartAside')).display !== 'none';
   const lines = asideVisible ? '' : p.lines.map((l, i) => { const it = byId(menu.items, cart[i].item_id); const img = it ? imgOf(it) : '';
-    return `<div class="cline">${img ? `<img src="${esc(img)}" alt="">` : '<div class="ph"></div>'}<div class="info"><div class="nm">${esc(l.name)}${l.variant_name ? ' · ' + esc(l.variant_name) : ''} <span class="muted">×${l.qty}</span></div><div class="opts">${l.options.map(o => esc(o.name)).join(', ')}</div>${l.note ? `<div class="note">✎ ${esc(l.note)}</div>` : ''}</div>
+    return `<div class="cline">${img ? `<img src="${esc(pic(img, 160))}" alt="">` : '<div class="ph"></div>'}<div class="info"><div class="nm">${esc(l.name)}${l.variant_name ? ' · ' + esc(l.variant_name) : ''} <span class="muted">×${l.qty}</span></div><div class="opts">${l.options.map(o => esc(o.name)).join(', ')}</div>${l.note ? `<div class="note">✎ ${esc(l.note)}</div>` : ''}</div>
       <div class="qty"><button data-q="-1" data-i="${i}">−</button><span>${l.qty}</span><button data-q="1" data-i="${i}">+</button></div><div class="pr">${money(l.line_total)}</div></div>`; }).join('');
   const web = MODE === 'web';
   const formHtml = web ? `

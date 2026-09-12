@@ -1,6 +1,7 @@
 /* Homepage: loads /api/site and renders intro, featured dishes, reviews, hours, open/closed state. */
 (function () {
   const $ = s => document.querySelector(s);
+  const pic = (u, w) => (u && String(u).startsWith('/uploads/')) ? `/img/${w}/${u.split('/').pop()}` : (u || '');
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const STR = {
     fr: { tagline: 'Crêperie & Café', 'nav.menu': 'Menu', 'nav.reviews': 'Avis', 'nav.contact': 'Nous trouver', 'nav.order': 'Commander', 'hero.order': 'Commander en ligne', 'hero.menu': 'Voir le menu',
@@ -70,9 +71,9 @@
         : !st.open ? t('banner.closed', { when: hint || '' }) : (st.slots?.length === 0 && s.state.open ? t('banner.late') : t('banner.off'));
     } else banner.classList.add('hidden');
     // hero images: first 3 featured
-    $('#heroImgs').innerHTML = s.featured.slice(0, 3).map(f => `<img src="${esc(f.image || '/shared/logo-full.png')}" alt="${esc(tx(f.name))}">`).join('');
+    $('#heroImgs').innerHTML = s.featured.slice(0, 3).map(f => `<img src="${esc(pic(f.image, 960) || '/shared/logo-full.png')}" alt="${esc(tx(f.name))}">`).join('');
     // dishes
-    $('#dishGrid').innerHTML = s.featured.map(f => `<a class="dish" href="/commander/#${esc(f.category_id)}">${f.image ? `<img src="${esc(f.image)}" alt="">` : ''}<div class="body">${f.badge ? `<span class="tag">${esc(tx(f.badge))}</span>` : ''}<div class="nm">${esc(tx(f.name))}</div><div class="ds">${esc(tx(f.description))}</div><div class="pr">${f.from ? `<small>${t('from')}</small> ` : ''}${money(f.price)}</div></div></a>`).join('');
+    $('#dishGrid').innerHTML = s.featured.map(f => `<a class="dish" href="/commander/#${esc(f.category_id)}">${f.image ? `<img src="${esc(pic(f.image, 640))}" alt="" loading="lazy">` : ''}<div class="body">${f.badge ? `<span class="tag">${esc(tx(f.badge))}</span>` : ''}<div class="nm">${esc(tx(f.name))}</div><div class="ds">${esc(tx(f.description))}</div><div class="pr">${f.from ? `<small>${t('from')}</small> ` : ''}${money(f.price)}</div></div></a>`).join('');
     // reviews
     const r = s.reviews;
     $('#reviewsLink').href = (r && r.url) || s.google_maps_url;

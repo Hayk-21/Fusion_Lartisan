@@ -22,6 +22,7 @@ import { getReviews } from './google.js';
 import { verifyWebhook } from './stripe.js';
 import { expireUnpaidOrders, updateOrderFields } from './orders.js';
 import { kvGet, kvSet } from './db.js';
+import { imageRoute, warmImages } from './images.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC = path.resolve(__dirname, '..', 'public');
@@ -91,7 +92,9 @@ app.use((req, res, next) => { res.setHeader('Cache-Control', 'no-store'); next()
 app.use('/admin', express.static(path.join(PUBLIC, 'admin'), { index: 'index.html' }));
 app.use('/shared/pricing.js', (req, res) => res.type('application/javascript').sendFile(path.join(__dirname, 'pricing.js')));
 app.use('/shared', express.static(path.join(PUBLIC, 'shared'), { maxAge: '1d' }));
-app.use('/uploads', express.static(UPLOADS, { maxAge: '1h' }));
+app.use('/uploads', express.static(UPLOADS, { maxAge: '30d', immutable: true }));
+app.get('/img/:w/:file', imageRoute());   // resized WebP copies, see images.js
+app.get('/sw.js', (req, res) => { res.setHeader('Cache-Control', 'no-cache'); res.sendFile(path.join(PUBLIC, 'kiosk', 'sw.js')); });   // picture cache (service worker, scope /)
 app.use('/tablette', express.static(path.join(PUBLIC, 'tablet'), { index: 'index.html' }));
 app.use('/commander', express.static(path.join(PUBLIC, 'site', 'commander'), { index: 'index.html' }));
 app.use('/', express.static(path.join(PUBLIC, 'site'), { index: 'index.html' }));
@@ -386,10 +389,13 @@ async function applyStockPhotos({ force = false } = {}) {
   for (const it of menu.items) await apply(it, map.items?.[it.id]);
   kvSet('pexels_cache', cache);
   let version = menu.version;
-  if (n) { version = publishMenu(saveMenu(normalizeMenu(menu)), 'photos').version; audit('menu.photos', `${n} photos, ${errors.length} errors`); }
+  if (n) { version = publishMenu(saveMenu(normalizeMenu(menu)), 'photos').version; audit('menu.photos', `${n} photos, ${errors.length} errors`); warmImages(getMenu()).catch(() => {}); }
   return { updated: n, errors, version, photos_version: map.version || 1 };
 }
 admin.post('/images/apply-stock', wrap(async (req, res) => ok(res, await applyStockPhotos({ force: !!req.body?.force }))));
+
+// Pre-generate the resized pictures so the first customer never waits
+setTimeout(() => warmImages(getMenu()).then(n => n && console.log(`[images] ${n} resized pictures generated`)).catch(e => console.warn('[images]', e.message)), 6000);
 
 // One-time menu v2 migration at start-up: structure (sections, tags, Salades) then stock photos in the background.
 {
