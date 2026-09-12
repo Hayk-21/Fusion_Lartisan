@@ -7,7 +7,7 @@ import { buildInstallerBat } from './agentInstaller.js';
 import path from 'node:path';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { db, getMenu, saveMenu, seedMenuIfEmpty, resetMenuToSeed, getSettings, setSettings, publicSettings,
+import { db, getMenu, saveMenu, seedMenuIfEmpty, upgradeMenuStructure, resetMenuToSeed, getSettings, setSettings, publicSettings,
          touchDevice, listAudit, backupDatabase, audit, localDay, DATA_DIR, applyTimezone } from './db.js';
 import { normalizeMenu } from './menuSchema.js';
 import { createOrder, getOrder, listOrders, updateOrderStatus, orderToText, STATUSES } from './orders.js';
@@ -31,6 +31,7 @@ const APP_VERSION = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'pa
 
 fs.mkdirSync(UPLOADS, { recursive: true });
 seedMenuIfEmpty();
+upgradeMenuStructure();
 
 const wrapAsync = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 const wrap = wrapAsync;
@@ -365,9 +366,10 @@ admin.post('/images/import', wrap(async (req, res) => {
 
 // one-shot: give every section / category / item a real photo (free Pexels pictures listed in data/photos.pexels.json),
 // downloaded into the uploads folder. Only fills what has no photo yet (or everything with { force: true }).
-admin.post('/images/apply-stock', wrap(async (req, res) => {
+// Stock photos (data/photos.pexels.json). Replaces placeholder pictures (/shared/dishes/*, empty, or older stock
+// photos); pictures the admin uploaded himself are kept unless force is true.
+async function applyStockPhotos({ force = false } = {}) {
   const map = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'data', 'photos.pexels.json'), 'utf8'));
-  const force = !!req.body?.force;
   const cache = kvGet('pexels_cache')?.value || {};
   const local = async id => {
     if (cache[id] && fs.existsSync(path.join(UPLOADS, path.basename(cache[id])))) return cache[id];
@@ -376,16 +378,33 @@ admin.post('/images/apply-stock', wrap(async (req, res) => {
     const buf = Buffer.from(await r.arrayBuffer()); const file = `pexels-${id}.jpg`;
     fs.writeFileSync(path.join(UPLOADS, file), buf); cache[id] = `/uploads/${file}`; return cache[id];
   };
+  const replaceable = img => !img || String(img).startsWith('/shared/') || /\/uploads\/pexels-\d+\.jpg$/.test(String(img));
   const menu = getMenu(); let n = 0, errors = [];
-  const apply = async (obj, id) => { if (!id || (obj.image && !force && !String(obj.image).startsWith('/shared/dishes/'))) return; try { obj.image = await local(id); n++; } catch (e) { errors.push(e.message); } };
-  for (const s of menu.sections) await apply(s, map.sections[s.id]);
-  for (const c of menu.categories) await apply(c, map.categories[c.id]);
-  for (const it of menu.items) await apply(it, map.items[it.id]);
+  const apply = async (obj, id) => { if (!id || (!force && !replaceable(obj.image))) return; try { const next = await local(id); if (next !== obj.image) { obj.image = next; n++; } } catch (e) { errors.push(e.message); } };
+  for (const s of menu.sections) await apply(s, map.sections?.[s.id]);
+  for (const c of menu.categories) await apply(c, map.categories?.[c.id]);
+  for (const it of menu.items) await apply(it, map.items?.[it.id]);
   kvSet('pexels_cache', cache);
-  const saved = publishMenu(normalizeMenu(menu), 'photos');
-  audit('menu.photos', `${n} photos, ${errors.length} errors`);
-  ok(res, { updated: n, errors, version: saved.version });
-}));
+  let version = menu.version;
+  if (n) { version = publishMenu(normalizeMenu(menu), 'photos').version; audit('menu.photos', `${n} photos, ${errors.length} errors`); }
+  return { updated: n, errors, version, photos_version: map.version || 1 };
+}
+admin.post('/images/apply-stock', wrap(async (req, res) => ok(res, await applyStockPhotos({ force: !!req.body?.force }))));
+
+// One-time menu v2 migration at start-up: structure (sections, tags, Salades) then stock photos in the background.
+{
+  const map = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'data', 'photos.pexels.json'), 'utf8'));
+  const want = Number(map.version || 1);
+  if (Number(kvGet('stock_photos_version')?.value || 0) < want) {
+    setTimeout(async () => {
+      try {
+        const r = await applyStockPhotos();
+        if (!r.errors.length) kvSet('stock_photos_version', want);
+        console.log(`[photos] stock photos: ${r.updated} updated, ${r.errors.length} errors`);
+      } catch (e) { console.error('[photos] failed:', e.message); }
+    }, 3000);
+  }
+}
 
 // ---------------------------------------------------------------- admin: settings, stats, devices, system
 admin.get('/settings', (req, res) => ok(res, getSettings()));

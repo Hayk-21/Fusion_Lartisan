@@ -228,6 +228,39 @@ export function seedMenuIfEmpty() {
   return false;
 }
 
+// Menu v2 (sections with pictures, tags, Salades category): merge the seed's STRUCTURE into a menu the admin
+// may already have edited, without touching names, prices or options. Runs once (settings.menu_structure_version).
+export function upgradeMenuStructure() {
+  const seed = JSON.parse(fs.readFileSync(SEED_PATH, 'utf8'));
+  const target = Number(seed.structure_version || seed.seed_version || 1);
+  if (Number(kvGet('menu_structure_version')?.value || 0) >= target) return false;
+  const row = db.prepare('SELECT data FROM menu WHERE id = 1').get();
+  if (!row) return false;
+  const menu = JSON.parse(row.data);
+  const changed = [];
+  if (!Array.isArray(menu.sections) || !menu.sections.length) { menu.sections = seed.sections || []; changed.push('sections'); }
+  const cats = new Map((menu.categories || []).map(c => [c.id, c]));
+  for (const sc of seed.categories || []) {
+    const c = cats.get(sc.id);
+    if (!c) { menu.categories.push(sc); changed.push(`+${sc.id}`); continue; }
+    if (!c.image && sc.image) c.image = sc.image;
+    if (!c.name_en && sc.name_en) c.name_en = sc.name_en;
+  }
+  const seedItems = new Map((seed.items || []).map(i => [i.id, i]));
+  for (const it of menu.items || []) {
+    const si = seedItems.get(it.id);
+    if (!si) continue;
+    if ((!Array.isArray(it.tags) || !it.tags.length) && Array.isArray(si.tags) && si.tags.length) it.tags = [...si.tags];
+    if (!it.image && si.image) it.image = si.image;
+  }
+  const catIds = new Set(menu.categories.map(c => c.id));
+  for (const s of menu.sections) s.category_ids = (s.category_ids || []).filter(id => catIds.has(id));
+  saveMenu(menu);
+  kvSet('menu_structure_version', target);
+  audit('menu.structure.upgraded', `v${target}: ${changed.join(', ') || 'tags/images only'}`);
+  return true;
+}
+
 export function resetMenuToSeed() {
   const seed = JSON.parse(fs.readFileSync(SEED_PATH, 'utf8'));
   const m = saveMenu(seed);

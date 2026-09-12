@@ -1,6 +1,6 @@
 {
   "name": "lartisan-cafe-server",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "L'Artisan Café — local order server, admin panel and tablet API",
   "private": true,
   "type": "module",
