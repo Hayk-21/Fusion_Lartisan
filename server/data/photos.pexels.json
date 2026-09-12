@@ -1,5 +1,5 @@
 {
- "version": 2,
+ "version": 3,
  "sections": {
   "sale": 32762150,
   "salades": 33323285,
@@ -29,7 +29,7 @@
   "dj-iced-latte": 35028555,
   "dj-matcha": 17366787,
   "dj-cafe-filtre": 15338488,
-  "galette-composer": 32762150,
+  "galette-composer": 12245875,
   "sig-foret-verte": 6824661,
   "sig-eveil-levant": 15389372,
   "sig-chevre-gourmand": 33698263,

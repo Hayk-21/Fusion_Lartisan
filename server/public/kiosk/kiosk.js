@@ -55,7 +55,7 @@ let heroIdx = 0, heroTimer = null;
 const CART_KEY = MODE === 'web' ? 'web_cart' : 'kiosk_cart_' + MODE;
 let cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
 const saveCart = () => localStorage.setItem(CART_KEY, JSON.stringify(cart));
-const saved = JSON.parse(localStorage.getItem('web_customer') || '{}');
+const saved = MODE === 'web' ? JSON.parse(localStorage.getItem('web_customer') || '{}') : {};   // a kiosk never pre-fills a customer
 let form = { name: saved.name || '', phone: saved.phone || '', email: saved.email || '', pickup: 'asap', tip: null, payment: null, service: MODE === 'web' ? 'takeout' : 'dine_in' };
 let idleTimer = null;
 
@@ -68,7 +68,8 @@ const hasSpecial = () => { const c = specialCat(); return c && itemsOfCat(c.id).
 const isSpecial = it => { const c = specialCat(); return (c && it.category_id === c.id) || (it.tags || []).includes('special'); };
 const minPrice = it => it.variants?.length ? Math.min(...it.variants.map(v => v.price)) : it.price;
 const configurable = it => it.variants?.length || it.option_groups?.some(g => g.included > 0 || g.options.some(o => o.price));
-const imgOf = it => it.image || byId(menu.categories, it.category_id)?.image || (menu.sections.find(s => s.category_ids.includes(it.category_id))?.image) || '';
+const imgOf = it => it.image || '';
+const iconOf = it => byId(menu.categories, it.category_id)?.icon || '🍽️';
 // resized WebP copies served by /img/<width>/<file> (see server/src/images.js); other URLs pass through
 const pic = (u, w) => (u && String(u).startsWith('/uploads/')) ? `/img/${w}/${u.split('/').pop()}` : (u || '');
 const cartQty = id => cart.filter(l => l.item_id === id).reduce((s, l) => s + l.qty, 0);
@@ -198,7 +199,7 @@ function renderGrid() {
 function card(it) {
   const img = imgOf(it); const q = cartQty(it.id);
   const tags = (it.tags || []).filter(x => ['special', 'donate', 'new'].includes(x)); if (isSpecial(it) && !tags.includes('special')) tags.unshift('special');
-  return `<div class="item" data-id="${esc(it.id)}"><div class="pic">${img ? `<img src="${esc(pic(img, 480))}" alt="" decoding="async">` : ''}</div>
+  return `<div class="item" data-id="${esc(it.id)}"><div class="pic">${img ? `<img src="${esc(pic(img, 480))}" alt="" decoding="async">` : `<span class="ph-ic">${esc(iconOf(it))}</span>`}</div>
     ${tags.length ? `<span class="tagline">${tags.map(x => `<span class="tag ${x}">${esc(tagName(x))}</span>`).join('')}</span>` : ''}${q ? `<span class="qty-badge">×${q}</span>` : ''}
     <div class="body"><span class="nm">${esc(txt(it.name))}</span><span class="ds">${esc(txt(it.description))}</span><span class="pr">${configurable(it) ? `<small>${t('from')}</small> ` : ''}${money(minPrice(it))}</span></div>
     <button class="add">+ ${t('addShort')}</button></div>`;
@@ -423,14 +424,14 @@ function renderWelcome() {
   if (MODE === 'web' || !menu) return;
   const secs = visibleSections(); const first = secs.find(x => x.id === 'sale') || secs[0];
   if (first?.image) $('#wBg').style.backgroundImage = `url("${pic(first.image, 1280)}")`;
-  $('#wLogo').src = site?.logo_url && !/logo-mark/.test(site.logo_url) ? site.logo_url : '/shared/logo-full.png';
+  $('#wLogo').src = site?.logo_url && !/\/shared\//.test(site.logo_url) ? site.logo_url : '/shared/logo-full-t.png';
   $('#wSlogan').textContent = txt(site?.tagline);
   $('#wQuestion').textContent = t('howOrder'); $('#wDine').textContent = t('wDine'); $('#wTake').textContent = t('wTake');
   $$('[data-wlang]').forEach(b => b.classList.toggle('on', b.dataset.wlang === lang));
 }
 function showWelcome() { if (MODE === 'web') return; renderWelcome(); welcome.classList.remove('hidden'); document.body.classList.add('on-welcome'); }
 $$('[data-wlang]').forEach(b => b.onclick = () => { lang = b.dataset.wlang; localStorage.setItem('site_lang', lang); applyLang(); renderWelcome(); });
-$$('[data-wsvc]').forEach(b => b.onclick = () => { form.service = b.dataset.wsvc; welcome.classList.add('hidden'); document.body.classList.remove('on-welcome'); goHome(); renderCart(); touch(); });
+$$('[data-wsvc]').forEach(b => b.onclick = () => { form.service = b.dataset.wsvc; form.name = ''; form.tip = null; welcome.classList.add('hidden'); document.body.classList.remove('on-welcome'); goHome(); renderCart(); touch(); });
 if (MODE !== 'web') { welcome.classList.remove('hidden'); document.body.classList.add('on-welcome'); }
 
 // ---------------------------------------------------------------- misc
