@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 echo  Deploiement vers Railway (git push)...
 git add -A
-git commit -m "update %date% %time%" >/dev/null 2>&1
+git commit -m "update %date% %time%"
 git push origin master
 if errorlevel 1 (echo. & echo  Le push a echoue : verifiez votre connexion ou vos identifiants GitHub. & pause & exit /b 1)
 echo.
