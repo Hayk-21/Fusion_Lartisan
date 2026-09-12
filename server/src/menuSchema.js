@@ -37,8 +37,9 @@ export function normalizeMenu(input) {
       sort: Number.isFinite(Number(c.sort)) ? Number(c.sort) : idx + 1,
       visible: bool(c.visible),
       daily_special: Boolean(c.daily_special),
+      image: typeof c.image === 'string' && c.image ? c.image : undefined,
     };
-  });
+  }).map(c => { if (c.image === undefined) delete c.image; return c; });
   const itemIds = new Set();
   const items = (Array.isArray(input.items) ? input.items : []).map((it, idx) => {
     const name = text(it.name);
@@ -89,12 +90,29 @@ export function normalizeMenu(input) {
       sort: Number.isFinite(Number(it.sort)) ? Number(it.sort) : idx + 1,
       badge: it.badge && text(it.badge).fr ? text(it.badge) : null,
       image: typeof it.image === 'string' && it.image ? it.image : undefined,
+      tags: Array.isArray(it.tags) ? [...new Set(it.tags.map(x => slug(x)).filter(Boolean))].slice(0, 8) : [],
       variants,
       option_groups,
     };
   }).map(it => { if (it.image === undefined) delete it.image; return it; });
+  // Sections = the big tiles of the touch-screen home page; each groups one or more categories.
+  const secIds = new Set();
+  let sections = (Array.isArray(input.sections) ? input.sections : []).map((sec, idx) => ({
+    id: uniqueId(sec.id || text(sec.name).fr || 'section', secIds),
+    name: text(sec.name),
+    image: typeof sec.image === 'string' && sec.image ? sec.image : '',
+    sort: Number.isFinite(Number(sec.sort)) ? Number(sec.sort) : idx + 1,
+    category_ids: (Array.isArray(sec.category_ids) ? sec.category_ids : []).filter(id => categories.some(c => c.id === id)),
+  }));
+  if (!sections.length) sections = defaultSections(categories);
+  sections.sort((a, b) => a.sort - b.sort);
   if (errors.length) throw Object.assign(new Error(errors.join('; ')), { status: 400 });
   categories.sort((a, b) => a.sort - b.sort);
   items.sort((a, b) => a.sort - b.sort);
-  return { currency: input.currency || 'CAD', categories, items };
+  return { currency: input.currency || 'CAD', sections, categories, items };
+}
+
+/** One section per category when the menu has no sections yet (older menus). */
+export function defaultSections(categories) {
+  return categories.filter(c => !c.daily_special).map((c, i) => ({ id: 'sec-' + c.id, name: { ...c.name }, image: c.image || '', sort: i + 1, category_ids: [c.id] }));
 }

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "seed_version": 2,
+  "seed_version": 3,
   "currency": "CAD",
   "categories": [
     {
@@ -157,6 +157,20 @@
         "fr": "Fraîcheurs maison, cocktails sans alcool, smoothies",
         "en": "House refreshers, mocktails, smoothies"
       }
+    },
+    {
+      "id": "salades",
+      "name": {
+        "fr": "Salades",
+        "en": "Salads"
+      },
+      "description": {
+        "fr": "Fraîches et généreuses.",
+        "en": "Fresh and generous."
+      },
+      "icon": "🥗",
+      "sort": 5.5,
+      "visible": true
     }
   ],
   "items": [
@@ -180,7 +194,11 @@
         "en": "Savory of the day"
       },
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "gluten-free",
+        "special"
+      ]
     },
     {
       "id": "dj-gourmande-chef",
@@ -202,7 +220,10 @@
         "en": "Sweet of the day"
       },
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "special"
+      ]
     },
     {
       "id": "dj-latte",
@@ -221,7 +242,10 @@
       "sort": 3,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "special"
+      ]
     },
     {
       "id": "dj-iced-latte",
@@ -240,7 +264,11 @@
       "sort": 4,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "cold",
+        "special"
+      ]
     },
     {
       "id": "dj-matcha",
@@ -259,7 +287,10 @@
       "sort": 5,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "special"
+      ]
     },
     {
       "id": "dj-cafe-filtre",
@@ -278,7 +309,10 @@
       "sort": 6,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "special"
+      ]
     },
     {
       "id": "galette-composer",
@@ -787,6 +821,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "gluten-free"
       ]
     },
     {
@@ -809,7 +846,8 @@
         "en": "VEGAN"
       },
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": []
     },
     {
       "id": "sig-eveil-levant",
@@ -828,7 +866,8 @@
       "sort": 9,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": []
     },
     {
       "id": "sig-chevre-gourmand",
@@ -847,7 +886,8 @@
       "sort": 10,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": []
     },
     {
       "id": "sig-nordique",
@@ -866,7 +906,8 @@
       "sort": 11,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": []
     },
     {
       "id": "sig-cidre-vague",
@@ -885,7 +926,8 @@
       "sort": 12,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": []
     },
     {
       "id": "sig-tandoori",
@@ -904,7 +946,8 @@
       "sort": 13,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": []
     },
     {
       "id": "sig-smoked-meat",
@@ -923,7 +966,8 @@
       "sort": 14,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": []
     },
     {
       "id": "tri-amour-maman",
@@ -945,7 +989,8 @@
         "en": "$1 donated"
       },
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": []
     },
     {
       "id": "tri-signature-pa",
@@ -967,7 +1012,8 @@
         "en": "$1 donated"
       },
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": []
     },
     {
       "id": "tri-festin-soeurs",
@@ -989,7 +1035,8 @@
         "en": "$1 donated"
       },
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": []
     },
     {
       "id": "form-lunch-pro",
@@ -1087,6 +1134,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "popular"
       ]
     },
     {
@@ -1182,7 +1232,8 @@
             }
           ]
         }
-      ]
+      ],
+      "tags": []
     },
     {
       "id": "form-artisan-salee",
@@ -1310,7 +1361,8 @@
             }
           ]
         }
-      ]
+      ],
+      "tags": []
     },
     {
       "id": "crepe-composer",
@@ -1883,6 +1935,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "gluten-free"
       ]
     },
     {
@@ -1902,7 +1957,8 @@
       "sort": 22,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": []
     },
     {
       "id": "ssig-erable-royal",
@@ -1921,7 +1977,8 @@
       "sort": 23,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": []
     },
     {
       "id": "ssig-elegance",
@@ -1940,7 +1997,8 @@
       "sort": 24,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": []
     },
     {
       "id": "ssig-emeraude-pistache",
@@ -1959,7 +2017,8 @@
       "sort": 25,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": []
     },
     {
       "id": "ssig-matcha-anko",
@@ -1978,7 +2037,8 @@
       "sort": 26,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": []
     },
     {
       "id": "ssig-estivale",
@@ -1997,7 +2057,8 @@
       "sort": 27,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": []
     },
     {
       "id": "stri-amour-maman",
@@ -2019,7 +2080,8 @@
         "en": "Trilogy of the Heart"
       },
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": []
     },
     {
       "id": "stri-signature-pa",
@@ -2041,7 +2103,8 @@
         "en": "Trilogy of the Heart"
       },
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": []
     },
     {
       "id": "stri-festin-soeurs",
@@ -2063,7 +2126,8 @@
         "en": "Trilogy of the Heart"
       },
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": []
     },
     {
       "id": "form-artisan-sucree",
@@ -2128,7 +2192,8 @@
             }
           ]
         }
-      ]
+      ],
+      "tags": []
     },
     {
       "id": "form-midi",
@@ -2181,7 +2246,8 @@
             }
           ]
         }
-      ]
+      ],
+      "tags": []
     },
     {
       "id": "form-express",
@@ -2243,7 +2309,8 @@
             }
           ]
         }
-      ]
+      ],
+      "tags": []
     },
     {
       "id": "glace-composer",
@@ -2589,6 +2656,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "cold"
       ]
     },
     {
@@ -2645,6 +2715,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "cold"
       ]
     },
     {
@@ -2701,6 +2774,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "cold"
       ]
     },
     {
@@ -2757,6 +2833,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "cold"
       ]
     },
     {
@@ -2813,6 +2892,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "cold"
       ]
     },
     {
@@ -2866,6 +2948,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "cold"
       ]
     },
     {
@@ -2919,6 +3004,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "cold"
       ]
     },
     {
@@ -2972,6 +3060,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "cold"
       ]
     },
     {
@@ -3008,7 +3099,10 @@
           "price": 3.5
         }
       ],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "hot"
+      ]
     },
     {
       "id": "hot-americano",
@@ -3044,7 +3138,10 @@
           "price": 4.25
         }
       ],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "hot"
+      ]
     },
     {
       "id": "hot-macchiato",
@@ -3080,7 +3177,10 @@
           "price": 4.25
         }
       ],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "hot"
+      ]
     },
     {
       "id": "hot-flat-white",
@@ -3116,7 +3216,10 @@
           "price": 5.55
         }
       ],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "hot"
+      ]
     },
     {
       "id": "hot-cortado",
@@ -3152,7 +3255,10 @@
           "price": 4.75
         }
       ],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "hot"
+      ]
     },
     {
       "id": "hot-cafe-bonbon",
@@ -3171,7 +3277,10 @@
       "sort": 47,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "hot"
+      ]
     },
     {
       "id": "hot-affogato",
@@ -3190,7 +3299,10 @@
       "sort": 48,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "hot"
+      ]
     },
     {
       "id": "hot-cafe-filtre",
@@ -3234,7 +3346,10 @@
           "price": 3.45
         }
       ],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "hot"
+      ]
     },
     {
       "id": "hot-cappuccino",
@@ -3312,6 +3427,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "hot"
       ]
     },
     {
@@ -3390,6 +3508,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "hot"
       ]
     },
     {
@@ -3510,6 +3631,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "hot"
       ]
     },
     {
@@ -3588,6 +3712,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "hot"
       ]
     },
     {
@@ -3666,6 +3793,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "hot"
       ]
     },
     {
@@ -3744,6 +3874,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "hot"
       ]
     },
     {
@@ -3822,6 +3955,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "hot"
       ]
     },
     {
@@ -3900,6 +4036,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "hot"
       ]
     },
     {
@@ -3978,6 +4117,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "hot"
       ]
     },
     {
@@ -4056,6 +4198,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "hot"
       ]
     },
     {
@@ -4134,6 +4279,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "hot"
       ]
     },
     {
@@ -4212,6 +4360,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "hot"
       ]
     },
     {
@@ -4290,6 +4441,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "hot"
       ]
     },
     {
@@ -4368,6 +4522,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "hot"
       ]
     },
     {
@@ -4421,6 +4578,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "hot"
       ]
     },
     {
@@ -4474,6 +4634,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "hot"
       ]
     },
     {
@@ -4545,6 +4708,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "hot"
       ]
     },
     {
@@ -4625,6 +4791,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "cold"
       ]
     },
     {
@@ -4644,7 +4813,10 @@
       "sort": 68,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "cold"
+      ]
     },
     {
       "id": "cold-sunny-red",
@@ -4663,7 +4835,10 @@
       "sort": 69,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "cold"
+      ]
     },
     {
       "id": "cold-pink-yuzu",
@@ -4682,7 +4857,10 @@
       "sort": 70,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "cold"
+      ]
     },
     {
       "id": "cold-oranges-pressees",
@@ -4701,7 +4879,10 @@
       "sort": 71,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "cold"
+      ]
     },
     {
       "id": "cold-virgin-mojito",
@@ -4784,6 +4965,9 @@
             }
           ]
         }
+      ],
+      "tags": [
+        "cold"
       ]
     },
     {
@@ -4806,7 +4990,10 @@
         "en": "Alcohol-free"
       },
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "cold"
+      ]
     },
     {
       "id": "cold-cosmo-bloom",
@@ -4828,7 +5015,10 @@
         "en": "Alcohol-free"
       },
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "cold"
+      ]
     },
     {
       "id": "cold-tropical-punch",
@@ -4850,7 +5040,10 @@
         "en": "Alcohol-free"
       },
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "cold"
+      ]
     },
     {
       "id": "cold-miss-red",
@@ -4869,7 +5062,10 @@
       "sort": 76,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "cold"
+      ]
     },
     {
       "id": "cold-mango-island",
@@ -4888,7 +5084,10 @@
       "sort": 77,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "cold"
+      ]
     },
     {
       "id": "cold-tropical-dream",
@@ -4907,7 +5106,10 @@
       "sort": 78,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "cold"
+      ]
     },
     {
       "id": "cold-dragon-kiss",
@@ -4926,7 +5128,10 @@
       "sort": 79,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "cold"
+      ]
     },
     {
       "id": "cold-eska",
@@ -4945,7 +5150,89 @@
       "sort": 80,
       "badge": null,
       "variants": [],
-      "option_groups": []
+      "option_groups": [],
+      "tags": [
+        "cold"
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "id": "sale",
+      "name": {
+        "fr": "Galettes & plats salés",
+        "en": "Savoury galettes & dishes"
+      },
+      "image": "",
+      "sort": 1,
+      "category_ids": [
+        "galettes",
+        "signatures-salees",
+        "trilogie-salee",
+        "formules-salees"
+      ]
+    },
+    {
+      "id": "salades",
+      "name": {
+        "fr": "Salades",
+        "en": "Salads"
+      },
+      "image": "",
+      "sort": 2,
+      "category_ids": [
+        "salades"
+      ]
+    },
+    {
+      "id": "sucre",
+      "name": {
+        "fr": "Crêpes sucrées",
+        "en": "Sweet crêpes"
+      },
+      "image": "",
+      "sort": 3,
+      "category_ids": [
+        "crepes",
+        "signatures-sucrees",
+        "formules-sucrees"
+      ]
+    },
+    {
+      "id": "glaces",
+      "name": {
+        "fr": "Milkshakes & coupes glacées",
+        "en": "Milkshakes & ice cream"
+      },
+      "image": "",
+      "sort": 4,
+      "category_ids": [
+        "glaces"
+      ]
+    },
+    {
+      "id": "chaud",
+      "name": {
+        "fr": "Boissons chaudes",
+        "en": "Hot drinks"
+      },
+      "image": "",
+      "sort": 5,
+      "category_ids": [
+        "boissons-chaudes"
+      ]
+    },
+    {
+      "id": "froid",
+      "name": {
+        "fr": "Boissons & jus",
+        "en": "Drinks & juices"
+      },
+      "image": "",
+      "sort": 6,
+      "category_ids": [
+        "boissons-froides"
+      ]
     }
   ]
 }

@@ -21,7 +21,7 @@ export function todayHours(settings, now = new Date()) {
 /** Open right now? Considers weekly hours and the manual "temporarily closed" switch. */
 export function openState(settings, now = new Date()) {
   const t = todayHours(settings, now);
-  const manual = !!settings.temporarily_closed && !settings.test_mode;
+  const manual = !!settings.temporarily_closed;   // an explicit "café fermé" always wins, even in test mode
   let open = false, reason = 'closed';
   if (manual) reason = 'temporarily_closed';
   else if (t.closed) reason = 'closed_today';

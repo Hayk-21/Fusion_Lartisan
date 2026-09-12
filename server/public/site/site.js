@@ -12,7 +12,7 @@
       'reviews.title': 'Ce que disent nos clients', 'reviews.link': 'Voir les avis sur Google →', 'reviews.count': '{n} avis Google', 'hours.google': 'Heures synchronisées avec Google Maps', 'banner.test': 'Mode test : le site accepte les commandes hors des heures d\'ouverture.', 'reviews.none': 'Les avis Google apparaîtront ici.',
       'loc.title': 'Nous trouver', 'loc.hours': "Heures d'ouverture", closed: 'Fermé', 'foot.tag': 'Crêperie artisanale · Café de spécialité · Sur place & à emporter', 'foot.thanks': "Merci de soutenir l'artisanat local !",
       open: 'Ouvert', 'open.until': 'Ouvert · ferme à {t}', 'open.test': 'Ouvert (mode test)', 'closed.now': 'Fermé', 'closed.today': "Fermé aujourd'hui", 'closed.temp': 'Fermé exceptionnellement', 'opens.today': 'ouvre à {t}', 'opens.tomorrow': 'ouvre demain à {t}', 'opens.day': 'ouvre {d} à {t}', 'hours.today': "Aujourd'hui : {o} - {c}",
-      'banner.closed': 'Le café est fermé · la commande en ligne reprend {when}.', 'banner.late': "Trop tard pour commander aujourd'hui · à demain !", 'banner.off': 'La commande en ligne est temporairement désactivée.',
+      'banner.closed': 'Le café est fermé · la commande en ligne reprend {when}.', 'banner.temp': 'Le café est fermé pour le moment · la commande en ligne reprendra à la réouverture.', 'banner.late': "Trop tard pour commander aujourd'hui · à demain !", 'banner.off': 'La commande en ligne est temporairement désactivée.',
       days: { mon: 'Lundi', tue: 'Mardi', wed: 'Mercredi', thu: 'Jeudi', fri: 'Vendredi', sat: 'Samedi', sun: 'Dimanche' } },
     en: { tagline: 'Crêperie & Café', 'nav.menu': 'Menu', 'nav.reviews': 'Reviews', 'nav.contact': 'Find us', 'nav.order': 'Order', 'hero.order': 'Order online', 'hero.menu': 'See the menu',
       'how.title': 'Order online, pick up at the café', 'how.sub': 'No waiting: your order is ready at the counter at the time you choose.',
@@ -23,7 +23,7 @@
       'reviews.title': 'What our customers say', 'reviews.link': 'See reviews on Google →', 'reviews.count': '{n} Google reviews', 'hours.google': 'Hours synced with Google Maps', 'banner.test': 'Test mode: the site accepts orders outside opening hours.', 'reviews.none': 'Google reviews will appear here.',
       'loc.title': 'Find us', 'loc.hours': 'Opening hours', closed: 'Closed', 'foot.tag': 'Artisan crêperie · Specialty coffee · Dine in & take out', 'foot.thanks': 'Thank you for supporting local artisans!',
       open: 'Open', 'open.until': 'Open · closes at {t}', 'open.test': 'Open (test mode)', 'closed.now': 'Closed', 'closed.today': 'Closed today', 'closed.temp': 'Exceptionally closed', 'opens.today': 'opens at {t}', 'opens.tomorrow': 'opens tomorrow at {t}', 'opens.day': 'opens {d} at {t}', 'hours.today': 'Today: {o} - {c}',
-      'banner.closed': 'The café is closed · online ordering resumes {when}.', 'banner.late': 'Too late to order today · see you tomorrow!', 'banner.off': 'Online ordering is temporarily disabled.',
+      'banner.closed': 'The café is closed · online ordering resumes {when}.', 'banner.temp': 'The café is closed at the moment · online ordering resumes when it reopens.', 'banner.late': 'Too late to order today · see you tomorrow!', 'banner.off': 'Online ordering is temporarily disabled.',
       days: { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' } },
   };
   let lang = localStorage.getItem('site_lang') || ((navigator.language || 'fr').toLowerCase().startsWith('en') ? 'en' : 'fr');
@@ -66,7 +66,7 @@
     const banner = $('#closedBanner');
     if (!st.ordering) {
       banner.classList.remove('hidden');
-      banner.textContent = st.reason === 'temporarily_closed' && tx(s.closed_message) ? tx(s.closed_message)
+      banner.textContent = st.reason === 'temporarily_closed' ? (tx(s.closed_message) || t('banner.temp'))
         : !st.open ? t('banner.closed', { when: hint || '' }) : (st.slots?.length === 0 && s.state.open ? t('banner.late') : t('banner.off'));
     } else banner.classList.add('hidden');
     // hero images: first 3 featured

@@ -23,7 +23,10 @@
   }
 
   // ---------------------------------------------------------------- café mode
-  function setCafe(open) {
+  // Opening / closing the café here also opens / closes ONLINE ordering: the website refuses orders while the café is closed
+  // (server setting temporarily_closed). Tablets and the counter page (/local) keep working.
+  async function setCafe(open, { remote = false } = {}) {
+    if (remote) { try { await api('/admin/settings', { method: 'PUT', body: { temporarily_closed: !open } }); toast(t(open ? 'live.siteOpened' : 'live.siteClosed'), open ? 'ok' : ''); } catch (e) { toast(e.message, 'err'); } }
     cafeOpen = open; localStorage.setItem('cafe_open', open ? '1' : '0');
     $('#openCafeBtn').classList.toggle('hidden', open);
     $('#closeCafeBtn').classList.toggle('hidden', !open);
@@ -32,8 +35,8 @@
     if (open) { playAlert().then(() => { audio.pause(); audio.currentTime = 0; }); scheduleRepeat(); }
     else clearInterval(repeatTimer);
   }
-  $('#openCafeBtn').addEventListener('click', () => setCafe(true));
-  $('#closeCafeBtn').addEventListener('click', () => setCafe(false));
+  $('#openCafeBtn').addEventListener('click', () => setCafe(true, { remote: true }));
+  $('#closeCafeBtn').addEventListener('click', () => setCafe(false, { remote: true }));
   $('#fullscreenBtn').addEventListener('click', () => {
     document.body.classList.toggle('fullscreen');
     if (document.body.classList.contains('fullscreen')) document.documentElement.requestFullscreen?.().catch(() => {});
@@ -157,13 +160,15 @@
       applyOrder(m.order);
     } else if (m.type === 'print_error') {
       toast(t('live.printError', { n: m.order_number, e: m.error }), 'err');
+    } else if (m.type === 'settings_updated') {
+      const open = !m.settings.temporarily_closed; if (open !== cafeOpen) setCafe(open);
     } else if (m.type === 'devices') {
       devicesOnline = m.devices.filter(d => d.online).length;
       $('#liveSummary').textContent = t('live.summary', { n: orders.size, t: todayCount, d: devicesOnline });
     }
   });
   document.addEventListener('ws-open', refresh);
-  document.addEventListener('app-start', () => { setCafe(cafeOpen); refresh(); clearInterval(ageTimer); ageTimer = setInterval(() => { if (currentView() === 'live') render(); }, 30000); });
+  document.addEventListener('app-start', async () => { try { const s = await api('/settings/public'); cafeOpen = !s.temporarily_closed; } catch {} setCafe(cafeOpen); refresh(); clearInterval(ageTimer); ageTimer = setInterval(() => { if (currentView() === 'live') render(); }, 30000); });
   document.addEventListener('app-stop', () => { clearInterval(ageTimer); clearInterval(repeatTimer); });
   document.addEventListener('view', e => { if (e.detail === 'live') refresh(); if (e.detail === 'history') loadHistory(); });
 

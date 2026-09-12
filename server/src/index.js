@@ -68,7 +68,10 @@ app.get(['/api/app/lartisan.apk', '/app/lartisan.apk'], (req, res) => {
 });
 app.get('/app', (req, res) => res.sendFile(path.join(PUBLIC, 'site', 'app.html')));
 // café PC / counter: same ordering page as the website, PIN-protected, orders go straight to the kitchen (pay at counter)
-app.get(['/local', '/local/'], (req, res) => res.sendFile(path.join(PUBLIC, 'site', 'commander', 'index.html')));
+// menu v2 (touch-screen design): counter PC, tablets (web), public ordering page. Same page, different mode from the URL.
+const KIOSK = path.join(PUBLIC, 'kiosk', 'index.html');
+app.get(['/local', '/local/', '/tablette', '/tablette/', '/commander', '/commander/'], (req, res) => res.sendFile(KIOSK));
+app.use('/kiosk', express.static(path.join(PUBLIC, 'kiosk'), { index: false }));
 app.post('/api/admin/app/apk', express.raw({ type: () => true, limit: '120mb' }), (req, res) => {
   if (!isValid(tokenFromRequest(req))) return fail(res, 401, 'Unauthorized');
   const buf = req.body;
@@ -343,6 +346,46 @@ admin.post('/upload', (req, res) => {
   fs.writeFileSync(path.join(UPLOADS, file), Buffer.from(m[3], 'base64'));
   ok(res, { url: `/uploads/${file}` });
 });
+
+// import a picture from a URL (stock photo) into the uploads folder → { url }
+admin.post('/images/import', wrap(async (req, res) => {
+  const src = String(req.body?.url || ''); const name = String(req.body?.name || 'photo');
+  if (!/^https?:\/\//.test(src)) return fail(res, 400, 'URL invalide');
+  const r = await fetch(src, { redirect: 'follow', signal: AbortSignal.timeout(20000) });
+  if (!r.ok) return fail(res, 502, `Téléchargement impossible (${r.status})`);
+  const type = (r.headers.get('content-type') || '').split(';')[0];
+  const ext = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' }[type];
+  if (!ext) return fail(res, 415, 'Ce lien n\'est pas une image JPEG/PNG/WebP');
+  const buf = Buffer.from(await r.arrayBuffer());
+  if (buf.length > 8 * 1024 * 1024) return fail(res, 413, 'Image trop lourde (max 8 Mo)');
+  const file = `${Date.now()}-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40)}.${ext}`;
+  fs.writeFileSync(path.join(UPLOADS, file), buf);
+  ok(res, { url: `/uploads/${file}`, bytes: buf.length });
+}));
+
+// one-shot: give every section / category / item a real photo (free Pexels pictures listed in data/photos.pexels.json),
+// downloaded into the uploads folder. Only fills what has no photo yet (or everything with { force: true }).
+admin.post('/images/apply-stock', wrap(async (req, res) => {
+  const map = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'data', 'photos.pexels.json'), 'utf8'));
+  const force = !!req.body?.force;
+  const cache = kvGet('pexels_cache')?.value || {};
+  const local = async id => {
+    if (cache[id] && fs.existsSync(path.join(UPLOADS, path.basename(cache[id])))) return cache[id];
+    const r = await fetch(`https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=900`, { signal: AbortSignal.timeout(20000) });
+    if (!r.ok) throw new Error(`pexels ${id}: ${r.status}`);
+    const buf = Buffer.from(await r.arrayBuffer()); const file = `pexels-${id}.jpg`;
+    fs.writeFileSync(path.join(UPLOADS, file), buf); cache[id] = `/uploads/${file}`; return cache[id];
+  };
+  const menu = getMenu(); let n = 0, errors = [];
+  const apply = async (obj, id) => { if (!id || (obj.image && !force && !String(obj.image).startsWith('/shared/dishes/'))) return; try { obj.image = await local(id); n++; } catch (e) { errors.push(e.message); } };
+  for (const s of menu.sections) await apply(s, map.sections[s.id]);
+  for (const c of menu.categories) await apply(c, map.categories[c.id]);
+  for (const it of menu.items) await apply(it, map.items[it.id]);
+  kvSet('pexels_cache', cache);
+  const saved = publishMenu(normalizeMenu(menu), 'photos');
+  audit('menu.photos', `${n} photos, ${errors.length} errors`);
+  ok(res, { updated: n, errors, version: saved.version });
+}));
 
 // ---------------------------------------------------------------- admin: settings, stats, devices, system
 admin.get('/settings', (req, res) => ok(res, getSettings()));

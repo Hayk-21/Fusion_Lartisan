@@ -14,7 +14,7 @@ const STR = {
     payCounterNote: 'Vous réglez au comptoir (carte, débit ou comptant) en venant chercher votre commande.', payStripeNote: 'Vous serez redirigé vers une page de paiement sécurisée (Stripe).',
     back: 'Retour', confirm: 'Confirmer la commande', confirmPay: 'Payer {t}', sending: 'Envoi…',
     open: 'Ouvert · ferme à {t}', closed: 'Fermé', closedTemp: 'Fermé exceptionnellement', opensTomorrow: 'ouvre demain à {t}', opensToday: 'ouvre à {t}',
-    bannerClosed: 'Le café est fermé · la commande en ligne reprend {when}. Vous pouvez consulter le menu.', bannerLate: "Trop tard pour commander aujourd'hui · à demain ! Vous pouvez consulter le menu.", bannerOff: 'La commande en ligne est temporairement désactivée.',
+    bannerClosed: 'Le café est fermé · la commande en ligne reprend {when}. Vous pouvez consulter le menu.', bannerTemp: 'Le café est fermé pour le moment · la commande en ligne reprendra à la réouverture. Vous pouvez consulter le menu.', bannerLate: "Trop tard pour commander aujourd'hui · à demain ! Vous pouvez consulter le menu.", bannerOff: 'La commande en ligne est temporairement désactivée.',
     closedBtn: 'Café fermé · commande impossible', localTitle: 'Mode comptoir', localHint: 'Entrez le code PIN pour ouvrir le menu du café.', clear: 'Effacer', wrongPin: 'Code PIN incorrect', counterMode: 'Comptoir', localSub: 'Commande prise au comptoir · paiement sur place', nameOpt: 'Prénom du client (facultatif)', thanks: 'Commande envoyée en cuisine', giveNumber: 'Numéro de commande', newOrder: 'Nouvelle commande', autoBack: 'Retour au menu dans {s} s', fullscreen: 'Plein écran', service: 'Sur place ou à emporter ?', takeout: 'À emporter', dineIn: 'Sur place', arrival: "Heure d'arrivée", lateBtn: "Trop tard pour aujourd'hui", menuUpdated: 'Le menu a été mis à jour', errNet: 'Connexion impossible, réessayez.', cancelled: 'Paiement annulé · votre panier est conservé.', max: 'Maximum {n}' },
   en: { orderOnline: 'Order online', yourOrder: 'Your order', clear: 'Clear', checkout: 'Checkout', viewCart: 'View order', empty: 'Your order is empty.\nTap a dish to start.',
     from: 'from', add: 'Add', included: 'included', includedOf: '{c}/{n} included', extra: 'extra', required: 'Required', choose: 'Choose', qty: 'Quantity', note: 'Note for the kitchen (allergies, no onion…)',
@@ -24,7 +24,7 @@ const STR = {
     payCounterNote: 'You pay at the counter (card, debit or cash) when you pick up your order.', payStripeNote: 'You will be redirected to a secure payment page (Stripe).',
     back: 'Back', confirm: 'Confirm order', confirmPay: 'Pay {t}', sending: 'Sending…',
     open: 'Open · closes at {t}', closed: 'Closed', closedTemp: 'Exceptionally closed', opensTomorrow: 'opens tomorrow at {t}', opensToday: 'opens at {t}',
-    bannerClosed: 'The café is closed · online ordering resumes {when}. You can still browse the menu.', bannerLate: 'Too late to order today · see you tomorrow! You can still browse the menu.', bannerOff: 'Online ordering is temporarily disabled.',
+    bannerClosed: 'The café is closed · online ordering resumes {when}. You can still browse the menu.', bannerTemp: 'The café is closed at the moment · online ordering resumes when it reopens. You can still browse the menu.', bannerLate: 'Too late to order today · see you tomorrow! You can still browse the menu.', bannerOff: 'Online ordering is temporarily disabled.',
     closedBtn: 'Café closed · ordering unavailable', localTitle: 'Counter mode', localHint: 'Enter the PIN to open the café menu.', clear: 'Clear', wrongPin: 'Wrong PIN', counterMode: 'Counter', localSub: 'Order taken at the counter · pay in person', nameOpt: 'Customer first name (optional)', thanks: 'Order sent to the kitchen', giveNumber: 'Order number', newOrder: 'New order', autoBack: 'Back to the menu in {s} s', fullscreen: 'Full screen', service: 'Dine in or take out?', takeout: 'Take out', dineIn: 'Dine in', arrival: 'Arrival time', lateBtn: 'Too late for today', menuUpdated: 'The menu was updated', errNet: 'Cannot connect, please retry.', cancelled: 'Payment cancelled · your cart was kept.', max: 'Maximum {n}' },
 };
 let lang = localStorage.getItem('site_lang') || ((navigator.language || 'fr').toLowerCase().startsWith('en') ? 'en' : 'fr');
@@ -100,7 +100,7 @@ function renderState() {
   const banner = $('#closedBanner');
   if (!st.ordering) {
     banner.classList.remove('hidden');
-    banner.textContent = st.reason === 'temporarily_closed' && txt(site.closed_message) ? txt(site.closed_message) : !st.open ? t('bannerClosed', { when: hint }) : (st.open && !st.slots.length ? t('bannerLate') : t('bannerOff'));
+    banner.textContent = st.reason === 'temporarily_closed' ? (txt(site.closed_message) || t('bannerTemp')) : !st.open ? t('bannerClosed', { when: hint }) : (st.open && !st.slots.length ? t('bannerLate') : t('bannerOff'));
   } else banner.classList.add('hidden');
   const btn = $('#reviewBtn');
   if (LOCAL) { banner.classList.add('hidden'); btn.disabled = !cart.length; btn.textContent = t('checkout'); return; }

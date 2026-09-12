@@ -4,6 +4,7 @@ import { DatabaseSync } from 'node:sqlite';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { defaultSections } from './menuSchema.js';
 import { PRINT_DEFAULTS } from './printer.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -188,6 +189,7 @@ export function getMenu() {
   const row = db.prepare('SELECT version, data, updated_at FROM menu WHERE id = 1').get();
   if (!row) return null;
   const data = JSON.parse(row.data);
+  if (!Array.isArray(data.sections) || !data.sections.length) data.sections = defaultSections(data.categories || []);
   data.version = row.version;
   data.updated_at = row.updated_at;
   return data;
@@ -197,7 +199,7 @@ export function saveMenu(data, { bump = true } = {}) {
   const current = db.prepare('SELECT version FROM menu WHERE id = 1').get();
   const version = current ? (bump ? current.version + 1 : current.version) : 1;
   const now = new Date().toISOString();
-  const clean = { currency: data.currency || 'CAD', categories: data.categories, items: data.items };
+  const clean = { currency: data.currency || 'CAD', sections: data.sections || [], categories: data.categories, items: data.items };
   db.prepare(`INSERT INTO menu(id, version, data, updated_at) VALUES (1, ?, ?, ?)
               ON CONFLICT(id) DO UPDATE SET version = excluded.version, data = excluded.data, updated_at = excluded.updated_at`)
     .run(version, JSON.stringify(clean), now);
