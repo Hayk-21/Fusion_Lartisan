@@ -232,3 +232,17 @@ a.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
   .kpis{grid-template-columns:1fr 1fr}
   .table-wrap{font-size:13px}
 }
+
+/* menu sections / tags / photos */
+.list li .thumb{width:34px;height:34px;border-radius:8px;object-fit:cover;background:var(--soft);flex:0 0 auto}
+.photo-box{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.photo-box .img-preview{width:120px;height:90px}
+.photo-box .btns{display:flex;flex-direction:column;gap:6px}
+.tags-grid{display:flex;flex-wrap:wrap;gap:8px}
+.tags-grid label{display:inline-flex;flex-direction:row;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;background:#fff;font-size:13px}
+.tags-grid label:has(input:checked){background:var(--soft);border-color:var(--brand)}
+.tags-grid input{width:16px;height:16px;margin:0}
+.sec-cats{display:flex;flex-direction:column;gap:6px;margin:6px 0}
+.sec-cats .row-c{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:#fff}
+.sec-cats .row-c.off{opacity:.55}
+.sec-cats .row-c .nm{flex:1}

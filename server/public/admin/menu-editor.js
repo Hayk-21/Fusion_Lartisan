@@ -1,6 +1,8 @@
 /* Menu editor · categories, items, variants, option groups. Works on a local copy; "Save" sends the whole menu. */
 (function () {
-  let menu = null, selCat = null, selItem = null, dirty = false;
+  let menu = null, selCat = null, selItem = null, selSec = null, dirty = false;
+  const TAGS = ['popular', 'special', 'hot', 'cold', 'donate', 'gluten-free', 'vegetarian', 'vegan', 'new', 'kids'];
+  const pic = (u, w) => (u && String(u).startsWith('/uploads/')) ? `/img/${w}/${u.split('/').pop()}` : (u || '/shared/logo-mark.png');
   const uid = (p) => p + '-' + Math.random().toString(36).slice(2, 7);
 
   window.MenuEditor = { isDirty: () => dirty };
@@ -9,30 +11,92 @@
 
   async function load() {
     menu = await api('/admin/menu');
-    menu.categories.sort((a, b) => a.sort - b.sort); menu.items.sort((a, b) => a.sort - b.sort);
+    menu.sections = (menu.sections || []).sort((a, b) => a.sort - b.sort); menu.categories.sort((a, b) => a.sort - b.sort); menu.items.sort((a, b) => a.sort - b.sort);
     if (!selCat || !menu.categories.find(c => c.id === selCat)) selCat = menu.categories[0]?.id || null;
     selItem = null; setDirty(false); renderAll();
   }
   function renderAll() {
     $('#menuVersionLabel').textContent = t('menu.version', { v: menu.version, c: menu.categories.length, i: menu.items.length });
-    renderCats(); renderItems(); renderEditor();
+    renderSecs(); renderCats(); renderItems(); renderEditor();
+  }
+
+
+  // ---------------------------------------------------------------- sections (big tiles of the touch menu)
+  function renderSecs() {
+    $('#secList').innerHTML = menu.sections.map((sc, i) => { const cats = sc.category_ids.map(id => menu.categories.find(c => c.id === id)).filter(Boolean);
+      return `<li class="${sc.id === selSec ? 'active' : ''} ${cats.length ? '' : 'off'}" data-id="${sc.id}"><img class="thumb" src="${esc(pic(sc.image, 160))}" alt="">
+      <span class="nm">${esc(tx(sc.name))}<span class="sub">${cats.length ? cats.map(c => tx(c.name)).join(', ') : t('menu.secNoCat')}</span></span>
+      <span class="mini"><button data-mv="-1" title="${t('ed.up')}" ${i === 0 ? 'disabled' : ''}>▲</button><button data-mv="1" title="${t('ed.down')}" ${i === menu.sections.length - 1 ? 'disabled' : ''}>▼</button></span></li>`; }).join('');
+    const orphan = menu.categories.filter(c => !c.daily_special && !menu.sections.some(sc => sc.category_ids.includes(c.id)));
+    $('#secOrphan').textContent = orphan.length ? t('menu.secOrphan', { n: orphan.map(c => tx(c.name)).join(', ') }) : '';
+  }
+  $('#secList').addEventListener('click', e => {
+    const li = e.target.closest('li'); if (!li) return;
+    const mv = e.target.closest('[data-mv]');
+    if (mv) { moveInArray(menu.sections, li.dataset.id, Number(mv.dataset.mv)); menu.sections.forEach((x, i) => x.sort = i + 1); setDirty(true); renderSecs(); return; }
+    selSec = li.dataset.id; selCat = null; selItem = null; renderSecs(); renderCats(); renderItems(); renderEditor();
+  });
+  $('#secAdd').addEventListener('click', () => {
+    const sc = { id: uid('sec'), name: { fr: t('menu.newSection'), en: 'New section' }, image: '', sort: menu.sections.length + 1, category_ids: [] };
+    menu.sections.push(sc); selSec = sc.id; selCat = null; selItem = null; setDirty(true); renderAll();
+    $('#secEditor input')?.focus();
+  });
+  function renderSecEditor() {
+    const sc = menu.sections.find(x => x.id === selSec); const ed = $('#secEditor');
+    ed.classList.toggle('hidden', !sc); $('#itemsPanel').classList.toggle('hidden', !!sc);
+    if (!sc) return;
+    const inSec = sc.category_ids.map(id => menu.categories.find(c => c.id === id)).filter(Boolean);
+    const others = menu.categories.filter(c => !sc.category_ids.includes(c.id));
+    ed.innerHTML = `
+      <div class="row"><label style="flex:1"><span>${t('menu.secName')}</span><input data-sb="name.fr" value="${esc(sc.name.fr)}"></label><label style="flex:1"><span>${t('menu.secNameEn')}</span><input data-sb="name.en" value="${esc(sc.name.en || '')}"></label></div>
+      <p class="help">${t('menu.secHelp')}</p>
+      ${photoBox(sc, 'sec')}
+      <label><span>${t('menu.secCats')}</span></label>
+      <div class="sec-cats">${inSec.map((c, i) => `<div class="row-c"><span>${esc(c.icon || '')}</span><span class="nm">${esc(tx(c.name))}</span>
+        <button class="small ghost" data-sc="up" data-id="${c.id}" ${i === 0 ? 'disabled' : ''}>▲</button><button class="small ghost" data-sc="down" data-id="${c.id}" ${i === inSec.length - 1 ? 'disabled' : ''}>▼</button><button class="small ghost danger-text" data-sc="rm" data-id="${c.id}">✕</button></div>`).join('')}
+        ${others.map(c => `<div class="row-c off"><span>${esc(c.icon || '')}</span><span class="nm">${esc(tx(c.name))}</span><button class="small ghost" data-sc="add" data-id="${c.id}">+ ${t('common.add')}</button></div>`).join('')}</div>
+      <div class="row" style="justify-content:flex-end"><button class="small ghost danger-text" id="secDelete">🗑 ${t('common.delete')}</button></div>`;
+    $$('#secEditor [data-sb]').forEach(inp => inp.addEventListener('input', () => { setPath(sc, inp.dataset.sb, inp.value); setDirty(true); renderSecs(); }));
+    ed.querySelectorAll('[data-sc]').forEach(b => b.onclick = () => {
+      const id = b.dataset.id, i = sc.category_ids.indexOf(id);
+      if (b.dataset.sc === 'add') sc.category_ids.push(id); else if (b.dataset.sc === 'rm') sc.category_ids.splice(i, 1);
+      else swap(sc.category_ids, i, i + (b.dataset.sc === 'up' ? -1 : 1));
+      setDirty(true); renderSecs(); renderSecEditor();
+    });
+    bindPhoto(sc, () => { renderSecs(); renderSecEditor(); });
+    $('#secDelete').onclick = async () => { if (!(await confirmDialog(t('menu.deleteSection', { n: tx(sc.name) }), { danger: true }))) return; menu.sections = menu.sections.filter(x => x.id !== sc.id); selSec = null; setDirty(true); renderAll(); };
+  }
+  // photo block shared by sections, categories and items: upload from the device or import from a URL
+  function photoBox(obj) {
+    return `<div class="photo-box"><img class="img-preview" id="imgPrev" src="${esc(pic(obj.image, 320))}" alt=""><span class="btns">
+      <button class="small ghost" id="imgUp">📷 ${t('ed.upload')}</button><button class="small ghost" id="imgUrl">${t('ed.fromUrl')}</button>${obj.image ? `<button class="small ghost danger-text" id="imgRm">${t('ed.removeImage')}</button>` : ''}</span></div>`;
+  }
+  function bindPhoto(obj, after) {
+    $('#imgUp').onclick = () => { $('#imageFile').onchange = () => uploadImage(obj, after); $('#imageFile').click(); };
+    $('#imgUrl').onclick = async () => {
+      const url = prompt(t('ed.urlPrompt'), ''); if (!url) return;
+      $('#imgUrl').textContent = t('ed.importing'); $('#imgUrl').disabled = true;
+      try { const r = await api('/admin/images/import', { method: 'POST', body: { url, name: tx(obj.name) } }); obj.image = r.url; setDirty(true); after(); }
+      catch (e) { toast(e.message, 'err'); $('#imgUrl').disabled = false; $('#imgUrl').textContent = t('ed.fromUrl'); }
+    };
+    $('#imgRm')?.addEventListener('click', () => { obj.image = ''; setDirty(true); after(); });
   }
 
   // ---------------------------------------------------------------- categories
   function renderCats() {
     $('#catList').innerHTML = menu.categories.map((c, i) => `<li class="${c.id === selCat ? 'active' : ''} ${c.visible === false ? 'off' : ''}" data-id="${c.id}">
-      <span>${esc(c.icon || '')}</span><span class="nm">${esc(tx(c.name))}<span class="sub">${menu.items.filter(x => x.category_id === c.id).length} ${t('menu.items').toLowerCase()}${c.visible === false ? ' · ' + t('menu.hidden') : ''}</span></span>
+      <img class="thumb" src="${esc(pic(c.image, 160))}" alt=""><span class="nm">${esc(c.icon || '')} ${esc(tx(c.name))}<span class="sub">${menu.items.filter(x => x.category_id === c.id).length} ${t('menu.items').toLowerCase()}${c.visible === false ? ' · ' + t('menu.hidden') : ''}</span></span>
       <span class="mini"><button data-mv="-1" title="${t('ed.up')}" ${i === 0 ? 'disabled' : ''}>▲</button><button data-mv="1" title="${t('ed.down')}" ${i === menu.categories.length - 1 ? 'disabled' : ''}>▼</button></span></li>`).join('');
   }
   $('#catList').addEventListener('click', e => {
     const li = e.target.closest('li'); if (!li) return;
     const mv = e.target.closest('[data-mv]');
     if (mv) { moveInArray(menu.categories, li.dataset.id, Number(mv.dataset.mv)); menu.categories.forEach((c, i) => c.sort = i + 1); setDirty(true); renderCats(); return; }
-    selCat = li.dataset.id; selItem = null; renderCats(); renderItems(); renderEditor();
+    selCat = li.dataset.id; selItem = null; selSec = null; renderSecs(); renderCats(); renderItems(); renderEditor();
   });
   $('#catAdd').addEventListener('click', () => {
     const c = { id: uid('cat'), name: { fr: t('menu.newCategory'), en: 'New category' }, description: { fr: '', en: '' }, icon: '🍽️', sort: menu.categories.length + 1, visible: true };
-    menu.categories.push(c); selCat = c.id; selItem = null; setDirty(true); renderAll();
+    menu.categories.push(c); selCat = c.id; selItem = null; selSec = null; setDirty(true); renderAll();
     $('#catEditor input')?.focus();
   });
   function renderCatEditor() {
@@ -47,7 +111,9 @@
       <div class="row" style="justify-content:space-between;align-items:center">
         <label class="check"><input type="checkbox" data-cb="visible" ${c.visible !== false ? 'checked' : ''}><span>${t('menu.visible')}</span></label>
         <label class="check"><input type="checkbox" data-cb="daily_special" ${c.daily_special ? 'checked' : ''}><span>${t('menu.dailySpecial')}</span></label>
-        <button class="small ghost danger-text" id="catDelete">🗑 ${t('common.delete')}</button></div>`;
+        <button class="small ghost danger-text" id="catDelete">🗑 ${t('common.delete')}</button></div>
+      ${photoBox(c)}`;
+    bindPhoto(c, () => { renderCats(); renderCatEditor(); });
     $$('#catEditor [data-cb]').forEach(inp => inp.addEventListener('input', () => {
       setPath(c, inp.dataset.cb, inp.type === 'checkbox' ? inp.checked : inp.value); setDirty(true); renderCats();
     }));
@@ -62,7 +128,7 @@
 
   // ---------------------------------------------------------------- items list
   function renderItems() {
-    renderCatEditor();
+    renderSecEditor(); renderCatEditor();
     const c = menu.categories.find(x => x.id === selCat);
     $('#itemsTitle').textContent = c ? tx(c.name) : t('menu.items');
     const list = menu.items.filter(i => i.category_id === selCat);
@@ -106,9 +172,10 @@
           <label><span>${t('ed.price')}</span><input type="number" step="0.01" min="0" data-b="price" value="${it.price}" ${it.variants.length ? 'disabled title="Prix défini par les tailles/formules"' : ''}></label></div>
         <div class="row2" style="align-items:center">
           <label class="check"><input type="checkbox" data-b="available" ${it.available !== false ? 'checked' : ''}><span>${t('ed.available')}</span></label>
-          <div style="display:flex;gap:10px;align-items:center"><img class="img-preview" src="${it.image ? esc(it.image) : '/shared/logo-mark.png'}" id="imgPrev"><span><button class="small ghost" id="imgUp">📷 ${t('ed.upload')}</button> ${it.image ? `<button class="small ghost danger-text" id="imgRm">${t('ed.removeImage')}</button>` : ''}</span></div>
+          ${photoBox(it)}
         </div>
       </fieldset>
+      <fieldset><legend>${t('ed.tags')}</legend><div class="tags-grid">${TAGS.map(x => `<label><input type="checkbox" data-tag="${x}" ${(it.tags || []).includes(x) ? 'checked' : ''}>${t('tag.' + x)}</label>`).join('')}</div></fieldset>
       <fieldset><legend>${t('ed.variants')}</legend><p class="help">${t('ed.variantsHelp')}</p>
         <div id="variants">${it.variants.map((v, vi) => variantHtml(it, v, vi)).join('')}</div>
         <button class="small ghost" id="vAdd">${t('ed.addVariant')}</button>
@@ -129,8 +196,8 @@
     // structural buttons
     $('#itDup').onclick = () => { const copy = JSON.parse(JSON.stringify(it)); copy.id = uid('item'); copy.name = { fr: it.name.fr + ' (copie)', en: (it.name.en || it.name.fr) + ' (copy)' }; copy.sort = it.sort + 0.5; menu.items.push(copy); menu.items.sort((a, b) => a.sort - b.sort); menu.items.filter(i => i.category_id === selCat).forEach((x, i) => x.sort = i + 1); selItem = copy.id; setDirty(true); renderItems(); renderEditor(); };
     $('#itDel').onclick = async () => { if (!(await confirmDialog(t('menu.deleteItem', { n: tx(it.name) }), { danger: true }))) return; menu.items = menu.items.filter(x => x.id !== it.id); selItem = null; setDirty(true); renderItems(); renderEditor(); };
-    $('#imgUp').onclick = () => { $('#imageFile').onchange = () => uploadImage(it); $('#imageFile').click(); };
-    $('#imgRm')?.addEventListener('click', () => { delete it.image; setDirty(true); renderEditor(); });
+    bindPhoto(it, renderEditor);
+    $$('#itemEditor [data-tag]').forEach(cb => cb.addEventListener('change', () => { it.tags = TAGS.filter(x => $(`#itemEditor [data-tag="${x}"]`).checked); setDirty(true); }));
     $('#vAdd').onclick = () => { it.variants.push({ id: uid('v'), name: { fr: '', en: '' }, price: it.price || 0, included: {} }); setDirty(true); renderEditor(); };
     $('#gAdd').onclick = () => { it.option_groups.push({ id: uid('g'), name: { fr: '', en: '' }, type: 'multi', required: false, min: 0, max: null, included: 0, extra_price: 0, options: [] }); setDirty(true); renderEditor(); };
     ed.querySelectorAll('[data-act]').forEach(b => b.addEventListener('click', () => structural(it, b.dataset.act, b.dataset)));
@@ -187,10 +254,10 @@
       closeModal(); setDirty(true); renderEditor();
     };
   }
-  async function uploadImage(it) {
+  async function uploadImage(obj, after = renderEditor) {
     const f = $('#imageFile').files[0]; if (!f) return;
-    const data = await resizeImage(f, 800);
-    try { const r = await api('/admin/upload', { method: 'POST', body: { data, name: it.name.fr } }); it.image = r.url; setDirty(true); renderEditor(); }
+    const data = await resizeImage(f, 1200);
+    try { const r = await api('/admin/upload', { method: 'POST', body: { data, name: tx(obj.name) } }); obj.image = r.url; setDirty(true); after(); }
     catch (e) { toast(e.message, 'err'); }
     $('#imageFile').value = '';
   }

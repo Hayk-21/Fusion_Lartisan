@@ -117,13 +117,19 @@
       </header>
       <div class="menu-layout">
         <div class="panel cats">
-          <div class="panel-head"><h3 data-i18n="menu.categories">Catégories</h3><button id="catAdd" class="small primary">+ <span data-i18n="menu.addCategory">Catégorie</span></button></div>
+          <div class="panel-head"><h3 data-i18n="menu.sections">Sections</h3><button id="secAdd" class="small primary">+ <span data-i18n="menu.addSection">Section</span></button></div>
+          <ul id="secList" class="list"></ul>
+          <p class="help" id="secOrphan"></p>
+          <div class="panel-head" style="margin-top:14px"><h3 data-i18n="menu.categories">Catégories</h3><button id="catAdd" class="small primary">+ <span data-i18n="menu.addCategory">Catégorie</span></button></div>
           <ul id="catList" class="list"></ul>
         </div>
         <div class="panel items">
-          <div class="panel-head"><h3 id="itemsTitle" data-i18n="menu.items">Articles</h3><button id="itemAdd" class="small primary">+ <span data-i18n="menu.addItem">Article</span></button></div>
-          <div id="catEditor" class="cat-editor"></div>
-          <ul id="itemList" class="list"></ul>
+          <div id="secEditor" class="cat-editor hidden"></div>
+          <div id="itemsPanel">
+            <div class="panel-head"><h3 id="itemsTitle" data-i18n="menu.items">Articles</h3><button id="itemAdd" class="small primary">+ <span data-i18n="menu.addItem">Article</span></button></div>
+            <div id="catEditor" class="cat-editor"></div>
+            <ul id="itemList" class="list"></ul>
+          </div>
         </div>
         <div class="panel editor" id="itemEditor">
           <div class="empty" data-i18n="menu.selectItem">Sélectionnez un article pour le modifier, ou créez-en un nouveau.</div>

@@ -24,7 +24,7 @@ const STR = {
     closedBtn: 'Café fermé', lateBtn: "Trop tard pour aujourd'hui", localTitle: 'Mode comptoir', localHint: 'Entrez le code PIN pour ouvrir le menu du café.', wrongPin: 'Code PIN incorrect', counter: 'Comptoir', tablet: 'Tablette', tabletName: 'Nom de cette tablette', save: 'Enregistrer',
     menuUpdated: 'Le menu a été mis à jour', errNet: 'Connexion impossible, réessayez.', cancelled: 'Paiement annulé · votre panier est conservé.', max: 'Maximum {n}', orderOnline: 'Commander en ligne',
     best: 'Best-sellers', ourBest: 'Nos best-sellers', heroTitle: 'Des saveurs qui font la différence', heroSub: '{list} et plus encore…', seeAll: 'Voir tout', continue: 'Continuer', clearCart: 'Vider le panier', addShort: 'Ajouter',
-    dineInSub: 'Servi à votre table', takeoutSub: 'Prêt à emporter', promoSpecial: 'Spécial du jour', promoCoffee: 'Café de spécialité', promoCoffeeSub: 'Boissons chaudes', taxes: 'Taxes (TPS/TVQ)', choices: '{n} choix' },
+    dineInSub: 'Servi à votre table', takeoutSub: 'Prêt à emporter', promoSpecial: 'Spécial du jour', promoCoffee: 'Café de spécialité', promoCoffeeSub: 'Boissons chaudes', taxes: 'Taxes (TPS/TVQ)', choices: '{n} choix', howOrder: 'Comment souhaitez-vous commander ?', wDine: 'Sur place', wTake: 'Pour emporter' },
   en: { back: 'Back', confirm: 'Confirm', confirmN: 'Confirm · {n} · {t}', yourOrder: 'Your order', clear: 'Clear', empty: 'Your order is empty.\nTap a dish to start.',
     from: 'from', add: 'Add', included: 'included', includedOf: '{c}/{n} included', extra: 'extra', required: 'Required', choose: 'Choose', qty: 'Quantity', note: 'Note for the kitchen (allergies, no onion…)',
     subtotal: 'Subtotal', gst: 'GST ({r}%)', qst: 'QST ({r}%)', tip: 'Tip', total: 'Total', items: '{n} item(s)', all: 'All', filters: 'Filters', special: "Today's special", specialStrip: "⭐ See today's special",
@@ -38,7 +38,7 @@ const STR = {
     closedBtn: 'Café closed', lateBtn: 'Too late for today', localTitle: 'Counter mode', localHint: 'Enter the PIN to open the café menu.', wrongPin: 'Wrong PIN', counter: 'Counter', tablet: 'Tablet', tabletName: 'Name of this tablet', save: 'Save',
     menuUpdated: 'The menu was updated', errNet: 'Cannot connect, please retry.', cancelled: 'Payment cancelled · your cart was kept.', max: 'Maximum {n}', orderOnline: 'Order online',
     best: 'Best-sellers', ourBest: 'Our best-sellers', heroTitle: 'Flavours that make the difference', heroSub: '{list} and more…', seeAll: 'See all', continue: 'Continue', clearCart: 'Clear cart', addShort: 'Add',
-    dineInSub: 'Served at your table', takeoutSub: 'Ready to go', promoSpecial: "Today's special", promoCoffee: 'Specialty coffee', promoCoffeeSub: 'Hot drinks', taxes: 'Taxes (GST/QST)', choices: '{n} choices' },
+    dineInSub: 'Served at your table', takeoutSub: 'Ready to go', promoSpecial: "Today's special", promoCoffee: 'Specialty coffee', promoCoffeeSub: 'Hot drinks', taxes: 'Taxes (GST/QST)', choices: '{n} choices', howOrder: 'How would you like to order?', wDine: 'Dine in', wTake: 'Take out' },
 };
 let lang = localStorage.getItem('site_lang') || ((navigator.language || 'fr').toLowerCase().startsWith('en') ? 'en' : 'fr');
 const t = (k, v = {}) => { let s = STR[lang][k] ?? STR.fr[k] ?? k; if (typeof s !== 'string') return s; for (const [a, b] of Object.entries(v)) s = s.replace('{' + a + '}', b); return s; };
@@ -80,7 +80,7 @@ function applyLang() {
   $('#navSub').textContent = MODE === 'local' ? t('counter') : MODE === 'tablet' ? t('tablet') : t('orderOnline');
   if (menu) render();
 }
-$$('.lang button').forEach(b => b.onclick = () => { lang = b.dataset.lang; localStorage.setItem('site_lang', lang); applyLang(); });
+$$('.lang button').forEach(b => b.onclick = () => { lang = b.dataset.lang; localStorage.setItem('site_lang', lang); applyLang(); if (menu) renderWelcome(); });
 
 // ---------------------------------------------------------------- data
 async function load() {
@@ -88,7 +88,7 @@ async function load() {
   menu = m; site = s; settings = { ...settings, ...m.settings };
   $('#navName').textContent = s.cafe_name; $('#navLogo').src = s.logo_url || '/shared/logo-mark.png'; document.title = `${s.cafe_name} · Menu`;
   if (view.section && !byId(menu.sections, view.section)) view = { page: 'best', section: null, subcat: null, tag: null };
-  render(); renderState();
+  render(); renderState(); renderWelcome();
   prefetchPictures();
 }
 // Load every menu picture in the background (small WebP copies) so that switching sections is instant.
@@ -367,7 +367,7 @@ async function submit() {
     cart = []; saveCart(); form.name = ''; form.service = 'dine_in'; form.tip = null; renderGrid(); renderCart(); renderBar();
     let secs = Math.max(3, Math.min(120, Number(settings.thank_you_seconds) || 12));
     $('#cartCard').innerHTML = `<div class="success"><h2>${t('thanks')}</h2><p class="muted">${t('giveNumber')}</p><div class="num">#${data.number}</div><p><button class="btn primary big" id="newOrderBtn">${t('newOrder')}</button></p><p class="muted" id="autoBack">${t('autoBack', { s: secs })}</p></div>`;
-    const done = () => { clearInterval(tm); closeCart(); goHome(); };
+    const done = () => { clearInterval(tm); closeCart(); goHome(); showWelcome(); };
     $('#newOrderBtn').onclick = done;
     const tm = setInterval(() => { secs--; if (secs <= 0) done(); else { const p = $('#autoBack'); if (p) p.textContent = t('autoBack', { s: secs }); } }, 1000);
   } catch (e) {
@@ -413,8 +413,26 @@ if (MODE !== 'web') {
   document.addEventListener('fullscreenchange', () => { fs.textContent = document.fullscreenElement ? '✕' : '⛶'; });
 }
 // abandoned cart on a kiosk: back to the home page after 5 minutes without a touch
-function touch() { if (MODE === 'web') return; clearTimeout(idleTimer); idleTimer = setTimeout(() => { cart = []; saveCart(); closeSheet(); closeCart(); goHome(); }, 5 * 60 * 1000); }
-['click', 'touchstart', 'keydown'].forEach(ev => document.addEventListener(ev, () => { if (cart.length) touch(); }, { passive: true }));
+function touch() { if (MODE === 'web') return; clearTimeout(idleTimer); idleTimer = setTimeout(() => { cart = []; saveCart(); closeSheet(); closeCart(); goHome(); showWelcome(); }, 5 * 60 * 1000); }
+let idle2 = null;
+['click', 'touchstart', 'keydown'].forEach(ev => document.addEventListener(ev, () => { if (cart.length) touch(); if (MODE !== 'web') { clearTimeout(idle2); idle2 = setTimeout(() => { if (!cart.length && welcome.classList.contains('hidden')) { closeSheet(); closeCart(); goHome(); showWelcome(); } }, 3 * 60 * 1000); } }, { passive: true }));
+
+// ---------------------------------------------------------------- welcome screen (counter and tablets)
+const welcome = $('#welcome');
+function renderWelcome() {
+  if (MODE === 'web' || !menu) return;
+  const secs = visibleSections(); const photos = [secs.find(x => x.id === 'sale') || secs[0], secs.find(x => x.id === 'sucre') || secs[1]].filter(Boolean);
+  $('#wPhotos').innerHTML = photos.map(x => x.image ? `<img src="${esc(pic(x.image, 960))}" alt="">` : '').join('');
+  $('#wLogo').src = site?.logo_url && !/logo-mark/.test(site.logo_url) ? site.logo_url : '/shared/logo-full.png';
+  $('#wKicker').textContent = secs.slice(0, 3).map(x => txt(x.name)).join(' · ');
+  $('#wSlogan').textContent = txt(site?.tagline);
+  $('#wQuestion').textContent = t('howOrder'); $('#wDine').textContent = t('wDine'); $('#wTake').textContent = t('wTake');
+  $$('[data-wlang]').forEach(b => b.classList.toggle('on', b.dataset.wlang === lang));
+}
+function showWelcome() { if (MODE === 'web') return; renderWelcome(); welcome.classList.remove('hidden'); }
+$$('[data-wlang]').forEach(b => b.onclick = () => { lang = b.dataset.wlang; localStorage.setItem('site_lang', lang); applyLang(); renderWelcome(); });
+$$('[data-wsvc]').forEach(b => b.onclick = () => { form.service = b.dataset.wsvc; welcome.classList.add('hidden'); goHome(); renderCart(); touch(); });
+if (MODE !== 'web') { welcome.classList.remove('hidden'); }
 
 // ---------------------------------------------------------------- misc
 function toast(msg, kind = '') { const el = $('#toast'); el.textContent = msg; el.className = 'toast ' + kind; clearTimeout(el._t); el._t = setTimeout(() => el.classList.add('hidden'), 2500); }

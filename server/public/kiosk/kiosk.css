@@ -72,7 +72,7 @@ button{font:inherit;cursor:pointer}
 .chips{display:flex;gap:8px;flex-wrap:wrap}
 .chips button{border:1px solid var(--line);background:#fff;color:var(--brown);border-radius:999px;padding:9px 16px;font-weight:600;font-size:13.5px;min-height:42px;display:inline-flex;align-items:center;gap:6px}
 .chips button.on{background:var(--gold);border-color:var(--gold);color:#fff}
-.chips.tags button{background:var(--paper)}
+.chips.tags button:not(.on){background:var(--paper)}
 /* cards */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(208px,1fr));gap:14px}
 .grid h3.cat{grid-column:1/-1;font-size:20px;margin:6px 0 -4px;color:var(--brown);display:flex;align-items:center;gap:8px}
@@ -115,7 +115,7 @@ button{font:inherit;cursor:pointer}
 .cart .go{width:100%;margin-top:10px}
 .cart .clear{width:100%;margin-top:8px;border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:10px;padding:9px;font-weight:600;font-size:13px}
 .svc{display:flex;flex-direction:column;gap:8px;margin-top:12px}
-.svc button{display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;text-align:left;min-height:54px}
+.svc button{display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:#fff;border-radius:12px;padding:8px 12px;text-align:left;min-height:48px}
 .svc button .ic{font-size:20px}.svc button .tx{flex:1;line-height:1.15}.svc button b{display:block;font-size:14px;color:var(--brown)}.svc button small{font-size:11.5px;color:var(--muted)}
 .svc button .ch{color:var(--muted)}
 .svc button.on{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold);background:#fffaf0}
@@ -198,3 +198,28 @@ body.mode-web .app{height:auto;min-height:calc(100vh - var(--top))}
 body.mode-web .main{overflow:visible}
 body.mode-web .side,body.mode-web .cart{position:sticky;top:0;height:calc(100vh - var(--top));align-self:start}
 @media(max-width:940px){body.mode-web .side{height:auto}}
+
+/* ------------------------------------------------------------ welcome screen */
+.welcome{position:fixed;inset:0;z-index:70;background:var(--paper);display:grid;grid-template-columns:1fr 1fr}
+.w-photos{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:0;overflow:hidden;background:#5a4632}
+.w-photos img{width:100%;height:100%;object-fit:cover;display:block}
+.w-photos::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.05),rgba(0,0,0,.25))}
+.w-panel{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 48px;gap:14px;overflow-y:auto}
+.w-logo{height:min(190px,26vh);max-width:80%;object-fit:contain}
+.w-kicker{font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold2);font-weight:700}
+.w-slogan{margin:0;font-family:"Playfair Display",serif;font-size:clamp(16px,1.6vw,22px);color:var(--brown);max-width:520px}
+.w-lang{display:flex;gap:12px;margin-top:10px}
+.w-lang button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:12px 26px;font-weight:700;font-size:16px;color:var(--brown);min-height:52px;box-shadow:0 3px 10px rgba(60,30,10,.06)}
+.w-lang button.on{border-color:var(--gold);box-shadow:inset 0 0 0 2px var(--gold)}
+.w-q{font-family:Montserrat,sans-serif;font-weight:700;font-size:clamp(17px,1.5vw,21px);color:var(--ink);margin-top:14px}
+.w-choices{display:grid;grid-template-columns:1fr 1fr;gap:18px;width:min(560px,100%)}
+.w-choices button{border:none;border-radius:22px;background:linear-gradient(160deg,#c9a55c,#a8823f);color:#fff;padding:26px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;min-height:160px;box-shadow:0 12px 26px rgba(150,110,40,.3);font-size:19px}
+.w-choices button .ic{font-size:44px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.2))}
+.w-choices button:active{transform:scale(.97)}
+@media(orientation:portrait),(max-width:940px){
+  .welcome{grid-template-rows:42vh 1fr;grid-template-columns:1fr}
+  .w-photos{grid-template-columns:1fr 1fr}
+  .w-panel{padding:22px 20px;gap:10px;justify-content:center}
+  .w-logo{height:min(120px,16vh);position:absolute;top:22px;left:50%;transform:translateX(-50%);z-index:1;filter:drop-shadow(0 4px 12px rgba(0,0,0,.35))}
+  .w-choices button{min-height:130px;padding:20px 12px}
+}

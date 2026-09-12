@@ -63,6 +63,21 @@
     <p id="pinError" class="pin-error"></p>
   </div>
 </div>
+<!-- welcome screen (counter / tablets): language + dine in / take out -->
+<div id="welcome" class="welcome hidden">
+  <div class="w-photos" id="wPhotos"></div>
+  <div class="w-panel">
+    <img src="/shared/logo-full.png" alt="" class="w-logo" id="wLogo">
+    <div class="w-kicker" id="wKicker"></div>
+    <p class="w-slogan" id="wSlogan"></p>
+    <div class="w-lang"><button data-wlang="fr">🇫🇷 Français</button><button data-wlang="en">🇬🇧 English</button></div>
+    <h2 class="w-q" id="wQuestion"></h2>
+    <div class="w-choices">
+      <button data-wsvc="dine_in"><span class="ic">🍽️</span><b id="wDine"></b></button>
+      <button data-wsvc="takeout"><span class="ic">🛍️</span><b id="wTake"></b></button>
+    </div>
+  </div>
+</div>
 <div id="toast" class="toast hidden"></div>
 <script type="module" src="/kiosk/kiosk.js"></script>
 </body>
