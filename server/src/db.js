@@ -248,6 +248,10 @@ export function upgradeMenuStructure() {
     if (!c.name_en && sc.name_en) c.name_en = sc.name_en;
   }
   const seedItems = new Map((seed.items || []).map(i => [i.id, i]));
+  // v4: the daily special is split into dishes and drinks so that the Best-sellers page shows them on separate rows
+  const cats2 = new Map(menu.categories.map(c => [c.id, c]));
+  if (cats2.has('du-jour-boissons')) for (const it of menu.items || []) { const si = seedItems.get(it.id); if (si && si.category_id === 'du-jour-boissons' && it.category_id === 'du-jour') { it.category_id = 'du-jour-boissons'; changed.push('→' + it.id); } }
+  if (cats2.get('du-jour') && /^Spécial du jour$/i.test(cats2.get('du-jour').name?.fr || '') && seedItems.size) cats2.get('du-jour').name = { fr: 'Plats du jour', en: "Today's dishes" };
   for (const it of menu.items || []) {
     const si = seedItems.get(it.id);
     if (!si) continue;

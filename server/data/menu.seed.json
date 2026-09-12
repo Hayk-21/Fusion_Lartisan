@@ -1,13 +1,13 @@
 {
   "version": 1,
-  "seed_version": 3,
+  "seed_version": 4,
   "currency": "CAD",
   "categories": [
     {
       "id": "du-jour",
       "name": {
-        "fr": "Spécial du jour",
-        "en": "Today's Special"
+        "fr": "Plats du jour",
+        "en": "Today's dishes"
       },
       "icon": "⭐",
       "sort": 1,
@@ -19,13 +19,28 @@
       "daily_special": true
     },
     {
+      "id": "du-jour-boissons",
+      "name": {
+        "fr": "Boissons du jour",
+        "en": "Today's drinks"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "icon": "☕",
+      "sort": 2,
+      "visible": true,
+      "daily_special": true
+    },
+    {
       "id": "galettes",
       "name": {
         "fr": "Galettes salées",
         "en": "Savoury Galettes"
       },
       "icon": "🥙",
-      "sort": 2,
+      "sort": 3,
       "visible": true,
       "description": {
         "fr": "Sarrasin bio, sans gluten, composez votre galette",
@@ -39,7 +54,7 @@
         "en": "Atelier Signatures"
       },
       "icon": "✨",
-      "sort": 3,
+      "sort": 4,
       "visible": true,
       "description": {
         "fr": "Galettes bio & sans gluten, servies avec une petite salade du jour",
@@ -53,7 +68,7 @@
         "en": "The Trilogy of the Heart"
       },
       "icon": "❤️",
-      "sort": 4,
+      "sort": 5,
       "visible": true,
       "description": {
         "fr": "Pour chaque crêpe vendue de cette trilogie, 1 $ est versé à une cause qui nous tient à cœur.",
@@ -67,7 +82,7 @@
         "en": "Savoury Formulas"
       },
       "icon": "🍽️",
-      "sort": 5,
+      "sort": 6,
       "visible": true,
       "description": {
         "fr": "Des formules combinées pour un repas complet",
@@ -81,7 +96,7 @@
         "en": "Sweet Crêpes"
       },
       "icon": "🍓",
-      "sort": 6,
+      "sort": 7,
       "visible": true,
       "description": {
         "fr": "L'Artisan, c'est vous, composez votre crêpe sucrée",
@@ -95,7 +110,7 @@
         "en": "Signature Crêpes"
       },
       "icon": "🌟",
-      "sort": 7,
+      "sort": 8,
       "visible": true,
       "description": {
         "fr": "Nos créations sucrées, un voyage pour les papilles",
@@ -109,7 +124,7 @@
         "en": "Sweet Formulas"
       },
       "icon": "🍨",
-      "sort": 8,
+      "sort": 9,
       "visible": true,
       "description": {
         "fr": "Pour bien commencer la journée",
@@ -123,7 +138,7 @@
         "en": "Milkshakes & Ice Cream"
       },
       "icon": "🍦",
-      "sort": 9,
+      "sort": 10,
       "visible": true,
       "description": {
         "fr": "À composer soi-même, crème Chantilly incluse",
@@ -137,7 +152,7 @@
         "en": "Hot Drinks"
       },
       "icon": "☕",
-      "sort": 10,
+      "sort": 11,
       "visible": true,
       "description": {
         "fr": "Café barista, thés & lattés",
@@ -151,7 +166,7 @@
         "en": "Drinks & Juices"
       },
       "icon": "🥤",
-      "sort": 11,
+      "sort": 12,
       "visible": true,
       "description": {
         "fr": "Fraîcheurs maison, cocktails sans alcool, smoothies",
@@ -169,7 +184,7 @@
         "en": "Fresh and generous."
       },
       "icon": "🥗",
-      "sort": 5.5,
+      "sort": 13,
       "visible": true
     }
   ],
@@ -227,7 +242,7 @@
     },
     {
       "id": "dj-latte",
-      "category_id": "du-jour",
+      "category_id": "du-jour-boissons",
       "name": {
         "fr": "Latte du jour",
         "en": "Latte of the Day"
@@ -249,7 +264,7 @@
     },
     {
       "id": "dj-iced-latte",
-      "category_id": "du-jour",
+      "category_id": "du-jour-boissons",
       "name": {
         "fr": "Iced Latte du jour",
         "en": "Iced Latte of the Day"
@@ -272,7 +287,7 @@
     },
     {
       "id": "dj-matcha",
-      "category_id": "du-jour",
+      "category_id": "du-jour-boissons",
       "name": {
         "fr": "Matcha du jour",
         "en": "Matcha of the Day"
@@ -294,7 +309,7 @@
     },
     {
       "id": "dj-cafe-filtre",
-      "category_id": "du-jour",
+      "category_id": "du-jour-boissons",
       "name": {
         "fr": "Café filtre",
         "en": "Filter Coffee"
@@ -5234,5 +5249,6 @@
         "boissons-froides"
       ]
     }
-  ]
+  ],
+  "structure_version": 4
 }
