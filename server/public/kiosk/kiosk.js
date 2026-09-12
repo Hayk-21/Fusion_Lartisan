@@ -471,7 +471,14 @@ function vkPress(k) {
   el.value = v; try { el.setSelectionRange(pos, pos); } catch {}
   el.dispatchEvent(new Event('input', { bubbles: true }));
 }
-function vkShow(el) { if (!vk || vkLang !== lang) vkBuild(); vkTarget = el; vkShownAt = Date.now(); vk.classList.remove('hidden'); document.body.classList.add('vk-open'); setTimeout(() => el.scrollIntoView({ block: 'center', behavior: 'smooth' }), 50); }
+function vkShow(el) {
+  if (!vk || vkLang !== lang) vkBuild();
+  vkTarget = el; vkShownAt = Date.now(); vk.classList.remove('hidden');
+  document.documentElement.style.setProperty('--vk-h', vk.offsetHeight + 'px');
+  // move the sheet above the keyboard only once the tap is finished (a layout change during the tap makes the
+  // touch land somewhere else and the field never gets the focus)
+  setTimeout(() => { if (vkTarget === el) { document.body.classList.add('vk-open'); if (document.activeElement !== el) { try { el.focus({ preventScroll: true }); } catch {} } setTimeout(() => el.scrollIntoView({ block: 'center', behavior: 'smooth' }), 60); } }, 350);
+}
 function vkHide() { if (!vk) return; vk.classList.add('hidden'); document.body.classList.remove('vk-open'); vkTarget = null; }
 if (MODE !== 'web') {
   document.addEventListener('pointerdown', e => { const el = e.target.closest('input,textarea'); if (el && ((el.tagName === 'INPUT' && /^(text|search|tel|email|url|)$/.test(el.type || '')) || el.tagName === 'TEXTAREA')) { el.setAttribute('inputmode', 'none'); if (!vk || vk.classList.contains('hidden') || vkTarget !== el) vkShow(el); } });
