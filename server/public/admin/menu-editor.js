@@ -90,23 +90,25 @@
       else swap(sc.category_ids, i, i + (b.dataset.sc === 'up' ? -1 : 1));
       setDirty(true); renderSecs(); renderSecEditor();
     });
-    bindPhoto(sc, () => { renderSecs(); renderSecEditor(); });
+    bindPhoto('#secEditor', sc, () => { renderSecs(); renderSecEditor(); });
     $('#secDelete').onclick = async () => { if (!(await confirmDialog(t('menu.deleteSection', { n: tx(sc.name) }), { danger: true }))) return; menu.sections = menu.sections.filter(x => x.id !== sc.id); selSec = null; setDirty(true); renderAll(); };
   }
-  // photo block shared by sections, categories and items: upload from the device or import from a URL
+  // photo block shared by sections, categories and items: upload from the device or import from a URL.
+  // Several blocks can be on the page at once (category + item), so buttons are found inside their own root.
   function photoBox(obj) {
-    return `<div class="photo-box"><img class="img-preview" id="imgPrev" src="${esc(pic(obj.image, 320))}" alt=""><span class="btns">
-      <button class="small ghost" id="imgUp">📷 ${t('ed.upload')}</button><button class="small ghost" id="imgUrl">${t('ed.fromUrl')}</button>${obj.image ? `<button class="small ghost danger-text" id="imgRm">${t('ed.removeImage')}</button>` : ''}</span></div>`;
+    return `<div class="photo-box"><img class="img-preview" src="${esc(pic(obj.image, 320))}" alt=""><span class="btns">
+      <button class="small ghost" data-p="up">📷 ${t('ed.upload')}</button><button class="small ghost" data-p="url">${t('ed.fromUrl')}</button>${obj.image ? `<button class="small ghost danger-text" data-p="rm">${t('ed.removeImage')}</button>` : ''}</span></div>`;
   }
-  function bindPhoto(obj, after) {
-    $('#imgUp').onclick = () => { $('#imageFile').onchange = () => uploadImage(obj, after); $('#imageFile').click(); };
-    $('#imgUrl').onclick = async () => {
+  function bindPhoto(rootSel, obj, after) {
+    const root = $(rootSel); const box = root && root.querySelector('.photo-box'); if (!box) return;
+    box.querySelector('[data-p="up"]').onclick = () => { $('#imageFile').onchange = () => uploadImage(obj, after); $('#imageFile').click(); };
+    box.querySelector('[data-p="url"]').onclick = async () => {
       const url = prompt(t('ed.urlPrompt'), ''); if (!url) return;
-      $('#imgUrl').textContent = t('ed.importing'); $('#imgUrl').disabled = true;
+      const b = box.querySelector('[data-p="url"]'); b.textContent = t('ed.importing'); b.disabled = true;
       try { const r = await api('/admin/images/import', { method: 'POST', body: { url, name: tx(obj.name) } }); obj.image = r.url; setDirty(true); after(); }
-      catch (e) { toast(e.message, 'err'); $('#imgUrl').disabled = false; $('#imgUrl').textContent = t('ed.fromUrl'); }
+      catch (e) { toast(e.message, 'err'); b.disabled = false; b.textContent = t('ed.fromUrl'); }
     };
-    $('#imgRm')?.addEventListener('click', () => { obj.image = ''; setDirty(true); after(); });
+    const rm = box.querySelector('[data-p="rm"]'); if (rm) rm.onclick = () => { obj.image = ''; setDirty(true); after(); toast(t('ed.removed'), 'ok'); };
   }
 
   // ---------------------------------------------------------------- categories
@@ -140,7 +142,7 @@
         <label class="check"><input type="checkbox" data-cb="daily_special" ${c.daily_special ? 'checked' : ''}><span>${t('menu.dailySpecial')}</span></label>
         <button class="small ghost danger-text" id="catDelete">🗑 ${t('common.delete')}</button></div>
       ${photoBox(c)}`;
-    bindPhoto(c, () => { renderCats(); renderCatEditor(); });
+    bindPhoto('#catEditor', c, () => { renderCats(); renderCatEditor(); });
     $$('#catEditor [data-cb]').forEach(inp => inp.addEventListener('input', () => {
       setPath(c, inp.dataset.cb, inp.type === 'checkbox' ? inp.checked : inp.value); setDirty(true); renderCats();
     }));
@@ -223,7 +225,7 @@
     // structural buttons
     $('#itDup').onclick = () => { const copy = JSON.parse(JSON.stringify(it)); copy.id = uid('item'); copy.name = { fr: it.name.fr + ' (copie)', en: (it.name.en || it.name.fr) + ' (copy)' }; copy.sort = it.sort + 0.5; menu.items.push(copy); menu.items.sort((a, b) => a.sort - b.sort); menu.items.filter(i => i.category_id === selCat).forEach((x, i) => x.sort = i + 1); selItem = copy.id; setDirty(true); renderItems(); renderEditor(); };
     $('#itDel').onclick = async () => { if (!(await confirmDialog(t('menu.deleteItem', { n: tx(it.name) }), { danger: true }))) return; menu.items = menu.items.filter(x => x.id !== it.id); selItem = null; setDirty(true); renderItems(); renderEditor(); };
-    bindPhoto(it, renderEditor);
+    bindPhoto('#itemEditor', it, () => { renderEditor(); renderItems(); });
     $$('#itemEditor [data-tag]').forEach(cb => cb.addEventListener('change', () => { it.tags = TAGS.filter(x => $(`#itemEditor [data-tag="${x}"]`).checked); setDirty(true); }));
     $('#vAdd').onclick = () => { it.variants.push({ id: uid('v'), name: { fr: '', en: '' }, price: it.price || 0, included: {} }); setDirty(true); renderEditor(); };
     $('#gAdd').onclick = () => { it.option_groups.push({ id: uid('g'), name: { fr: '', en: '' }, type: 'multi', required: false, min: 0, max: null, included: 0, extra_price: 0, options: [] }); setDirty(true); renderEditor(); };
