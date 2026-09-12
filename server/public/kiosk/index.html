@@ -63,18 +63,21 @@
     <p id="pinError" class="pin-error"></p>
   </div>
 </div>
-<!-- welcome screen (counter / tablets): language + dine in / take out -->
+<!-- welcome screen (counter / tablets): language + dine in / take out. Sits below the header. -->
 <div id="welcome" class="welcome hidden">
-  <div class="w-photos" id="wPhotos"></div>
-  <div class="w-panel">
+  <div class="w-bg" id="wBg"></div>
+  <div class="w-card">
     <img src="/shared/logo-full.png" alt="" class="w-logo" id="wLogo">
     <div class="w-kicker" id="wKicker"></div>
     <p class="w-slogan" id="wSlogan"></p>
-    <div class="w-lang"><button data-wlang="fr">🇫🇷 Français</button><button data-wlang="en">🇬🇧 English</button></div>
+    <div class="w-lang">
+      <button data-wlang="fr"><svg viewBox="0 0 30 20" aria-hidden="true"><rect width="10" height="20" fill="#0055A4"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#EF4135"/></svg>Français</button>
+      <button data-wlang="en"><svg viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#012169"/><path d="M0 0L30 20M30 0L0 20" stroke="#fff" stroke-width="4"/><path d="M0 0L30 20M30 0L0 20" stroke="#C8102E" stroke-width="1.6"/><path d="M15 0V20M0 10H30" stroke="#fff" stroke-width="6"/><path d="M15 0V20M0 10H30" stroke="#C8102E" stroke-width="3.2"/></svg>English</button>
+    </div>
     <h2 class="w-q" id="wQuestion"></h2>
     <div class="w-choices">
-      <button data-wsvc="dine_in"><span class="ic">🍽️</span><b id="wDine"></b></button>
-      <button data-wsvc="takeout"><span class="ic">🛍️</span><b id="wTake"></b></button>
+      <button data-wsvc="dine_in"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="16" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="32" cy="32" r="9" fill="none" stroke="currentColor" stroke-width="2" opacity=".7"/><path d="M9 12v14a5 5 0 0 0 10 0V12M14 12v40M9 12h0M19 12h0" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M52 12c-4 2-6 8-6 14v6h6V12zM52 32v20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><b id="wDine"></b></button>
+      <button data-wsvc="takeout"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M14 22h36l-3 32H17z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="M23 22v-4a9 9 0 0 1 18 0v4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M24 34h16" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".7"/></svg><b id="wTake"></b></button>
     </div>
   </div>
 </div>

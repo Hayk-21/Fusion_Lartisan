@@ -1,6 +1,8 @@
 # Tablettes Android — compiler, installer, configurer
 
-Le dossier `android-app/` est un projet **Android Studio** complet (Kotlin + Jetpack Compose, Android 7.0+ / API 24).
+Le dossier `android-app/` est un projet **Android Studio** (Kotlin, Android 7.0+ / API 24).
+
+> **Version 2.0 :** l'application est une coquille légère autour du menu web du serveur (`/tablette`). Le design, l'écran d'accueil, le menu, les photos et la commande sont ceux du serveur : quand vous modifiez le menu dans le panneau admin, les tablettes sont à jour immédiatement, sans réinstaller l'app. L'app ajoute seulement le mode kiosque (écran allumé, pas de barres système), une page « serveur injoignable » avec réessai automatique, et une boîte de réglages (adresse du serveur, nom de la tablette, PIN) accessible par un appui long sur le logo ou sur le bouton Retour, protégée par le PIN (2121 par défaut). Vous pouvez supprimer les anciens dossiers `ui/` et les fichiers `data/*.kt` marqués « Removed in version 2.0 » (sauf `Prefs.kt`).
 Le menu est **embarqué dans l'application** (`app/src/main/assets/menu.json`) puis tenu à jour automatiquement par le serveur.
 
 > Pourquoi l'APK n'est-il pas fourni déjà compilé ? L'environnement dans lequel ce projet a été produit n'avait pas accès aux

@@ -200,26 +200,29 @@ body.mode-web .side,body.mode-web .cart{position:sticky;top:0;height:calc(100vh 
 @media(max-width:940px){body.mode-web .side{height:auto}}
 
 /* ------------------------------------------------------------ welcome screen */
-.welcome{position:fixed;inset:0;z-index:70;background:var(--paper);display:grid;grid-template-columns:1fr 1fr}
-.w-photos{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:0;overflow:hidden;background:#5a4632}
-.w-photos img{width:100%;height:100%;object-fit:cover;display:block}
-.w-photos::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.05),rgba(0,0,0,.25))}
-.w-panel{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 48px;gap:14px;overflow-y:auto}
-.w-logo{height:min(190px,26vh);max-width:80%;object-fit:contain}
-.w-kicker{font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold2);font-weight:700}
-.w-slogan{margin:0;font-family:"Playfair Display",serif;font-size:clamp(16px,1.6vw,22px);color:var(--brown);max-width:520px}
-.w-lang{display:flex;gap:12px;margin-top:10px}
-.w-lang button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:12px 26px;font-weight:700;font-size:16px;color:var(--brown);min-height:52px;box-shadow:0 3px 10px rgba(60,30,10,.06)}
-.w-lang button.on{border-color:var(--gold);box-shadow:inset 0 0 0 2px var(--gold)}
-.w-q{font-family:Montserrat,sans-serif;font-weight:700;font-size:clamp(17px,1.5vw,21px);color:var(--ink);margin-top:14px}
-.w-choices{display:grid;grid-template-columns:1fr 1fr;gap:18px;width:min(560px,100%)}
-.w-choices button{border:none;border-radius:22px;background:linear-gradient(160deg,#c9a55c,#a8823f);color:#fff;padding:26px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;min-height:160px;box-shadow:0 12px 26px rgba(150,110,40,.3);font-size:19px}
-.w-choices button .ic{font-size:44px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.2))}
+.welcome{position:fixed;left:0;right:0;bottom:0;top:var(--top);z-index:40;display:flex;align-items:center;justify-content:center;padding:24px;overflow:hidden;background:#3a2a1c}
+.w-bg{position:absolute;inset:0;background-size:cover;background-position:center;transform:scale(1.04);animation:wzoom 18s ease-in-out infinite alternate}
+.w-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(30,18,8,.35),rgba(30,18,8,.6))}
+@keyframes wzoom{from{transform:scale(1.04)}to{transform:scale(1.12)}}
+.w-card{position:relative;z-index:1;background:rgba(255,252,247,.94);backdrop-filter:blur(10px);border-radius:28px;padding:34px 44px 38px;width:min(640px,100%);max-height:100%;overflow-y:auto;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.w-logo{height:min(150px,20vh);max-width:80%;object-fit:contain;mix-blend-mode:multiply}
+.w-kicker{font-size:11.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold2);font-weight:700}
+.w-slogan{margin:0;font-family:"Playfair Display",serif;font-size:clamp(16px,1.5vw,21px);color:var(--brown);max-width:480px}
+.w-lang{display:flex;gap:12px;margin-top:8px}
+.w-lang button{display:inline-flex;align-items:center;gap:10px;border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:11px 22px 11px 14px;font-weight:700;font-size:16px;color:var(--brown);min-height:52px}
+.w-lang button svg{width:30px;height:20px;border-radius:4px;box-shadow:0 0 0 1px rgba(0,0,0,.08)}
+.w-lang button.on{border-color:var(--gold);background:#fff8e8;box-shadow:0 0 0 2px var(--gold)}
+.w-q{font-family:Montserrat,sans-serif;font-weight:700;font-size:clamp(17px,1.4vw,20px);color:var(--ink);margin-top:10px}
+.w-choices{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%}
+.w-choices button{border:none;border-radius:20px;background:linear-gradient(160deg,#c9a55c,#a8823f);color:#fff;padding:22px 14px;display:flex;flex-direction:column;align-items:center;gap:10px;min-height:150px;box-shadow:0 12px 26px rgba(150,110,40,.35);font-size:19px;font-weight:700}
+.w-choices button svg{width:54px;height:54px}
 .w-choices button:active{transform:scale(.97)}
-@media(orientation:portrait),(max-width:940px){
-  .welcome{grid-template-rows:42vh 1fr;grid-template-columns:1fr}
-  .w-photos{grid-template-columns:1fr 1fr}
-  .w-panel{padding:22px 20px;gap:10px;justify-content:center}
-  .w-logo{height:min(120px,16vh);position:absolute;top:22px;left:50%;transform:translateX(-50%);z-index:1;filter:drop-shadow(0 4px 12px rgba(0,0,0,.35))}
-  .w-choices button{min-height:130px;padding:20px 12px}
+body.on-welcome .lang,body.on-welcome #openBadge{display:none}
+@media(max-width:940px){
+  .welcome{padding:14px;align-items:flex-end}
+  .w-card{padding:22px 18px 22px;border-radius:24px;gap:8px}
+  .w-logo{height:min(110px,15vh)}
+  .w-lang button{padding:10px 16px 10px 12px;font-size:15px;min-height:46px}
+  .w-choices button{min-height:124px;padding:16px 10px;font-size:17px}.w-choices button svg{width:44px;height:44px}
 }
+@media(orientation:portrait) and (min-width:941px){.w-card{width:min(720px,100%)}}

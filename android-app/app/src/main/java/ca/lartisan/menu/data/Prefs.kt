@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import java.util.UUID
 
-/** Small persistent settings (server address, device identity, language, tablet PIN). */
+/** Small persistent settings (server address, tablet name, settings PIN). */
 class Prefs(context: Context) {
     private val sp: SharedPreferences = context.getSharedPreferences("lartisan", Context.MODE_PRIVATE)
 
@@ -24,18 +24,10 @@ class Prefs(context: Context) {
             return id
         }
 
-    var lang: String?
-        get() = sp.getString("lang", null)
-        set(v) = sp.edit().putString("lang", v).apply()
-
     /** PIN protecting the tablet settings screen (long-press the logo). Default 2121, same as the admin panel. */
     var tabletPin: String
         get() = sp.getString("tablet_pin", "2121") ?: "2121"
         set(v) = sp.edit().putString("tablet_pin", v).apply()
-
-    var cachedMenuVersion: Int
-        get() = sp.getInt("menu_version", 0)
-        set(v) = sp.edit().putInt("menu_version", v).apply()
 
     companion object {
         const val DEFAULT_SERVER_URL = "https://fusionlartisan-production.up.railway.app"

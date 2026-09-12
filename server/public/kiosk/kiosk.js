@@ -381,7 +381,7 @@ async function submit() {
 // ---------------------------------------------------------------- device identity (tablets / counter)
 function deviceInfo() {
   if (MODE === 'local') return { id: 'local-pc', name: 'Comptoir' };
-  let id = localStorage.getItem('tablet_id'); if (!id) { id = 'web-' + Math.random().toString(36).slice(2, 10); localStorage.setItem('tablet_id', id); }
+  let id = localStorage.getItem('tablet_id'); if (!id) { id = (window.LArtisanApp?.deviceId ? window.LArtisanApp.deviceId() : '') || 'web-' + Math.random().toString(36).slice(2, 10); localStorage.setItem('tablet_id', id); }
   const q = new URLSearchParams(location.search).get('device'); if (q) localStorage.setItem('tablet_name', q);
   return { id, name: localStorage.getItem('tablet_name') || 'Tablette' };
 }
@@ -389,7 +389,7 @@ if (MODE === 'tablet') {
   deviceInfo();
   // long-press on the logo → rename the tablet
   let pressTimer; const brand = $('#brandLink');
-  const start = () => { pressTimer = setTimeout(() => { const n = prompt(t('tabletName'), localStorage.getItem('tablet_name') || 'Tablette 1'); if (n) { localStorage.setItem('tablet_name', n.trim()); hello(); } }, 1500); };
+  const start = () => { pressTimer = setTimeout(() => { if (window.LArtisanApp?.openSettings) return window.LArtisanApp.openSettings(); const n = prompt(t('tabletName'), localStorage.getItem('tablet_name') || 'Tablette 1'); if (n) { localStorage.setItem('tablet_name', n.trim()); hello(); } }, 1500); };
   const stop = () => clearTimeout(pressTimer);
   brand.addEventListener('touchstart', start, { passive: true }); brand.addEventListener('mousedown', start); ['touchend', 'touchcancel', 'mouseup', 'mouseleave'].forEach(ev => brand.addEventListener(ev, stop));
 }
@@ -421,18 +421,17 @@ let idle2 = null;
 const welcome = $('#welcome');
 function renderWelcome() {
   if (MODE === 'web' || !menu) return;
-  const secs = visibleSections(); const photos = [secs.find(x => x.id === 'sale') || secs[0], secs.find(x => x.id === 'sucre') || secs[1]].filter(Boolean);
-  $('#wPhotos').innerHTML = photos.map(x => x.image ? `<img src="${esc(pic(x.image, 960))}" alt="">` : '').join('');
+  const secs = visibleSections(); const first = secs.find(x => x.id === 'sale') || secs[0];
+  if (first?.image) $('#wBg').style.backgroundImage = `url("${pic(first.image, 1280)}")`;
   $('#wLogo').src = site?.logo_url && !/logo-mark/.test(site.logo_url) ? site.logo_url : '/shared/logo-full.png';
-  $('#wKicker').textContent = secs.slice(0, 3).map(x => txt(x.name)).join(' · ');
   $('#wSlogan').textContent = txt(site?.tagline);
   $('#wQuestion').textContent = t('howOrder'); $('#wDine').textContent = t('wDine'); $('#wTake').textContent = t('wTake');
   $$('[data-wlang]').forEach(b => b.classList.toggle('on', b.dataset.wlang === lang));
 }
-function showWelcome() { if (MODE === 'web') return; renderWelcome(); welcome.classList.remove('hidden'); }
+function showWelcome() { if (MODE === 'web') return; renderWelcome(); welcome.classList.remove('hidden'); document.body.classList.add('on-welcome'); }
 $$('[data-wlang]').forEach(b => b.onclick = () => { lang = b.dataset.wlang; localStorage.setItem('site_lang', lang); applyLang(); renderWelcome(); });
-$$('[data-wsvc]').forEach(b => b.onclick = () => { form.service = b.dataset.wsvc; welcome.classList.add('hidden'); goHome(); renderCart(); touch(); });
-if (MODE !== 'web') { welcome.classList.remove('hidden'); }
+$$('[data-wsvc]').forEach(b => b.onclick = () => { form.service = b.dataset.wsvc; welcome.classList.add('hidden'); document.body.classList.remove('on-welcome'); goHome(); renderCart(); touch(); });
+if (MODE !== 'web') { welcome.classList.remove('hidden'); document.body.classList.add('on-welcome'); }
 
 // ---------------------------------------------------------------- misc
 function toast(msg, kind = '') { const el = $('#toast'); el.textContent = msg; el.className = 'toast ' + kind; clearTimeout(el._t); el._t = setTimeout(() => el.classList.add('hidden'), 2500); }
@@ -442,7 +441,7 @@ applyLang();
 load().catch(() => toast(t('errNet'), 'err'));
 setInterval(refreshState, 60000);
 let ws;
-function hello() { try { if (ws && ws.readyState === 1) { const d = deviceInfo(); ws.send(JSON.stringify(MODE === 'tablet' ? { type: 'hello', role: 'tablet', device_id: d.id, device_name: d.name, app_version: 'web-2.0', menu_version: menu?.version } : { type: 'hello', role: 'web' })); } } catch {} }
+function hello() { try { if (ws && ws.readyState === 1) { const d = deviceInfo(); ws.send(JSON.stringify(MODE === 'tablet' ? { type: 'hello', role: 'tablet', device_id: d.id, device_name: d.name, app_version: window.LArtisanApp?.version ? 'app-' + window.LArtisanApp.version() : 'web-2.0', menu_version: menu?.version } : { type: 'hello', role: 'web' })); } } catch {} }
 function connectWs() {
   try {
     ws = new WebSocket((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws');
