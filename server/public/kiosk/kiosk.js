@@ -63,9 +63,10 @@ let idleTimer = null;
 const byId = (arr, id) => arr.find(x => x.id === id);
 const catsOf = sec => sec.category_ids.map(id => byId(menu.categories, id)).filter(c => c && c.visible !== false);
 const itemsOfCat = cid => menu.items.filter(i => i.category_id === cid && i.available !== false).sort((a, b) => a.sort - b.sort);
-const specialCat = () => menu.categories.find(c => c.daily_special && c.visible !== false);
-const hasSpecial = () => { const c = specialCat(); return c && itemsOfCat(c.id).length > 0; };
-const isSpecial = it => { const c = specialCat(); return (c && it.category_id === c.id) || (it.tags || []).includes('special'); };
+const specialCats = () => menu.categories.filter(c => c.daily_special && c.visible !== false);
+const specialCat = () => specialCats().find(c => itemsOfCat(c.id).length) || specialCats()[0];
+const hasSpecial = () => specialCats().some(c => itemsOfCat(c.id).length > 0);
+const isSpecial = it => specialCats().some(c => it.category_id === c.id) || (it.tags || []).includes('special');
 const minPrice = it => it.variants?.length ? Math.min(...it.variants.map(v => v.price)) : it.price;
 const configurable = it => it.variants?.length || it.option_groups?.some(g => g.included > 0 || g.options.some(o => o.price));
 const imgOf = it => it.image || '';
@@ -439,24 +440,26 @@ $$('[data-wsvc]').forEach(b => b.onclick = () => { form.service = b.dataset.wsvc
 if (MODE !== 'web') { welcome.classList.remove('hidden'); document.body.classList.add('on-welcome'); }
 
 // ---------------------------------------------------------------- on-screen keyboard (touch screens without a physical keyboard)
-const VK_ROWS = [
-  ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '⌫'],
-  ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'é'],
-  ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'è', 'à'],
-  ['⇧', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'ç', 'ê', 'ô'],
-  ["'", '-', ' ', ',', '.', '✓'],
-];
-let vk = null, vkTarget = null, vkShift = false, vkShownAt = 0;
+// French layout keeps the accented letters; the English layout is a plain QWERTY
+const VK_LAYOUTS = {
+  fr: [['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '⌫'], ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'é'], ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'è', 'à'], ['⇧', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'ç', 'ê', 'ô'], ["'", '-', ' ', ',', '.', '✓']],
+  en: [['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '⌫'], ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'], ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', "'"], ['⇧', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.'], ['-', ' ', '!', '?', '✓']],
+};
+let vk = null, vkTarget = null, vkShift = false, vkShownAt = 0, vkLang = null;
 function vkBuild() {
-  vk = document.createElement('div'); vk.id = 'vk'; vk.className = 'vk hidden';
-  vk.innerHTML = VK_ROWS.map(r => `<div class="vk-row">${r.map(k => `<button data-k="${k === ' ' ? 'space' : esc(k)}" class="${k === ' ' ? 'space' : k === '⌫' ? 'bk' : k === '⇧' ? 'sh' : k === '✓' ? 'ok' : ''}">${k === ' ' ? '' : esc(k)}</button>`).join('')}</div>`).join('');
-  document.body.appendChild(vk);
-  vk.addEventListener('mousedown', e => e.preventDefault());   // keep the focus in the input
-  vk.addEventListener('touchstart', e => { e.preventDefault(); const b = e.target.closest('button'); if (b) vkPress(b.dataset.k); }, { passive: false });
-  vk.addEventListener('click', e => { const b = e.target.closest('button'); if (b && !('ontouchstart' in window)) vkPress(b.dataset.k); });
+  if (!vk) { vk = document.createElement('div'); vk.id = 'vk'; vk.className = 'vk hidden'; document.body.appendChild(vk); }
+  vkLang = lang; vkShift = false; vk.classList.remove('shift');
+  const rows = VK_LAYOUTS[lang] || VK_LAYOUTS.fr;
+  vk.innerHTML = rows.map(r => `<div class="vk-row">${r.map(k => `<button data-k="${k === ' ' ? 'space' : esc(k)}" class="${k === ' ' ? 'space' : k === '⌫' ? 'bk' : k === '⇧' ? 'sh' : k === '✓' ? 'ok' : ''}">${k === ' ' ? '' : esc(k)}</button>`).join('')}</div>`).join('');
+  if (!vk._bound) { vk._bound = true;
+    vk.addEventListener('mousedown', e => e.preventDefault());   // keep the focus in the input
+    vk.addEventListener('touchstart', e => { e.preventDefault(); const b = e.target.closest('button'); if (b) vkPress(b.dataset.k); }, { passive: false });
+    vk.addEventListener('click', e => { const b = e.target.closest('button'); if (b && !('ontouchstart' in window)) vkPress(b.dataset.k); }); }
 }
 function vkPress(k) {
-  const el = vkTarget; if (!el) return;
+  if (vkTarget && !vkTarget.isConnected && vkTarget.id) { vkTarget = document.getElementById(vkTarget.id); }   // the sheet was re-drawn
+  const el = vkTarget; if (!el) { vkHide(); return; }
+  if (document.activeElement !== el) { try { el.focus({ preventScroll: true }); } catch {} }
   if (k === '✓') { vkHide(); return; }
   if (k === '⇧') { vkShift = !vkShift; vk.classList.toggle('shift', vkShift); vk.querySelectorAll('button:not(.space):not(.bk):not(.sh):not(.ok)').forEach(b => { if (b.dataset.k.length === 1 && /[a-zàâçéèêëîïôûùüÿ]/i.test(b.dataset.k)) b.textContent = vkShift ? b.dataset.k.toUpperCase() : b.dataset.k; }); return; }
   const start = el.selectionStart ?? el.value.length, end = el.selectionEnd ?? el.value.length;
@@ -468,9 +471,10 @@ function vkPress(k) {
   el.value = v; try { el.setSelectionRange(pos, pos); } catch {}
   el.dispatchEvent(new Event('input', { bubbles: true }));
 }
-function vkShow(el) { if (!vk) vkBuild(); vkTarget = el; vkShownAt = Date.now(); vk.classList.remove('hidden'); document.body.classList.add('vk-open'); setTimeout(() => el.scrollIntoView({ block: 'center', behavior: 'smooth' }), 50); }
+function vkShow(el) { if (!vk || vkLang !== lang) vkBuild(); vkTarget = el; vkShownAt = Date.now(); vk.classList.remove('hidden'); document.body.classList.add('vk-open'); setTimeout(() => el.scrollIntoView({ block: 'center', behavior: 'smooth' }), 50); }
 function vkHide() { if (!vk) return; vk.classList.add('hidden'); document.body.classList.remove('vk-open'); vkTarget = null; }
 if (MODE !== 'web') {
+  document.addEventListener('pointerdown', e => { const el = e.target.closest('input,textarea'); if (el && ((el.tagName === 'INPUT' && /^(text|search|tel|email|url|)$/.test(el.type || '')) || el.tagName === 'TEXTAREA')) { el.setAttribute('inputmode', 'none'); if (!vk || vk.classList.contains('hidden') || vkTarget !== el) vkShow(el); } });
   document.addEventListener('focusin', e => { const el = e.target; if ((el.tagName === 'INPUT' && /^(text|search|tel|email|url|)$/.test(el.type || '')) || el.tagName === 'TEXTAREA') { el.setAttribute('inputmode', 'none'); vkShow(el); } else if (!el.closest('#vk')) vkHide(); });
   document.addEventListener('click', e => { if (vk && Date.now() - vkShownAt > 400 && !e.target.closest('#vk') && !e.target.closest('input,textarea')) vkHide(); });
 }

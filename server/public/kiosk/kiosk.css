@@ -150,7 +150,8 @@ button{font:inherit;cursor:pointer}
 .opt.dis{opacity:.4;pointer-events:none}
 .opt .txt{display:flex;flex-direction:column}.opt .name{font-weight:600;font-size:15px}.opt .sub{font-size:12px;color:var(--muted)}
 .sheet .qty button{width:44px;height:44px;background:var(--soft);border:none;font-size:22px}.sheet .qty span{min-width:36px;font-size:18px}
-.note-in{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;font:inherit}
+.note-in{width:100%;padding:14px 16px;border:1.5px solid var(--line);border-radius:12px;font:inherit;font-size:16px;min-height:52px;background:#fff}
+.note-in:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(176,138,62,.18)}
 .field{margin:12px 0}.field label{display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:6px}
 .field input,.field select{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:12px;font:inherit;font-size:16px}
 .seg{display:flex;gap:8px;flex-wrap:wrap}.seg button{flex:1;min-width:120px;padding:14px 12px;border-radius:12px;border:1px solid var(--line);background:#fff;font-weight:700;color:var(--brown);font-size:16px}
@@ -243,6 +244,7 @@ body.on-welcome .lang,body.on-welcome #openBadge{display:none}
 .vk button.bk,.vk button.sh{background:#e2d6c2;font-size:20px}
 .vk.shift button.sh{background:var(--gold);color:#fff}
 .vk button.ok{background:var(--gold);color:#fff;max-width:120px;flex:1.5}
-body.vk-open .sheet{align-items:flex-start;padding-bottom:330px}
-body.vk-open .sheet-card{max-height:calc(100vh - 340px)}
-@media(max-width:940px){.vk button{height:46px;font-size:18px}body.vk-open .sheet{padding-bottom:290px}body.vk-open .sheet-card{max-height:calc(100vh - 290px)}}
+:root{--vk-h:330px}
+body.vk-open .sheet{align-items:flex-start;padding-bottom:calc(var(--vk-h) + 10px)}
+body.vk-open .sheet-card{max-height:calc(100vh - var(--vk-h) - 24px)}
+@media(max-width:940px){.vk button{height:46px;font-size:18px}}
