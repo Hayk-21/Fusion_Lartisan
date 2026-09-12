@@ -1,5 +1,7 @@
 /* Core: i18n, API helper, login, routing, WebSocket, toasts, modal. Views live in their own files. */
 (function () {
+  // stale-check: an old cached page with new scripts → reload once from the server
+  if (!document.getElementById('secList') && !sessionStorage.getItem('reloaded_once')) { sessionStorage.setItem('reloaded_once', '1'); location.reload(true); return; }
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   window.$ = $; window.$$ = $$;

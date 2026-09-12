@@ -72,8 +72,11 @@ app.get('/app', (req, res) => res.sendFile(path.join(PUBLIC, 'site', 'app.html')
 // café PC / counter: same ordering page as the website, PIN-protected, orders go straight to the kitchen (pay at counter)
 // menu v2 (touch-screen design): counter PC, tablets (web), public ordering page. Same page, different mode from the URL.
 const KIOSK = path.join(PUBLIC, 'kiosk', 'index.html');
-app.get(['/local', '/local/', '/tablette', '/tablette/', '/commander', '/commander/'], (req, res) => res.sendFile(KIOSK));
-app.use('/kiosk', express.static(path.join(PUBLIC, 'kiosk'), { index: false }));
+// Pages, scripts and styles are always re-validated (ETag): after a deploy every screen picks up the new
+// version at the next load, instead of running new scripts against an old cached HTML page.
+const FRESH = { setHeaders: (res, p) => { if (/\.(html|js|css)$/i.test(p)) res.setHeader('Cache-Control', 'no-cache'); } };
+app.get(['/local', '/local/', '/tablette', '/tablette/', '/commander', '/commander/'], (req, res) => { res.setHeader('Cache-Control', 'no-cache'); res.sendFile(KIOSK); });
+app.use('/kiosk', express.static(path.join(PUBLIC, 'kiosk'), { index: false, ...FRESH }));
 app.post('/api/admin/app/apk', express.raw({ type: () => true, limit: '120mb' }), (req, res) => {
   if (!isValid(tokenFromRequest(req))) return fail(res, 401, 'Unauthorized');
   const buf = req.body;
@@ -89,15 +92,15 @@ app.use(express.json({ limit: '6mb' }));
 app.use((req, res, next) => { res.setHeader('Cache-Control', 'no-store'); next(); });
 
 // ---------------------------------------------------------------- static
-app.use('/admin', express.static(path.join(PUBLIC, 'admin'), { index: 'index.html' }));
+app.use('/admin', express.static(path.join(PUBLIC, 'admin'), { index: 'index.html', ...FRESH }));
 app.use('/shared/pricing.js', (req, res) => res.type('application/javascript').sendFile(path.join(__dirname, 'pricing.js')));
 app.use('/shared', express.static(path.join(PUBLIC, 'shared'), { maxAge: '1d' }));
 app.use('/uploads', express.static(UPLOADS, { maxAge: '30d', immutable: true }));
 app.get('/img/:w/:file', imageRoute());   // resized WebP copies, see images.js
 app.get('/sw.js', (req, res) => { res.setHeader('Cache-Control', 'no-cache'); res.sendFile(path.join(PUBLIC, 'kiosk', 'sw.js')); });   // picture cache (service worker, scope /)
-app.use('/tablette', express.static(path.join(PUBLIC, 'tablet'), { index: 'index.html' }));
-app.use('/commander', express.static(path.join(PUBLIC, 'site', 'commander'), { index: 'index.html' }));
-app.use('/', express.static(path.join(PUBLIC, 'site'), { index: 'index.html' }));
+app.use('/tablette', express.static(path.join(PUBLIC, 'tablet'), { index: 'index.html', ...FRESH }));
+app.use('/commander', express.static(path.join(PUBLIC, 'site', 'commander'), { index: 'index.html', ...FRESH }));
+app.use('/', express.static(path.join(PUBLIC, 'site'), { index: 'index.html', ...FRESH }));
 
 const ok = (res, data) => res.json(data);
 const fail = (res, status, error, extra = {}) => res.status(status).json({ error, ...extra });
