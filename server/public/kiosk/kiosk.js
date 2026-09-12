@@ -88,7 +88,7 @@ async function load() {
   const [m, s] = await Promise.all([fetch('/api/menu').then(r => r.json()), fetch('/api/site').then(r => r.json())]);
   menu = m; site = s; settings = { ...settings, ...m.settings };
   $('#navName').textContent = s.cafe_name; $('#navLogo').src = s.logo_url || '/shared/logo-mark.png'; document.title = `${s.cafe_name} · Menu`;
-  if (view.section && !byId(menu.sections, view.section)) view = { page: 'best', section: null, subcat: null, tag: null };
+  if ((view.section && !byId(menu.sections, view.section)) || (view.page === 'best' && !bestOn())) view = bestOn() ? { page: 'best', section: null, subcat: null, tag: null } : { page: 'section', section: visibleSections()[0]?.id, subcat: null, tag: null };
   render(); renderState(); renderWelcome();
   prefetchPictures();
 }
@@ -131,14 +131,16 @@ function bestSellers() {
 }
 function render() { $('#kicker').textContent = visibleSections().map(x => txt(x.name)).join('  ·  '); $('#slogan').textContent = txt(site?.tagline); tickClock(); renderNav(); renderHero(); renderGrid(); renderCart(); renderBar(); }
 function go(page, section = null, tag = null) { view = { page, section, subcat: null, tag }; render(); $('#main').scrollTop = 0; if (MODE === 'web' || innerWidth <= 940) window.scrollTo({ top: 0 }); }
-function goHome() { go('best'); }
+const bestOn = () => settings.best_sellers?.enabled !== false;
+const bestName = () => txt(settings.best_sellers?.name) || t('best');
+function goHome() { bestOn() ? go('best') : go('section', visibleSections()[0]?.id); }
 function openSection(id) { go('section', id); }
 function renderNav() {
   const secs = visibleSections();
-  $('#nav').innerHTML = `<button class="${view.page === 'best' ? 'on' : ''}" data-go="best"><span class="ic">⭐</span>${t('best')}</button>` +
+  $('#nav').innerHTML = (bestOn() ? `<button class="${view.page === 'best' ? 'on' : ''}" data-go="best"><span class="ic">⭐</span>${esc(bestName())}</button>` : '') +
     secs.map(s => `<button class="${view.page === 'section' && view.section === s.id ? 'on' : ''}" data-go="sec" data-sec="${esc(s.id)}"><span class="ic">${secIcon(s)}</span>${esc(txt(s.name))}</button>`).join('');
   $('#nav').onclick = e => { const b = e.target.closest('[data-go]'); if (!b) return; b.dataset.go === 'best' ? go('best') : openSection(b.dataset.sec); touch(); };
-  $('#backBtn').classList.toggle('hidden', view.page === 'best');
+  $('#backBtn').classList.toggle('hidden', view.page === 'best' || (!bestOn() && view.section === visibleSections()[0]?.id));
   // promo tile: today's special when there is one, otherwise the hot-drinks section
   const promo = $('#promo'); const sc = hasSpecial() ? specialCat() : null;
   const hot = byId(menu.sections, 'chaud') || secs.find(s => /chaud|hot/i.test(txt(s.name)));
@@ -173,7 +175,7 @@ function renderGrid() {
   const ICON = { hot: '🔥', cold: '🧊', special: '⭐', donate: '💚', popular: '❤️', 'gluten-free': '🌾', vegetarian: '🥬', vegan: '🌱', new: '✨', kids: '🧒' };
   const tagsHere = [...new Set(pool.flatMap(i => i.tags || []))].filter(x => x !== 'special' && (view.page !== 'best' || x !== 'popular'));
   if (view.page === 'section' && pool.some(isSpecial)) tagsHere.unshift('special');
-  const title = view.page === 'best' ? `<span class="st">⭐</span>${t('best')}` : view.page === 'special' ? `<span class="st">⭐</span>${t('special')}` : esc(txt(section.name));
+  const title = view.page === 'best' ? `<span class="st">⭐</span>${esc(bestName())}` : view.page === 'special' ? `<span class="st">⭐</span>${t('special')}` : esc(txt(section.name));
   const subHtml = section && cats.length > 1 ? `<div class="chips sub"><button class="${!view.subcat ? 'on' : ''}" data-cat="">${t('all')}</button>${cats.map(c => `<button class="${view.subcat === c.id ? 'on' : ''}" data-cat="${esc(c.id)}">${esc(c.icon || '')} ${esc(txt(c.name))}</button>`).join('')}</div>` : '';
   const tagHtml = tagsHere.length ? `<div class="chips tags"><button class="${!view.tag ? 'on' : ''}" data-tag="">${t('all')}</button>${tagsHere.map(x => `<button class="${view.tag === x ? 'on' : ''}" data-tag="${esc(x)}">${ICON[x] || '🏷️'} ${esc(tagName(x))}</button>`).join('')}</div>` : '';
   $('#head').innerHTML = `<div class="row"><h2>${title}</h2><span class="spacer"></span>${view.page === 'best' && visibleSections().length ? `<button class="link" data-all>${t('seeAll')} →</button>` : ''}</div>${subHtml}${tagHtml}`;

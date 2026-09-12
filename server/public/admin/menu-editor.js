@@ -1,6 +1,6 @@
 /* Menu editor · categories, items, variants, option groups. Works on a local copy; "Save" sends the whole menu. */
 (function () {
-  let menu = null, selCat = null, selItem = null, selSec = null, dirty = false;
+  let menu = null, selCat = null, selItem = null, selSec = null, dirty = false, best = null;
   const TAGS = ['popular', 'special', 'hot', 'cold', 'donate', 'gluten-free', 'vegetarian', 'vegan', 'new', 'kids'];
   const pic = (u, w) => (u && String(u).startsWith('/uploads/')) ? `/img/${w}/${u.split('/').pop()}` : (u || '/shared/logo-mark.png');
   const uid = (p) => p + '-' + Math.random().toString(36).slice(2, 7);
@@ -11,6 +11,8 @@
 
   async function load() {
     menu = await api('/admin/menu');
+    try { best = (await api('/admin/settings')).best_sellers || null; } catch {}
+    best = best || { enabled: true, name: { fr: 'Best-sellers', en: 'Best-sellers' } };
     menu.sections = (menu.sections || []).sort((a, b) => a.sort - b.sort); menu.categories.sort((a, b) => a.sort - b.sort); menu.items.sort((a, b) => a.sort - b.sort);
     if (!selCat || !menu.categories.find(c => c.id === selCat)) selCat = menu.categories[0]?.id || null;
     selItem = null; setDirty(false); renderAll();
@@ -23,7 +25,9 @@
 
   // ---------------------------------------------------------------- sections (big tiles of the touch menu)
   function renderSecs() {
-    $('#secList').innerHTML = menu.sections.map((sc, i) => { const cats = sc.category_ids.map(id => menu.categories.find(c => c.id === id)).filter(Boolean);
+    const bestRow = `<li class="${selSec === '__best' ? 'active' : ''} ${best.enabled === false ? 'off' : ''}" data-id="__best"><span class="thumb" style="display:flex;align-items:center;justify-content:center;font-size:20px">⭐</span>
+      <span class="nm">${esc(tx(best.name) || 'Best-sellers')}<span class="sub">${best.enabled === false ? t('menu.hidden') : t('menu.bestSub')}</span></span></li>`;
+    $('#secList').innerHTML = bestRow + menu.sections.map((sc, i) => { const cats = sc.category_ids.map(id => menu.categories.find(c => c.id === id)).filter(Boolean);
       return `<li class="${sc.id === selSec ? 'active' : ''} ${cats.length ? '' : 'off'}" data-id="${sc.id}"><img class="thumb" src="${esc(pic(sc.image, 160))}" alt="">
       <span class="nm">${esc(tx(sc.name))}<span class="sub">${cats.length ? cats.map(c => tx(c.name)).join(', ') : t('menu.secNoCat')}</span></span>
       <span class="mini"><button data-mv="-1" title="${t('ed.up')}" ${i === 0 ? 'disabled' : ''}>▲</button><button data-mv="1" title="${t('ed.down')}" ${i === menu.sections.length - 1 ? 'disabled' : ''}>▼</button></span></li>`; }).join('');
@@ -42,7 +46,21 @@
     $('#secEditor input')?.focus();
   });
   function renderSecEditor() {
-    const sc = menu.sections.find(x => x.id === selSec); const ed = $('#secEditor');
+    const ed = $('#secEditor');
+    if (selSec === '__best') {
+      ed.classList.remove('hidden'); $('#itemsPanel').classList.add('hidden');
+      ed.innerHTML = `
+        <label class="check"><input type="checkbox" id="bestOn" ${best.enabled !== false ? 'checked' : ''}><span>${t('menu.bestShow')}</span></label>
+        <div class="row"><label style="flex:1"><span>${t('menu.secName')}</span><input id="bestFr" value="${esc(best.name?.fr || '')}"></label><label style="flex:1"><span>${t('menu.secNameEn')}</span><input id="bestEn" value="${esc(best.name?.en || '')}"></label></div>
+        <p class="help">${t('menu.bestHelp')}</p>
+        <div class="row" style="justify-content:flex-end"><button class="small primary" id="bestSave">💾 ${t('common.save')}</button></div>`;
+      $('#bestSave').onclick = async () => {
+        best = { enabled: $('#bestOn').checked, name: { fr: $('#bestFr').value.trim() || 'Best-sellers', en: $('#bestEn').value.trim() || 'Best-sellers' } };
+        try { await api('/admin/settings', { method: 'PUT', body: { best_sellers: best } }); toast(t('common.saved'), 'ok'); renderSecs(); } catch (e) { toast(e.message, 'err'); }
+      };
+      return;
+    }
+    const sc = menu.sections.find(x => x.id === selSec);
     ed.classList.toggle('hidden', !sc); $('#itemsPanel').classList.toggle('hidden', !!sc);
     if (!sc) return;
     const inSec = sc.category_ids.map(id => menu.categories.find(c => c.id === id)).filter(Boolean);

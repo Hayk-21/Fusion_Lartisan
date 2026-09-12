@@ -54,6 +54,7 @@ export const DEFAULT_SETTINGS = {
            thu: { open: '08:00', close: '20:00', closed: false }, fri: { open: '08:00', close: '20:00', closed: false }, sat: { open: '08:00', close: '20:00', closed: false }, sun: { open: '08:00', close: '20:00', closed: false } },
   timezone: 'America/Toronto',
   featured_count: 4,                   // best sellers of the daily-special section shown on the home page
+  best_sellers: { enabled: true, name: { fr: 'Best-sellers', en: 'Best-sellers' } },   // first page of the touch menu (dishes tagged « Populaire »)
   pickup_lead_minutes: 15,
   pickup_slot_minutes: 15,
   pickup_last_order_minutes: 15,       // no pickup later than closing − this

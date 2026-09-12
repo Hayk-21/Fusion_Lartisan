@@ -114,7 +114,7 @@ app.get('/api/menu', (req, res) => {
   const s = publicSettings();
   ok(res, { ...m, settings: { cafe_name: s.cafe_name, tax_gst: s.tax_gst, tax_qst: s.tax_qst, currency: s.currency, default_lang: s.default_lang,
     ask_customer_name: s.ask_customer_name, ask_service_type: s.ask_service_type, thank_you_seconds: s.thank_you_seconds, logo_url: s.logo_url,
-    tips_enabled: s.tips_enabled !== false, tip_options: s.tip_options || [0, 5, 10, 15] } });
+    tips_enabled: s.tips_enabled !== false, tip_options: s.tip_options || [0, 5, 10, 15], best_sellers: s.best_sellers || { enabled: true, name: { fr: 'Best-sellers', en: 'Best-sellers' } } } });
 });
 app.get('/api/menu/version', (req, res) => ok(res, { version: getMenu().version }));
 app.get('/api/settings/public', (req, res) => ok(res, publicSettings()));
