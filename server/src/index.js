@@ -467,12 +467,12 @@ server.listen(PORT, '0.0.0.0', () => {
   const addrs = localAddresses();
   console.log('');
   console.log('  ╔══════════════════════════════════════════════════════════╗');
-  console.log(`  ║   ${s.cafe_name} — order server v${APP_VERSION}`.padEnd(61) + '║');
+  console.log(`  ║   ${s.cafe_name}, order server v${APP_VERSION}`.padEnd(61) + '║');
   console.log('  ╠══════════════════════════════════════════════════════════╣');
   console.log(`  ║   Website     :  http://localhost:${PORT}/  (data: ${DATA_DIR})`.slice(0, 60).padEnd(61) + '║');
   console.log(`  ║   Admin panel :  http://localhost:${PORT}/admin`.padEnd(61) + '║');
   for (const a of addrs) console.log(`  ║   Tablets     :  http://${a.address}:${PORT}   (${a.iface})`.padEnd(61) + '║');
-  if (!addrs.length) console.log('  ║   (no Wi-Fi/LAN address found — connect to the network)  ║');
+  if (!addrs.length) console.log('  ║   (no Wi-Fi/LAN address found: connect to the network)  ║');
   console.log(`  ║   Discovery   :  UDP ${DISCOVERY_PORT}`.padEnd(61) + '║');
   console.log('  ╚══════════════════════════════════════════════════════════╝');
   console.log('');

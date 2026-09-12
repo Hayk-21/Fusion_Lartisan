@@ -1,4 +1,4 @@
-/* Touch-screen menu (v2): 6 photo tiles → section page with filters → item sheet → cart / confirm.
+/* Touch-screen menu (v3): left menu (best-sellers + sections) → hero + dish cards → cart panel on the right → confirm.
    Modes (from the URL): /local = café counter (PIN, orders straight to the kitchen)
                          /tablette = tablets (orders straight to the kitchen, tablet name)
                          /commander = public website (contact details, pickup time, pay at pickup / online) */
@@ -22,7 +22,9 @@ const STR = {
     open: 'Ouvert · ferme à {t}', closed: 'Fermé', closedTemp: 'Fermé exceptionnellement', opensTomorrow: 'ouvre demain à {t}', opensToday: 'ouvre à {t}',
     bannerClosed: 'Le café est fermé · la commande en ligne reprend {when}. Vous pouvez consulter le menu.', bannerTemp: 'Le café est fermé pour le moment · la commande en ligne reprendra à la réouverture.', bannerLate: "Trop tard pour commander aujourd'hui · à demain !", bannerOff: 'La commande en ligne est temporairement désactivée.',
     closedBtn: 'Café fermé', lateBtn: "Trop tard pour aujourd'hui", localTitle: 'Mode comptoir', localHint: 'Entrez le code PIN pour ouvrir le menu du café.', wrongPin: 'Code PIN incorrect', counter: 'Comptoir', tablet: 'Tablette', tabletName: 'Nom de cette tablette', save: 'Enregistrer',
-    menuUpdated: 'Le menu a été mis à jour', errNet: 'Connexion impossible, réessayez.', cancelled: 'Paiement annulé · votre panier est conservé.', max: 'Maximum {n}', orderOnline: 'Commander en ligne' },
+    menuUpdated: 'Le menu a été mis à jour', errNet: 'Connexion impossible, réessayez.', cancelled: 'Paiement annulé · votre panier est conservé.', max: 'Maximum {n}', orderOnline: 'Commander en ligne',
+    best: 'Best-sellers', ourBest: 'Nos best-sellers', heroTitle: 'Des saveurs qui font la différence', heroSub: '{list} et plus encore…', seeAll: 'Voir tout', continue: 'Continuer', clearCart: 'Vider le panier', addShort: 'Ajouter',
+    dineInSub: 'Servi à votre table', takeoutSub: 'Prêt à emporter', promoSpecial: 'Spécial du jour', promoCoffee: 'Café de spécialité', promoCoffeeSub: 'Boissons chaudes', taxes: 'Taxes (TPS/TVQ)', choices: '{n} choix' },
   en: { back: 'Back', confirm: 'Confirm', confirmN: 'Confirm · {n} · {t}', yourOrder: 'Your order', clear: 'Clear', empty: 'Your order is empty.\nTap a dish to start.',
     from: 'from', add: 'Add', included: 'included', includedOf: '{c}/{n} included', extra: 'extra', required: 'Required', choose: 'Choose', qty: 'Quantity', note: 'Note for the kitchen (allergies, no onion…)',
     subtotal: 'Subtotal', gst: 'GST ({r}%)', qst: 'QST ({r}%)', tip: 'Tip', total: 'Total', items: '{n} item(s)', all: 'All', filters: 'Filters', special: "Today's special", specialStrip: "⭐ See today's special",
@@ -34,7 +36,9 @@ const STR = {
     open: 'Open · closes at {t}', closed: 'Closed', closedTemp: 'Exceptionally closed', opensTomorrow: 'opens tomorrow at {t}', opensToday: 'opens at {t}',
     bannerClosed: 'The café is closed · online ordering resumes {when}. You can still browse the menu.', bannerTemp: 'The café is closed at the moment · online ordering resumes when it reopens.', bannerLate: 'Too late to order today · see you tomorrow!', bannerOff: 'Online ordering is temporarily disabled.',
     closedBtn: 'Café closed', lateBtn: 'Too late for today', localTitle: 'Counter mode', localHint: 'Enter the PIN to open the café menu.', wrongPin: 'Wrong PIN', counter: 'Counter', tablet: 'Tablet', tabletName: 'Name of this tablet', save: 'Save',
-    menuUpdated: 'The menu was updated', errNet: 'Cannot connect, please retry.', cancelled: 'Payment cancelled · your cart was kept.', max: 'Maximum {n}', orderOnline: 'Order online' },
+    menuUpdated: 'The menu was updated', errNet: 'Cannot connect, please retry.', cancelled: 'Payment cancelled · your cart was kept.', max: 'Maximum {n}', orderOnline: 'Order online',
+    best: 'Best-sellers', ourBest: 'Our best-sellers', heroTitle: 'Flavours that make the difference', heroSub: '{list} and more…', seeAll: 'See all', continue: 'Continue', clearCart: 'Clear cart', addShort: 'Add',
+    dineInSub: 'Served at your table', takeoutSub: 'Ready to go', promoSpecial: "Today's special", promoCoffee: 'Specialty coffee', promoCoffeeSub: 'Hot drinks', taxes: 'Taxes (GST/QST)', choices: '{n} choices' },
 };
 let lang = localStorage.getItem('site_lang') || ((navigator.language || 'fr').toLowerCase().startsWith('en') ? 'en' : 'fr');
 const t = (k, v = {}) => { let s = STR[lang][k] ?? STR.fr[k] ?? k; if (typeof s !== 'string') return s; for (const [a, b] of Object.entries(v)) s = s.replace('{' + a + '}', b); return s; };
@@ -46,7 +50,8 @@ const fmtT = hhmm => { if (!hhmm) return ''; const [h, m] = hhmm.split(':').map(
 const minToHHMM = m => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
 
 let menu = null, site = null, settings = { tax_gst: 5, tax_qst: 9.975 };
-let view = { page: 'home', section: null, subcat: null, tag: null };
+let view = { page: 'best', section: null, subcat: null, tag: null };
+let heroIdx = 0, heroTimer = null;
 const CART_KEY = MODE === 'web' ? 'web_cart' : 'kiosk_cart_' + MODE;
 let cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
 const saveCart = () => localStorage.setItem(CART_KEY, JSON.stringify(cart));
@@ -80,7 +85,9 @@ async function load() {
   const [m, s] = await Promise.all([fetch('/api/menu').then(r => r.json()), fetch('/api/site').then(r => r.json())]);
   menu = m; site = s; settings = { ...settings, ...m.settings };
   $('#navName').textContent = s.cafe_name; $('#navLogo').src = s.logo_url || '/shared/logo-mark.png'; document.title = `${s.cafe_name} · Menu`;
-  if (view.section && !byId(menu.sections, view.section)) view = { page: 'home', section: null, subcat: null, tag: null };
+  if (view.section && !byId(menu.sections, view.section)) view = { page: 'best', section: null, subcat: null, tag: null };
+  $('#kicker').textContent = menu.sections.filter(x => catsOf(x).length).map(x => txt(x.name)).join('  ·  ');
+  $('#slogan').textContent = txt(s.tagline);
   render(); renderState();
 }
 async function refreshState() { try { site.state = await fetch('/api/site/state').then(r => r.json()); renderState(); } catch {} }
@@ -102,56 +109,131 @@ function renderState() {
 const canOrder = () => MODE !== 'web' || !!site?.state?.ordering;
 
 // ---------------------------------------------------------------- rendering
-function render() { renderHome(); renderSection(); renderBar(); }
-function renderHome() {
-  const home = $('#home'); home.classList.toggle('hidden', view.page !== 'home');
-  $('#backBtn').classList.toggle('hidden', view.page === 'home');
-  if (view.page !== 'home') return;
-  const secs = menu.sections.filter(s => catsOf(s).length);
-  $('#tiles').innerHTML = secs.map(s => { const n = catsOf(s).reduce((k, c) => k + itemsOfCat(c.id).length, 0);
-    return `<button class="tile ${s.image ? '' : 'placeholder'}" data-sec="${esc(s.id)}">${s.image ? `<img src="${esc(s.image)}" alt="">` : ''}<span class="cap"><b>${esc(txt(s.name))}</b><small>${n} ${lang === 'en' ? 'choices' : 'choix'}</small></span></button>`; }).join('');
-  $('#tiles').onclick = e => { const b = e.target.closest('[data-sec]'); if (b) openSection(b.dataset.sec); };
-  const strip = $('#specialStrip'); strip.classList.toggle('hidden', !hasSpecial()); strip.textContent = t('specialStrip');
-  strip.onclick = () => openSection(null, 'special');
+const SEC_ICON = { sale: '🥞', salades: '🥗', sucre: '🍓', glaces: '🍨', chaud: '☕', froid: '🧃' };
+const secIcon = sec => sec.icon || SEC_ICON[sec.id] || catsOf(sec)[0]?.icon || '🍽️';
+const visibleSections = () => menu.sections.filter(s => catsOf(s).length);
+function bestSellers() {
+  const all = menu.items.filter(i => i.available !== false);
+  const pop = all.filter(i => (i.tags || []).includes('popular')); let list = pop.concat(all.filter(i => isSpecial(i) && !pop.includes(i)));
+  if (list.length < 4) for (const c of menu.categories.filter(c => c.visible !== false)) { const it = itemsOfCat(c.id)[0]; if (it && !list.includes(it)) list.push(it); }
+  return list.slice(0, 12);
 }
-function openSection(id, tag = null) { view = { page: 'section', section: id, subcat: null, tag }; render(); $('#section .content').scrollTop = 0; }
-function goHome() { view = { page: 'home', section: null, subcat: null, tag: null }; render(); }
-function renderSection() {
-  const sec = $('#section'); sec.classList.toggle('hidden', view.page !== 'section'); if (view.page !== 'section') return;
-  const section = view.section ? byId(menu.sections, view.section) : null;
+function render() { renderNav(); renderHero(); renderGrid(); renderCart(); renderBar(); }
+function go(page, section = null, tag = null) { view = { page, section, subcat: null, tag }; render(); $('#main').scrollTop = 0; if (MODE === 'web' || innerWidth <= 940) window.scrollTo({ top: 0 }); }
+function goHome() { go('best'); }
+function openSection(id) { go('section', id); }
+function renderNav() {
+  const secs = visibleSections();
+  $('#nav').innerHTML = `<button class="${view.page === 'best' ? 'on' : ''}" data-go="best"><span class="ic">⭐</span>${t('best')}</button>` +
+    secs.map(s => `<button class="${view.page === 'section' && view.section === s.id ? 'on' : ''}" data-go="sec" data-sec="${esc(s.id)}"><span class="ic">${secIcon(s)}</span>${esc(txt(s.name))}</button>`).join('');
+  $('#nav').onclick = e => { const b = e.target.closest('[data-go]'); if (!b) return; b.dataset.go === 'best' ? go('best') : openSection(b.dataset.sec); touch(); };
+  $('#backBtn').classList.toggle('hidden', view.page === 'best');
+  // promo tile: today's special when there is one, otherwise the hot-drinks section
+  const promo = $('#promo'); const sc = hasSpecial() ? specialCat() : null;
+  const hot = byId(menu.sections, 'chaud') || secs.find(s => /chaud|hot/i.test(txt(s.name)));
+  const src = sc ? (sc.image || itemsOfCat(sc.id)[0]?.image || '') : (hot?.image || '');
+  if (!sc && !hot) { promo.classList.add('hidden'); return; }
+  promo.classList.remove('hidden');
+  promo.innerHTML = `${src ? `<img src="${esc(src)}" alt="">` : ''}<span class="cap"><b>${sc ? t('promoSpecial') : t('promoCoffee')}</b><small>${sc ? esc(txt(itemsOfCat(sc.id)[0]?.name)) : t('promoCoffeeSub')}</small></span>`;
+  promo.onclick = () => sc ? go('special', null, 'special') : openSection(hot.id);
+}
+function renderHero() {
+  const hero = $('#hero'); const secs = visibleSections();
+  clearInterval(heroTimer);
+  if (view.page === 'best' && secs.length) {
+    const draw = () => { const s = secs[heroIdx % secs.length]; const img = s.image || '';
+      hero.innerHTML = `${img ? `<img src="${esc(img)}" alt="">` : ''}<div class="cap"><span class="pill">${t('ourBest')}</span><h1>${t('heroTitle')}</h1><p>${esc(t('heroSub', { list: secs.slice(0, 3).map(x => txt(x.name).toLowerCase()).join(', ') }))}</p></div>
+        <div class="dots">${secs.map((_, i) => `<span class="${i === heroIdx % secs.length ? 'on' : ''}"></span>`).join('')}</div><button class="go" data-sec="${esc(s.id)}" aria-label="${esc(txt(s.name))}"></button>`;
+      hero.querySelector('.go').onclick = () => openSection(s.id); };
+    draw(); heroTimer = setInterval(() => { heroIdx++; draw(); }, 6000);
+  } else if (view.page === 'section') {
+    const s = byId(menu.sections, view.section); const cats = catsOf(s); const n = cats.reduce((k, c) => k + itemsOfCat(c.id).length, 0);
+    hero.innerHTML = `${s.image ? `<img src="${esc(s.image)}" alt="">` : ''}<div class="cap"><span class="pill">${t('choices', { n })}</span><h1>${esc(txt(s.name))}</h1><p>${esc(cats.map(c => txt(c.name)).join(' · '))}</p></div>`;
+  } else {
+    const c = specialCat(); const it = c ? itemsOfCat(c.id)[0] : null; const img = c?.image || it?.image || '';
+    hero.innerHTML = `${img ? `<img src="${esc(img)}" alt="">` : ''}<div class="cap"><span class="pill">${t('special')}</span><h1>${esc(it ? txt(it.name) : t('special'))}</h1>${it ? `<p>${esc(txt(it.description))}</p>` : ''}</div>`;
+  }
+}
+function renderGrid() {
+  const section = view.page === 'section' ? byId(menu.sections, view.section) : null;
   const cats = section ? catsOf(section) : menu.categories.filter(c => c.visible !== false);
-  const specialOnly = !section && view.tag === 'special';
-  // pool of items for this page
-  let pool = specialOnly ? menu.items.filter(i => i.available !== false && isSpecial(i)) : cats.flatMap(c => itemsOfCat(c.id));
-  // filters: tags present in the pool (+ special when relevant)
-  const tagsHere = [...new Set(pool.flatMap(i => i.tags || []))].filter(x => x !== 'special');
-  if (!specialOnly && pool.some(isSpecial)) tagsHere.unshift('special');
+  const pool = view.page === 'best' ? bestSellers() : view.page === 'special' ? menu.items.filter(i => i.available !== false && isSpecial(i)) : cats.flatMap(c => itemsOfCat(c.id));
+  // filters (tags present in this list)
   const ICON = { hot: '🔥', cold: '🧊', special: '⭐', donate: '💚', popular: '❤️', 'gluten-free': '🌾', vegetarian: '🥬', vegan: '🌱', new: '✨', kids: '🧒' };
-  $('#filters').innerHTML = `<h4>${t('filters')}</h4><button class="chip ${!view.tag ? 'on' : ''}" data-tag="">${t('all')}</button>` +
-    tagsHere.map(x => `<button class="chip ${view.tag === x ? 'on' : ''}" data-tag="${esc(x)}"><span class="ic">${ICON[x] || '🏷️'}</span>${esc(tagName(x))}</button>`).join('');
-  $('#filters').onclick = e => { const b = e.target.closest('[data-tag]'); if (!b) return; view.tag = b.dataset.tag || null; if (specialOnly && !view.tag) { goHome(); return; } renderSection(); };
-  $('#secTitle').textContent = section ? txt(section.name) : t('special');
-  // sub-categories (only when the section groups several)
-  const sub = $('#subcats');
-  sub.innerHTML = cats.length > 1 && !specialOnly ? `<button class="${!view.subcat ? 'on' : ''}" data-cat="">${t('all')}</button>` + cats.map(c => `<button class="${view.subcat === c.id ? 'on' : ''}" data-cat="${esc(c.id)}">${esc(c.icon || '')} ${esc(txt(c.name))}</button>`).join('') : '';
-  sub.onclick = e => { const b = e.target.closest('[data-cat]'); if (!b) return; view.subcat = b.dataset.cat || null; renderSection(); };
-  // items
+  const tagsHere = [...new Set(pool.flatMap(i => i.tags || []))].filter(x => x !== 'special' && (view.page !== 'best' || x !== 'popular'));
+  if (view.page === 'section' && pool.some(isSpecial)) tagsHere.unshift('special');
+  const title = view.page === 'best' ? `<span class="st">⭐</span>${t('best')}` : view.page === 'special' ? `<span class="st">⭐</span>${t('special')}` : esc(txt(section.name));
+  const subHtml = section && cats.length > 1 ? `<div class="chips sub"><button class="${!view.subcat ? 'on' : ''}" data-cat="">${t('all')}</button>${cats.map(c => `<button class="${view.subcat === c.id ? 'on' : ''}" data-cat="${esc(c.id)}">${esc(c.icon || '')} ${esc(txt(c.name))}</button>`).join('')}</div>` : '';
+  const tagHtml = tagsHere.length ? `<div class="chips tags"><button class="${!view.tag ? 'on' : ''}" data-tag="">${t('all')}</button>${tagsHere.map(x => `<button class="${view.tag === x ? 'on' : ''}" data-tag="${esc(x)}">${ICON[x] || '🏷️'} ${esc(tagName(x))}</button>`).join('')}</div>` : '';
+  $('#head').innerHTML = `<div class="row"><h2>${title}</h2><span class="spacer"></span>${view.page === 'best' && visibleSections().length ? `<button class="link" data-all>${t('seeAll')} →</button>` : ''}</div>${subHtml}${tagHtml}`;
+  $('#head').onclick = e => {
+    const c = e.target.closest('[data-cat]'); if (c) { view.subcat = c.dataset.cat || null; renderGrid(); return; }
+    const g = e.target.closest('[data-tag]'); if (g) { view.tag = g.dataset.tag || null; renderGrid(); return; }
+    if (e.target.closest('[data-all]')) openSection(visibleSections()[0].id);
+  };
   let shown = pool;
   if (view.subcat) shown = shown.filter(i => i.category_id === view.subcat);
   if (view.tag) shown = shown.filter(i => view.tag === 'special' ? isSpecial(i) : (i.tags || []).includes(view.tag));
-  const grid = $('#grid'); let html = '';
-  const groups = (!view.subcat && cats.length > 1 && !specialOnly) ? cats : [null];
+  const groups = (section && !view.subcat && cats.length > 1) ? cats : [null];
+  let html = '';
   for (const c of groups) {
     const list = c ? shown.filter(i => i.category_id === c.id) : shown;
     if (!list.length) continue;
     if (c) html += `<h3 class="cat">${esc(c.icon || '')} ${esc(txt(c.name))}</h3>`;
-    html += list.map(it => { const img = imgOf(it); const q = cartQty(it.id); const tags = (it.tags || []).filter(x => ['special', 'donate', 'new', 'popular'].includes(x)); if (isSpecial(it) && !tags.includes('special')) tags.unshift('special');
-      return `<button class="item" data-id="${esc(it.id)}">${img ? `<img src="${esc(img)}" alt="" loading="lazy">` : '<div class="ph"></div>'}
-        ${tags.length ? `<span class="tagline">${tags.map(x => `<span class="tag ${x}">${esc(tagName(x))}</span>`).join('')}</span>` : ''}${q ? `<span class="qty-badge">×${q}</span>` : ''}
-        <span class="body"><span class="nm">${esc(txt(it.name))}</span><span class="ds">${esc(txt(it.description))}</span><span class="pr">${configurable(it) ? `<small>${t('from')}</small> ` : ''}${money(minPrice(it))}</span></span></button>`; }).join('');
+    html += list.map(card).join('');
   }
-  grid.innerHTML = html || `<div class="empty">${t('noResult')}</div>`;
-  grid.onclick = e => { const b = e.target.closest('.item'); if (b) openItem(b.dataset.id); };
+  $('#grid').innerHTML = html || `<div class="empty">${t('noResult')}</div>`;
+  $('#grid').onclick = e => { const b = e.target.closest('[data-id]'); if (!b) return; const id = b.dataset.id; if (e.target.closest('.add')) quickAdd(id); else openItem(id); };
+}
+function card(it) {
+  const img = imgOf(it); const q = cartQty(it.id);
+  const tags = (it.tags || []).filter(x => ['special', 'donate', 'new'].includes(x)); if (isSpecial(it) && !tags.includes('special')) tags.unshift('special');
+  return `<div class="item" data-id="${esc(it.id)}"><div class="pic">${img ? `<img src="${esc(img)}" alt="" loading="lazy">` : ''}</div>
+    ${tags.length ? `<span class="tagline">${tags.map(x => `<span class="tag ${x}">${esc(tagName(x))}</span>`).join('')}</span>` : ''}${q ? `<span class="qty-badge">×${q}</span>` : ''}
+    <div class="body"><span class="nm">${esc(txt(it.name))}</span><span class="ds">${esc(txt(it.description))}</span><span class="pr">${configurable(it) ? `<small>${t('from')}</small> ` : ''}${money(minPrice(it))}</span></div>
+    <button class="add">+ ${t('addShort')}</button></div>`;
+}
+// "+ Ajouter" on a card: straight into the cart when the dish has nothing to choose, otherwise open the sheet
+function quickAdd(id) {
+  const it = byId(menu.items, id); if (!it || it.available === false) return;
+  if (it.variants?.length || (it.option_groups || []).some(g => g.required || g.included > 0 || g.options.some(o => o.price))) return openItem(id);
+  addLine({ item_id: it.id, variant_id: null, options: [], qty: 1, note: '' }, it);
+}
+function addLine(line, it) {
+  const same = cart.find(c => JSON.stringify([c.item_id, c.variant_id, c.options, c.note]) === JSON.stringify([line.item_id, line.variant_id, line.options, line.note]));
+  if (same) same.qty += line.qty; else cart.push(line);
+  saveCart(); renderGrid(); renderCart(); renderBar(); toast('✓ ' + txt(it.name)); touch();
+}
+function cartTotals() {
+  if (!cart.length) return null;
+  const p = priceOrder(menu, cart, settings, lang);
+  if (!p.ok) { cart = cart.filter(l => priceLine(menu, l, lang).ok); saveCart(); return cart.length ? cartTotals() : null; }
+  return p;
+}
+function renderCart() {
+  const aside = $('#cartAside'); const p = cartTotals(); const count = cart.reduce((s, l) => s + l.qty, 0);
+  const lines = p ? p.lines.map((l, i) => { const it = byId(menu.items, cart[i].item_id); const img = it ? imgOf(it) : '';
+    return `<div class="cline">${img ? `<img src="${esc(img)}" alt="">` : '<div class="ph"></div>'}<div class="info"><div class="nm">${esc(l.name)}${l.variant_name ? ' · ' + esc(l.variant_name) : ''}</div>${l.options.length ? `<div class="opts">${l.options.map(o => esc(o.name)).join(', ')}</div>` : ''}${l.note ? `<div class="note">✎ ${esc(l.note)}</div>` : ''}<div class="pr">${money(l.line_total)}</div></div>
+      <button class="rm" data-rm="${i}" aria-label="×">✕</button><div class="qty"><button data-q="-1" data-i="${i}">−</button><span>${l.qty}</span><button data-q="1" data-i="${i}">+</button></div></div>`; }).join('') : `<div class="c-empty">${t('empty')}</div>`;
+  const st = site?.state; const blocked = MODE === 'web' && st && !st.ordering;
+  const svc = MODE === 'web'
+    ? [['takeout', '🛍️', t('takeout'), t('takeoutSub')], ['dine_in', '🍽️', t('dineIn'), t('dineInSub')]]
+    : [['dine_in', '🍽️', t('dineIn'), t('dineInSub')], ['takeout', '🛍️', t('takeout'), t('takeoutSub')]];
+  aside.innerHTML = `<div class="c-head"><h2>🛒 ${t('yourOrder')}</h2>${count ? `<span class="count">${count}</span>` : ''}</div>
+    <div class="c-lines">${lines}</div>
+    <div class="c-foot">
+      ${p ? `<div class="totals"><div><span>${t('subtotal')}</span><span>${money(p.subtotal)}</span></div><div><span>${t('taxes')}</span><span>${money(p.tax_gst + p.tax_qst)}</span></div><div class="tot"><span>${t('total')}</span><span>${money(p.total)}</span></div></div>` : ''}
+      <button class="btn primary big go" id="goBtn" ${p && !blocked ? '' : 'disabled'}>${blocked ? (st.open && !st.slots.length ? t('lateBtn') : t('closedBtn')) : t('continue') + ' →'}</button>
+      ${p ? `<button class="clear" id="clearBtn">🗑 ${t('clearCart')}</button>` : ''}
+      <div class="svc">${svc.map(([k, ic, b, sm]) => `<button data-svc="${k}" class="${form.service === k ? 'on' : ''}"><span class="ic">${ic}</span><span class="tx"><b>${b}</b><small>${sm}</small></span><span class="ch">›</span></button>`).join('')}</div>
+    </div>`;
+  aside.onclick = e => {
+    const q = e.target.closest('button[data-q]'); if (q) { const i = +q.dataset.i; cart[i].qty += +q.dataset.q; if (cart[i].qty <= 0) cart.splice(i, 1); saveCart(); renderGrid(); renderCart(); renderBar(); touch(); return; }
+    const rm = e.target.closest('button[data-rm]'); if (rm) { cart.splice(+rm.dataset.rm, 1); saveCart(); renderGrid(); renderCart(); renderBar(); return; }
+    const sv = e.target.closest('button[data-svc]'); if (sv) { form.service = sv.dataset.svc; renderCart(); return; }
+    if (e.target.closest('#goBtn')) openCart();
+    if (e.target.closest('#clearBtn')) { cart = []; saveCart(); render(); }
+  };
 }
 function renderBar() {
   const btn = $('#cartBtn'); const count = cart.reduce((s, l) => s + l.qty, 0);
@@ -164,6 +246,11 @@ function renderBar() {
 $('#backBtn').onclick = goHome;
 $('#cartBtn').onclick = () => openCart();
 $('#brandLink').onclick = e => { if (MODE !== 'web') { e.preventDefault(); goHome(); } };
+// clock (top right)
+function tickClock() { const d = new Date(); const loc = lang === 'en' ? 'en-CA' : 'fr-CA';
+  $('#clockTime').textContent = d.toLocaleTimeString(loc, { hour: '2-digit', minute: '2-digit' });
+  $('#clockDate').textContent = d.toLocaleDateString(loc, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }); }
+setInterval(tickClock, 15000); tickClock();
 
 // ---------------------------------------------------------------- item sheet
 function closeSheet() { $('#sheet').classList.add('hidden'); }
@@ -193,7 +280,7 @@ function openItem(id) {
     $('#sheetCard').innerHTML = `${img ? `<div class="sheet-hero"><img src="${esc(img)}" alt=""></div>` : ''}<div class="sheet-head"><div><h2>${esc(txt(it.name))}</h2><p>${esc(txt(it.description))}</p></div><button class="close" id="sheetClose">✕</button></div><div class="sheet-body">${body.join('')}</div>
       <div class="sheet-foot"><div class="total">${r.ok ? money(r.priced.line_total) : '-'}</div><button class="btn primary big" id="addBtn" ${r.ok ? '' : 'disabled'}>${r.ok ? '+ ' + t('add') : esc(r.error)}</button></div>`;
     $('#sheetClose').onclick = closeSheet;
-    $('#addBtn').onclick = () => { line.note = $('#noteIn').value.trim(); const same = cart.find(c => JSON.stringify([c.item_id, c.variant_id, c.options, c.note]) === JSON.stringify([line.item_id, line.variant_id, line.options, line.note])); if (same) same.qty += line.qty; else cart.push(line); saveCart(); closeSheet(); renderSection(); renderBar(); toast('✓ ' + txt(it.name)); touch(); };
+    $('#addBtn').onclick = () => { line.note = $('#noteIn').value.trim(); closeSheet(); addLine(line, it); };
     $('#noteIn').oninput = e => { line.note = e.target.value; };
     $$('#sheetCard [data-qd]').forEach(b => b.onclick = () => { line.qty = Math.max(1, Math.min(20, line.qty + +b.dataset.qd)); draw(); });
     $$('#sheetCard [data-v]').forEach(b => b.onclick = () => { line.variant_id = b.dataset.v; draw(); });
@@ -220,7 +307,8 @@ function openCart() {
   const total = Math.round((p.total + tipAmt) * 100) / 100;
   const webModes = MODE === 'web' ? st.payment_modes : ['counter'];
   if (!form.payment || !webModes.includes(form.payment)) form.payment = webModes[0];
-  const lines = p.lines.map((l, i) => { const it = byId(menu.items, cart[i].item_id); const img = it ? imgOf(it) : '';
+  const asideVisible = getComputedStyle($('#cartAside')).display !== 'none';
+  const lines = asideVisible ? '' : p.lines.map((l, i) => { const it = byId(menu.items, cart[i].item_id); const img = it ? imgOf(it) : '';
     return `<div class="cline">${img ? `<img src="${esc(img)}" alt="">` : '<div class="ph"></div>'}<div class="info"><div class="nm">${esc(l.name)}${l.variant_name ? ' · ' + esc(l.variant_name) : ''} <span class="muted">×${l.qty}</span></div><div class="opts">${l.options.map(o => esc(o.name)).join(', ')}</div>${l.note ? `<div class="note">✎ ${esc(l.note)}</div>` : ''}</div>
       <div class="qty"><button data-q="-1" data-i="${i}">−</button><span>${l.qty}</span><button data-q="1" data-i="${i}">+</button></div><div class="pr">${money(l.line_total)}</div></div>`; }).join('');
   const web = MODE === 'web';
@@ -241,8 +329,9 @@ function openCart() {
   const keep = () => { form.name = $('#fName')?.value ?? form.name; form.phone = $('#fPhone')?.value ?? form.phone; form.email = $('#fEmail')?.value ?? form.email; form.pickup = $('#fPickup')?.value ?? form.pickup; if (web) localStorage.setItem('web_customer', JSON.stringify({ name: form.name, phone: form.phone, email: form.email })); };
   $('#cartClose').onclick = closeCart; $('#backBtn2').onclick = closeCart;
   $('#cartClear').onclick = () => { cart = []; saveCart(); closeCart(); render(); };
-  $('#cartCard').querySelectorAll('button[data-q]').forEach(b => b.onclick = () => { keep(); const i = +b.dataset.i; cart[i].qty += +b.dataset.q; if (cart[i].qty <= 0) cart.splice(i, 1); saveCart(); renderSection(); renderBar(); if (cart.length) openCart(); else closeCart(); });
-  $('#svcSeg')?.addEventListener('click', e => { const b = e.target.closest('[data-svc]'); if (!b) return; keep(); form.service = b.dataset.svc; openCart(); });
+  $('#cartCard').classList.toggle('no-lines', asideVisible);
+  $('#cartCard').querySelectorAll('button[data-q]').forEach(b => b.onclick = () => { keep(); const i = +b.dataset.i; cart[i].qty += +b.dataset.q; if (cart[i].qty <= 0) cart.splice(i, 1); saveCart(); renderGrid(); renderCart(); renderBar(); if (cart.length) openCart(); else closeCart(); });
+  $('#svcSeg')?.addEventListener('click', e => { const b = e.target.closest('[data-svc]'); if (!b) return; keep(); form.service = b.dataset.svc; renderCart(); openCart(); });
   $('#tipSeg')?.addEventListener('click', e => { const b = e.target.closest('[data-tip]'); if (!b) return; keep(); form.tip = Number(b.dataset.tip); openCart(); });
   $('#paySeg')?.addEventListener('click', e => { const b = e.target.closest('[data-pay]'); if (!b) return; keep(); form.payment = b.dataset.pay; openCart(); });
   ['fName', 'fPhone', 'fEmail'].forEach(id => { const el = $('#' + id); if (el) el.oninput = keep; });
@@ -265,7 +354,7 @@ async function submit() {
     const r = await fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ device_id: dev.id, device_name: dev.name, customer_name: form.name.trim(), service_type: form.service === 'takeout' ? 'takeout' : 'dine_in', lang, lines: cart, tip_percent: form.tip }) });
     const data = await r.json(); if (!r.ok) throw new Error(data.error || 'error');
-    cart = []; saveCart(); form.name = ''; form.service = 'dine_in'; form.tip = null;
+    cart = []; saveCart(); form.name = ''; form.service = 'dine_in'; form.tip = null; renderGrid(); renderCart(); renderBar();
     let secs = Math.max(3, Math.min(120, Number(settings.thank_you_seconds) || 12));
     $('#cartCard').innerHTML = `<div class="success"><h2>${t('thanks')}</h2><p class="muted">${t('giveNumber')}</p><div class="num">#${data.number}</div><p><button class="btn primary big" id="newOrderBtn">${t('newOrder')}</button></p><p class="muted" id="autoBack">${t('autoBack', { s: secs })}</p></div>`;
     const done = () => { clearInterval(tm); closeCart(); goHome(); };
@@ -319,6 +408,7 @@ function touch() { if (MODE === 'web') return; clearTimeout(idleTimer); idleTime
 
 // ---------------------------------------------------------------- misc
 function toast(msg, kind = '') { const el = $('#toast'); el.textContent = msg; el.className = 'toast ' + kind; clearTimeout(el._t); el._t = setTimeout(() => el.classList.add('hidden'), 2500); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeSheet(); closeCart(); } });
 if (new URLSearchParams(location.search).get('cancelled')) setTimeout(() => toast(t('cancelled')), 500);
 applyLang();
 load().catch(() => toast(t('errNet'), 'err'));

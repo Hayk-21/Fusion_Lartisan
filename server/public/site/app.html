@@ -46,7 +46,7 @@ ol li{margin:8px 0}
     if (!info) { body.innerHTML = `<p class="muted">${t('none')}</p>`; return; }
     const d = new Date(info.uploaded_at).toLocaleDateString(lang === 'en' ? 'en-CA' : 'fr-CA');
     body.innerHTML = `<a class="btn primary big" href="/app/lartisan.apk">${t('dl')}</a>
-      <div class="meta">${t('meta').replace('{v}', info.version || '—').replace('{s}', (info.size / 1048576).toFixed(1)).replace('{d}', d)}</div>
+      <div class="meta">${t('meta').replace('{v}', info.version || '?').replace('{s}', (info.size / 1048576).toFixed(1)).replace('{d}', d)}</div>
       <ol>${t('steps').map(x => `<li>${x}</li>`).join('')}</ol>`;
   }
   document.querySelectorAll('.lang button').forEach(b => b.onclick = () => { lang = b.dataset.lang; localStorage.setItem('site_lang', lang); render(); });

@@ -36,8 +36,8 @@ export async function createCheckoutSession(settings, order, { successUrl, cance
     customer_email: order.customer_email || undefined,
     expires_at: Math.floor(Date.now() / 1000) + 31 * 60,
     metadata: { order_id: String(order.id), order_number: String(order.number) },
-    payment_intent_data: { description: `${settings.cafe_name} — commande #${order.number}`, metadata: { order_id: String(order.id) } },
-    line_items: [{ quantity: 1, price_data: { currency: 'cad', unit_amount: cents, product_data: { name: `${settings.cafe_name} — commande #${order.number}`, description: order.lines.map(l => `${l.qty}× ${l.name}`).join(', ').slice(0, 500) } } }],
+    payment_intent_data: { description: `${settings.cafe_name}, commande #${order.number}`, metadata: { order_id: String(order.id) } },
+    line_items: [{ quantity: 1, price_data: { currency: 'cad', unit_amount: cents, product_data: { name: `${settings.cafe_name}, commande #${order.number}`, description: order.lines.map(l => `${l.qty}× ${l.name}`).join(', ').slice(0, 500) } } }],
   });
 }
 

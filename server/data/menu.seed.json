@@ -28,8 +28,8 @@
       "sort": 2,
       "visible": true,
       "description": {
-        "fr": "Sarrasin bio, sans gluten — composez votre galette",
-        "en": "Organic buckwheat, gluten-free — build your galette"
+        "fr": "Sarrasin bio, sans gluten, composez votre galette",
+        "en": "Organic buckwheat, gluten-free, build your galette"
       }
     },
     {
@@ -84,8 +84,8 @@
       "sort": 6,
       "visible": true,
       "description": {
-        "fr": "L'Artisan, c'est vous — composez votre crêpe sucrée",
-        "en": "L'Artisan is You — build your own sweet crêpe"
+        "fr": "L'Artisan, c'est vous, composez votre crêpe sucrée",
+        "en": "L'Artisan is You, build your own sweet crêpe"
       }
     },
     {
@@ -126,8 +126,8 @@
       "sort": 9,
       "visible": true,
       "description": {
-        "fr": "À composer soi-même — crème Chantilly incluse",
-        "en": "Build your own — whipped cream included"
+        "fr": "À composer soi-même, crème Chantilly incluse",
+        "en": "Build your own, whipped cream included"
       }
     },
     {
@@ -501,8 +501,8 @@
             {
               "id": "oeuf",
               "name": {
-                "fr": "Œuf — miroir ou brouillé",
-                "en": "Egg — sunny-side up or scrambled"
+                "fr": "Œuf, miroir ou brouillé",
+                "en": "Egg, sunny-side up or scrambled"
               },
               "price": 0,
               "available": true,
@@ -1148,8 +1148,8 @@
       },
       "image": "/shared/dishes/form-etudiant.jpg",
       "description": {
-        "fr": "Sur présentation d'une carte étudiante valide — du lundi au vendredi, de 11 h à 15 h. 1 galette salée au choix + 1 boisson.",
-        "en": "Valid student ID required — Mon. to Fri., 11 am to 3 pm. 1 savoury galette of your choice + 1 drink."
+        "fr": "Sur présentation d'une carte étudiante valide, du lundi au vendredi, de 11 h à 15 h. 1 galette salée au choix + 1 boisson.",
+        "en": "Valid student ID required, Mon. to Fri., 11 am to 3 pm. 1 savoury galette of your choice + 1 drink."
       },
       "price": 11.99,
       "available": true,
@@ -1863,8 +1863,8 @@
         {
           "id": "premium",
           "name": {
-            "fr": "Garnitures premium — crèmes signature",
-            "en": "Premium fillings — signature creams"
+            "fr": "Garnitures premium, crèmes signature",
+            "en": "Premium fillings, signature creams"
           },
           "type": "multi",
           "required": false,
@@ -2024,8 +2024,8 @@
       "id": "ssig-matcha-anko",
       "category_id": "signatures-sucrees",
       "name": {
-        "fr": "Matcha-Anko — De Tokyo à Montréal",
-        "en": "Matcha-Anko — From Tokyo to Montréal"
+        "fr": "Matcha-Anko, De Tokyo à Montréal",
+        "en": "Matcha-Anko, From Tokyo to Montréal"
       },
       "image": "/shared/dishes/ssig-matcha-anko.jpg",
       "description": {
@@ -2166,8 +2166,8 @@
             {
               "id": "choc-noisette",
               "name": {
-                "fr": "L'Artisan Chocolat Noisette — ganache chocolat noir, banane rôtie, praliné noisette, chantilly vanille",
-                "en": "L'Artisan Chocolat Noisette — dark chocolate ganache, roasted banana, hazelnut praline, vanilla whipped cream"
+                "fr": "L'Artisan Chocolat Noisette, ganache chocolat noir, banane rôtie, praliné noisette, chantilly vanille",
+                "en": "L'Artisan Chocolat Noisette, dark chocolate ganache, roasted banana, hazelnut praline, vanilla whipped cream"
               },
               "price": 0.0,
               "available": true
@@ -2175,8 +2175,8 @@
             {
               "id": "boreale",
               "name": {
-                "fr": "La Boréale Fruité-Exotique — ananas rôti au miel, coulis mangue-passion, chantilly vanille, coco toastée",
-                "en": "La Boréale — honey-roasted pineapple, mango-passion coulis, vanilla whipped cream, toasted coconut"
+                "fr": "La Boréale Fruité-Exotique, ananas rôti au miel, coulis mangue-passion, chantilly vanille, coco toastée",
+                "en": "La Boréale, honey-roasted pineapple, mango-passion coulis, vanilla whipped cream, toasted coconut"
               },
               "price": 0.0,
               "available": true
@@ -2184,8 +2184,8 @@
             {
               "id": "douceur-nordique",
               "name": {
-                "fr": "La Douceur Nordique — pommes caramélisées à l'érable, chantilly vanille, pécan grillées",
-                "en": "La Douceur Nordique — maple-caramelized apples, vanilla whipped cream, toasted pecans"
+                "fr": "La Douceur Nordique, pommes caramélisées à l'érable, chantilly vanille, pécan grillées",
+                "en": "La Douceur Nordique, maple-caramelized apples, vanilla whipped cream, toasted pecans"
               },
               "price": 0.0,
               "available": true
@@ -2204,8 +2204,8 @@
       },
       "image": "/shared/dishes/form-midi.jpg",
       "description": {
-        "fr": "La pause déjeuner qui fait du bien. Crêpe L'Indémodable — Nutella, bananes fraîches, fraises juteuses, couronnée de chantilly + 1 café ou thé (12 oz).",
-        "en": "The lunch break that does you good. Crêpe L'Indémodable — Nutella, fresh bananas, juicy strawberries, crowned with whipped cream + 1 coffee or tea (12 oz)."
+        "fr": "La pause déjeuner qui fait du bien. Crêpe L'Indémodable, Nutella, bananes fraîches, fraises juteuses, couronnée de chantilly + 1 café ou thé (12 oz).",
+        "en": "The lunch break that does you good. Crêpe L'Indémodable, Nutella, fresh bananas, juicy strawberries, crowned with whipped cream + 1 coffee or tea (12 oz)."
       },
       "price": 14.99,
       "available": true,
@@ -2253,8 +2253,8 @@
       "id": "form-express",
       "category_id": "formules-sucrees",
       "name": {
-        "fr": "Formule Express — Grab & Go",
-        "en": "Express Formula — Grab & Go"
+        "fr": "Formule Express, Grab & Go",
+        "en": "Express Formula, Grab & Go"
       },
       "image": "/shared/dishes/form-express.jpg",
       "description": {
@@ -2366,8 +2366,8 @@
         {
           "id": "parfums",
           "name": {
-            "fr": "Parfums — crèmes glacées & sorbets",
-            "en": "Flavours — ice creams & sorbets"
+            "fr": "Parfums, crèmes glacées & sorbets",
+            "en": "Flavours, ice creams & sorbets"
           },
           "type": "multi",
           "required": true,
@@ -2670,7 +2670,7 @@
       },
       "image": "/shared/dishes/gsig-artisan-royal.jpg",
       "description": {
-        "fr": "Signature exclusive — introuvable ailleurs. Glace vanille bourbon, caramel beurre salé maison, crème spéculoos, crumble croustillant, chocolat noir intense, crème Chantilly.",
+        "fr": "Signature exclusive, introuvable ailleurs. Glace vanille bourbon, caramel beurre salé maison, crème spéculoos, crumble croustillant, chocolat noir intense, crème Chantilly.",
         "en": "Exclusive signature. Bourbon vanilla ice cream, house salted butter caramel, spéculoos cream, crunchy crumble, intense dark chocolate, whipped cream."
       },
       "price": 12.99,
@@ -4717,8 +4717,8 @@
       "id": "cold-the-vert-glace",
       "category_id": "boissons-froides",
       "name": {
-        "fr": "Thé vert glacé maison — 36 cl",
-        "en": "House iced green tea — 36 cl"
+        "fr": "Thé vert glacé maison, 36 cl",
+        "en": "House iced green tea, 36 cl"
       },
       "image": "/shared/dishes/cold-the-vert-glace.jpg",
       "description": {
@@ -4800,8 +4800,8 @@
       "id": "cold-citronnade",
       "category_id": "boissons-froides",
       "name": {
-        "fr": "Citronnade maison — 36 cl",
-        "en": "House lemonade — 36 cl"
+        "fr": "Citronnade maison, 36 cl",
+        "en": "House lemonade, 36 cl"
       },
       "image": "/shared/dishes/cold-citronnade.jpg",
       "description": {
@@ -4822,8 +4822,8 @@
       "id": "cold-sunny-red",
       "category_id": "boissons-froides",
       "name": {
-        "fr": "Sunny Red — 36 cl",
-        "en": "Sunny Red — 36 cl"
+        "fr": "Sunny Red, 36 cl",
+        "en": "Sunny Red, 36 cl"
       },
       "image": "/shared/dishes/cold-sunny-red.jpg",
       "description": {
@@ -4844,8 +4844,8 @@
       "id": "cold-pink-yuzu",
       "category_id": "boissons-froides",
       "name": {
-        "fr": "Pink Yuzu Fizz — 36 cl",
-        "en": "Pink Yuzu Fizz — 36 cl"
+        "fr": "Pink Yuzu Fizz, 36 cl",
+        "en": "Pink Yuzu Fizz, 36 cl"
       },
       "image": "/shared/dishes/cold-pink-yuzu.jpg",
       "description": {
@@ -4866,8 +4866,8 @@
       "id": "cold-oranges-pressees",
       "category_id": "boissons-froides",
       "name": {
-        "fr": "Oranges pressées — 36 cl",
-        "en": "Fresh-squeezed orange juice — 36 cl"
+        "fr": "Oranges pressées, 36 cl",
+        "en": "Fresh-squeezed orange juice, 36 cl"
       },
       "image": "/shared/dishes/cold-oranges-pressees.jpg",
       "description": {
@@ -4888,8 +4888,8 @@
       "id": "cold-virgin-mojito",
       "category_id": "boissons-froides",
       "name": {
-        "fr": "Virgin Mojito — 40 cl",
-        "en": "Virgin Mojito — 40 cl"
+        "fr": "Virgin Mojito, 40 cl",
+        "en": "Virgin Mojito, 40 cl"
       },
       "image": "/shared/dishes/cold-virgin-mojito.jpg",
       "description": {
@@ -4974,8 +4974,8 @@
       "id": "cold-maracuja",
       "category_id": "boissons-froides",
       "name": {
-        "fr": "Virgin Maracuja Dream — 30 cl",
-        "en": "Virgin Maracuja Dream — 30 cl"
+        "fr": "Virgin Maracuja Dream, 30 cl",
+        "en": "Virgin Maracuja Dream, 30 cl"
       },
       "image": "/shared/dishes/cold-maracuja.jpg",
       "description": {
@@ -4999,8 +4999,8 @@
       "id": "cold-cosmo-bloom",
       "category_id": "boissons-froides",
       "name": {
-        "fr": "Virgin Cosmo Bloom — 30 cl",
-        "en": "Virgin Cosmo Bloom — 30 cl"
+        "fr": "Virgin Cosmo Bloom, 30 cl",
+        "en": "Virgin Cosmo Bloom, 30 cl"
       },
       "image": "/shared/dishes/cold-cosmo-bloom.jpg",
       "description": {
@@ -5024,8 +5024,8 @@
       "id": "cold-tropical-punch",
       "category_id": "boissons-froides",
       "name": {
-        "fr": "Virgin Tropical Punch — 30 cl",
-        "en": "Virgin Tropical Punch — 30 cl"
+        "fr": "Virgin Tropical Punch, 30 cl",
+        "en": "Virgin Tropical Punch, 30 cl"
       },
       "image": "/shared/dishes/cold-tropical-punch.jpg",
       "description": {
@@ -5049,8 +5049,8 @@
       "id": "cold-miss-red",
       "category_id": "boissons-froides",
       "name": {
-        "fr": "Smoothie Miss Red — 30 cl",
-        "en": "Miss Red Smoothie — 30 cl"
+        "fr": "Smoothie Miss Red, 30 cl",
+        "en": "Miss Red Smoothie, 30 cl"
       },
       "image": "/shared/dishes/cold-miss-red.jpg",
       "description": {
@@ -5071,8 +5071,8 @@
       "id": "cold-mango-island",
       "category_id": "boissons-froides",
       "name": {
-        "fr": "Smoothie Mango Island — 30 cl",
-        "en": "Mango Island Smoothie — 30 cl"
+        "fr": "Smoothie Mango Island, 30 cl",
+        "en": "Mango Island Smoothie, 30 cl"
       },
       "image": "/shared/dishes/cold-mango-island.jpg",
       "description": {
@@ -5093,8 +5093,8 @@
       "id": "cold-tropical-dream",
       "category_id": "boissons-froides",
       "name": {
-        "fr": "Smoothie Tropical Dream — 30 cl",
-        "en": "Tropical Dream Smoothie — 30 cl"
+        "fr": "Smoothie Tropical Dream, 30 cl",
+        "en": "Tropical Dream Smoothie, 30 cl"
       },
       "image": "/shared/dishes/cold-tropical-dream.jpg",
       "description": {
@@ -5115,8 +5115,8 @@
       "id": "cold-dragon-kiss",
       "category_id": "boissons-froides",
       "name": {
-        "fr": "Smoothie Dragon Kiss — 30 cl",
-        "en": "Dragon Kiss Smoothie — 30 cl"
+        "fr": "Smoothie Dragon Kiss, 30 cl",
+        "en": "Dragon Kiss Smoothie, 30 cl"
       },
       "image": "/shared/dishes/cold-dragon-kiss.jpg",
       "description": {

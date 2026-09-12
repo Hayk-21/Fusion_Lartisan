@@ -7,36 +7,36 @@
 <meta name="description" content="Menu et commande en ligne de Fusion L'Artisan, crêperie et café à Montréal.">
 <link rel="icon" href="/shared/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/kiosk/kiosk.css">
 </head>
 <body>
 <div id="closedBanner" class="banner hidden"></div>
 <header class="top">
-  <a class="brand" id="brandLink" href="/"><img id="navLogo" src="/shared/logo-mark.png" alt=""><span><b id="navName">L'Artisan</b><small id="navSub">Crêperie & Café</small></span></a>
+  <a class="brand" id="brandLink" href="/"><img id="navLogo" src="/shared/logo-mark.png" alt=""><span class="brand-txt"><b id="navName">Fusion L'Artisan</b><small id="navSub"></small></span></a>
+  <div class="tagline"><div class="kicker" id="kicker"></div><div class="slogan" id="slogan"></div></div>
   <div class="top-right">
+    <div class="lang"><button data-lang="fr">FR</button><button data-lang="en">EN</button></div>
     <span class="badge" id="openBadge"><span class="dot"></span><span id="openText">…</span></span>
     <button class="icon-btn hidden" id="fsBtn" title="Plein écran">⛶</button>
-    <div class="lang"><button data-lang="fr">FR</button><button data-lang="en">EN</button></div>
+    <div class="clock"><b id="clockTime">--:--</b><small id="clockDate"></small></div>
   </div>
 </header>
 
-<!-- home: the 6 big tiles -->
-<main id="home" class="home">
-  <div class="tiles" id="tiles"></div>
-  <button class="special-strip hidden" id="specialStrip"></button>
-</main>
-
-<!-- section page -->
-<main id="section" class="section hidden">
-  <aside class="filters" id="filters"></aside>
-  <div class="content">
-    <div class="sec-head"><h1 id="secTitle"></h1><div class="subcats" id="subcats"></div></div>
+<div class="app">
+  <nav class="side" id="side">
+    <div class="nav" id="nav"></div>
+    <button class="promo hidden" id="promo"></button>
+  </nav>
+  <main class="main" id="main">
+    <section class="hero" id="hero"></section>
+    <div class="head" id="head"></div>
     <div class="grid" id="grid"></div>
-  </div>
-</main>
+  </main>
+  <aside class="cart" id="cartAside"></aside>
+</div>
 
-<!-- bottom bar -->
+<!-- bottom bar (phones / small screens only) -->
 <footer class="bar" id="bar">
   <button class="btn ghost big hidden" id="backBtn">← <span data-i18n="back">Retour</span></button>
   <div class="bar-spacer"></div>
@@ -45,7 +45,7 @@
 
 <!-- item sheet -->
 <div id="sheet" class="sheet hidden"><div class="sheet-card" id="sheetCard"></div></div>
-<!-- cart / confirm panel -->
+<!-- confirm panel -->
 <div id="cartPanel" class="sheet hidden"><div class="sheet-card wide" id="cartCard"></div></div>
 <!-- PIN gate (counter mode) -->
 <div id="pinGate" class="pin-gate hidden">

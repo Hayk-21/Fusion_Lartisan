@@ -25,7 +25,7 @@ export function computeStats({ from, to } = {}) {
     byHour[h].orders++; byHour[h].revenue += r.total;
     service[r.service_type] ??= { orders: 0, revenue: 0 };
     service[r.service_type].orders++; service[r.service_type].revenue += r.total;
-    const dn = r.source === 'online' ? '__online__' : (r.device_name || '—');
+    const dn = r.source === 'online' ? '__online__' : (r.device_name || '?');
     devices[dn] ??= { device: dn, orders: 0, revenue: 0 };
     devices[dn].orders++; devices[dn].revenue += r.total;
     tips += r.tip || 0; if (r.source === 'online') online++;

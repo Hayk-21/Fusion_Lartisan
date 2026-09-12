@@ -92,7 +92,7 @@ export function orderToText(o, lang = 'fr') {
   const l = [];
   for (const line of o.lines) {
     const opts = line.options.map(x => x.name).join(', ');
-    l.push(`${line.qty}× ${line.name}${line.variant_name ? ' (' + line.variant_name + ')' : ''}${opts ? ' — ' + opts : ''}${line.note ? ' [' + line.note + ']' : ''}`);
+    l.push(`${line.qty}× ${line.name}${line.variant_name ? ' (' + line.variant_name + ')' : ''}${opts ? ', ' + opts : ''}${line.note ? ' [' + line.note + ']' : ''}`);
   }
   return l.join(' | ');
 }

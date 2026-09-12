@@ -232,7 +232,7 @@ export function seedMenuIfEmpty() {
 // may already have edited, without touching names, prices or options. Runs once (settings.menu_structure_version).
 export function upgradeMenuStructure() {
   const seed = JSON.parse(fs.readFileSync(SEED_PATH, 'utf8'));
-  const target = Number(seed.structure_version || seed.seed_version || 1);
+  const target = Number(seed.structure_version || seed.seed_version || 1) + 0.1;   // .1: dash cleanup
   if (Number(kvGet('menu_structure_version')?.value || 0) >= target) return false;
   const row = db.prepare('SELECT data FROM menu WHERE id = 1').get();
   if (!row) return false;
@@ -253,6 +253,12 @@ export function upgradeMenuStructure() {
     if ((!Array.isArray(it.tags) || !it.tags.length) && Array.isArray(si.tags) && si.tags.length) it.tags = [...si.tags];
     if (!it.image && si.image) it.image = si.image;
   }
+  // Hayk's rule: never show the "—" symbol to customers (texts only; ids, images and types are untouched)
+  const SKIP = new Set(['id', 'image', 'category_id', 'category_ids', 'type', 'icon']);
+  const fixDash = (v, key) => Array.isArray(v) ? v.map(x => fixDash(x, key))
+    : (v && typeof v === 'object') ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, SKIP.has(k) ? x : fixDash(x, k)]))
+    : (typeof v === 'string' ? v.replace(/ — /g, ', ').replace(/—/g, '-') : v);
+  menu.sections = fixDash(menu.sections); menu.categories = fixDash(menu.categories); menu.items = fixDash(menu.items);
   const catIds = new Set(menu.categories.map(c => c.id));
   for (const s of menu.sections) s.category_ids = (s.category_ids || []).filter(id => catIds.has(id));
   saveMenu(menu);

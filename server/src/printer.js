@@ -165,7 +165,7 @@ export function buildTestTicket(settings) {
         options: [{ name: 'Cheddar', price: 0 }, { name: 'Jambon de dinde', price: 0 }, { name: 'Champignons', price: 0 }, { name: 'Saumon fumé', price: 8.98 }, { name: 'Sauce pesto', price: 1.55 }] },
       { qty: 2, name: 'Cappuccino', variant_name: 'Grand (L)', line_total: 13.0, options: [{ name: "Lait d'avoine", price: 0.75 }] },
     ],
-    subtotal: 38.52, tax_gst: 1.93, tax_qst: 3.84, total: 44.29, note: 'Ticket de test — Ça fonctionne : é à ç œ',
+    subtotal: 38.52, tax_gst: 1.93, tax_qst: 3.84, total: 44.29, note: 'Ticket de test, ça fonctionne : é à ç œ',
   }, settings);
 }
 
