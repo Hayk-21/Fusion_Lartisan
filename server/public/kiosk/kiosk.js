@@ -433,12 +433,23 @@ function renderWelcome() {
   if (MODE === 'web' || !menu) return;
   const secs = visibleSections(); const first = secs.find(x => x.id === 'sale') || secs[0];
   const wimg = settings.welcome_image || first?.image || '';
-  $('#wBg').style.backgroundImage = wimg ? `url("${pic(wimg, 1280)}")` : 'none';
+  const src = wimg ? pic(wimg, 1280) : '';
+  const im = $('#wImg'); if (im.dataset.src !== src) { im.dataset.src = src; im.src = src; $('#wBg').style.setProperty('--w-src', src ? `url("${src}")` : 'none'); im.onload = fitWelcome; }
+  fitWelcome();
   $('#wLogo').src = site?.logo_url && !/\/shared\//.test(site.logo_url) ? site.logo_url : '/shared/logo-full-t.png';
   $('#wSlogan').textContent = txt(site?.tagline);
   $('#wQuestion').textContent = t('howOrder'); $('#wDine').textContent = t('wDine'); $('#wTake').textContent = t('wTake');
   $$('[data-wlang]').forEach(b => b.classList.toggle('on', b.dataset.wlang === lang));
 }
+// size the photo column to the picture's proportions (landscape: width, portrait: height), within sensible limits
+function fitWelcome() {
+  const im = $('#wImg'), w = $('#welcome'); if (!im.naturalWidth) return;
+  const ratio = im.naturalWidth / im.naturalHeight;
+  const top = $('.top').offsetHeight, H = innerHeight - top, Wd = innerWidth;
+  if (Wd > 940 && Wd >= H) { const px = Math.max(Wd * 0.34, Math.min(Wd * 0.62, H * ratio)); w.style.setProperty('--w-photo', Math.round(px) + 'px'); }
+  else { const px = Math.max(H * 0.22, Math.min(H * 0.5, Wd / ratio)); w.style.setProperty('--w-photo-h', Math.round(px) + 'px'); }
+}
+window.addEventListener('resize', fitWelcome);
 function showWelcome() { if (MODE === 'web') return; renderWelcome(); welcome.classList.remove('hidden'); document.body.classList.add('on-welcome'); }
 $$('[data-wlang]').forEach(b => b.onclick = () => { lang = b.dataset.wlang; localStorage.setItem('site_lang', lang); applyLang(); renderWelcome(); });
 $$('[data-wsvc]').forEach(b => b.onclick = () => { form.service = b.dataset.wsvc; form.name = ''; form.tip = null; welcome.classList.add('hidden'); document.body.classList.remove('on-welcome'); goHome(); renderCart(); touch(); });
