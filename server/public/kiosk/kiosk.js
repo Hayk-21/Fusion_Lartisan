@@ -187,14 +187,16 @@ function renderGrid() {
   let shown = pool;
   if (view.subcat) shown = shown.filter(i => i.category_id === view.subcat);
   if (view.tag) shown = shown.filter(i => view.tag === 'special' ? isSpecial(i) : (i.tags || []).includes(view.tag));
-  const groups = (section && !view.subcat && cats.length > 1) ? cats : [null];
+  // group the cards by category (a section with several categories, or the best-sellers / special pages)
+  const groups = (section && !view.subcat && cats.length > 1) ? cats : (!section ? menu.categories.filter(c => c.visible !== false) : [null]);
   let html = '';
   for (const c of groups) {
     const list = c ? shown.filter(i => i.category_id === c.id) : shown;
     if (!list.length) continue;
-    if (c) html += `<h3 class="cat">${esc(c.icon || '')} ${esc(txt(c.name))}</h3>`;
+    if (c && groups.length > 1) html += `<h3 class="cat">${esc(c.icon || '')} ${esc(txt(c.name))}</h3>`;
     html += list.map(card).join('');
   }
+  if (!section) { const orphan = shown.filter(i => !groups.some(c => c.id === i.category_id)); if (orphan.length) html += orphan.map(card).join(''); }
   $('#grid').innerHTML = html || `<div class="empty">${t('noResult')}</div>`;
   $('#grid').onclick = e => { const b = e.target.closest('[data-id]'); if (!b) return; const id = b.dataset.id; if (e.target.closest('.add')) quickAdd(id); else openItem(id); };
 }
@@ -266,7 +268,7 @@ function tickClock() { const d = new Date(); const loc = lang === 'en' ? 'en-CA'
 setInterval(tickClock, 15000); tickClock();
 
 // ---------------------------------------------------------------- item sheet
-function closeSheet() { $('#sheet').classList.add('hidden'); }
+function closeSheet() { $('#sheet').classList.add('hidden'); if (typeof vkHide === 'function') vkHide(); }
 $('#sheet').onclick = e => { if (e.target === $('#sheet')) closeSheet(); };
 function openItem(id) {
   const it = byId(menu.items, id); if (!it || it.available === false) return;
@@ -308,7 +310,7 @@ function openItem(id) {
 }
 
 // ---------------------------------------------------------------- cart / confirm
-function closeCart() { $('#cartPanel').classList.add('hidden'); }
+function closeCart() { $('#cartPanel').classList.add('hidden'); if (typeof vkHide === 'function') vkHide(); }
 $('#cartPanel').onclick = e => { if (e.target === $('#cartPanel')) closeCart(); };
 function openCart() {
   if (!cart.length) return;
@@ -435,6 +437,43 @@ function showWelcome() { if (MODE === 'web') return; renderWelcome(); welcome.cl
 $$('[data-wlang]').forEach(b => b.onclick = () => { lang = b.dataset.wlang; localStorage.setItem('site_lang', lang); applyLang(); renderWelcome(); });
 $$('[data-wsvc]').forEach(b => b.onclick = () => { form.service = b.dataset.wsvc; form.name = ''; form.tip = null; welcome.classList.add('hidden'); document.body.classList.remove('on-welcome'); goHome(); renderCart(); touch(); });
 if (MODE !== 'web') { welcome.classList.remove('hidden'); document.body.classList.add('on-welcome'); }
+
+// ---------------------------------------------------------------- on-screen keyboard (touch screens without a physical keyboard)
+const VK_ROWS = [
+  ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '⌫'],
+  ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'é'],
+  ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'è', 'à'],
+  ['⇧', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'ç', 'ê', 'ô'],
+  ["'", '-', ' ', ',', '.', '✓'],
+];
+let vk = null, vkTarget = null, vkShift = false, vkShownAt = 0;
+function vkBuild() {
+  vk = document.createElement('div'); vk.id = 'vk'; vk.className = 'vk hidden';
+  vk.innerHTML = VK_ROWS.map(r => `<div class="vk-row">${r.map(k => `<button data-k="${k === ' ' ? 'space' : esc(k)}" class="${k === ' ' ? 'space' : k === '⌫' ? 'bk' : k === '⇧' ? 'sh' : k === '✓' ? 'ok' : ''}">${k === ' ' ? '' : esc(k)}</button>`).join('')}</div>`).join('');
+  document.body.appendChild(vk);
+  vk.addEventListener('mousedown', e => e.preventDefault());   // keep the focus in the input
+  vk.addEventListener('touchstart', e => { e.preventDefault(); const b = e.target.closest('button'); if (b) vkPress(b.dataset.k); }, { passive: false });
+  vk.addEventListener('click', e => { const b = e.target.closest('button'); if (b && !('ontouchstart' in window)) vkPress(b.dataset.k); });
+}
+function vkPress(k) {
+  const el = vkTarget; if (!el) return;
+  if (k === '✓') { vkHide(); return; }
+  if (k === '⇧') { vkShift = !vkShift; vk.classList.toggle('shift', vkShift); vk.querySelectorAll('button:not(.space):not(.bk):not(.sh):not(.ok)').forEach(b => { if (b.dataset.k.length === 1 && /[a-zàâçéèêëîïôûùüÿ]/i.test(b.dataset.k)) b.textContent = vkShift ? b.dataset.k.toUpperCase() : b.dataset.k; }); return; }
+  const start = el.selectionStart ?? el.value.length, end = el.selectionEnd ?? el.value.length;
+  let v = el.value, pos = start;
+  if (k === '⌫') { if (start === end && start > 0) { v = v.slice(0, start - 1) + v.slice(end); pos = start - 1; } else { v = v.slice(0, start) + v.slice(end); } }
+  else { let ch = k === 'space' ? ' ' : k; if (vkShift) { ch = ch.toUpperCase(); if (/[a-z]/i.test(k)) { vkShift = false; vk.classList.remove('shift'); vk.querySelectorAll('button').forEach(b => { if (b.dataset.k.length === 1 && /[a-zàâçéèêëîïôûùüÿ]/i.test(b.dataset.k)) b.textContent = b.dataset.k; }); } }
+    const max = Number(el.maxLength) > 0 ? Number(el.maxLength) : Infinity; if (v.length - (end - start) + ch.length > max) return;
+    v = v.slice(0, start) + ch + v.slice(end); pos = start + ch.length; }
+  el.value = v; try { el.setSelectionRange(pos, pos); } catch {}
+  el.dispatchEvent(new Event('input', { bubbles: true }));
+}
+function vkShow(el) { if (!vk) vkBuild(); vkTarget = el; vkShownAt = Date.now(); vk.classList.remove('hidden'); document.body.classList.add('vk-open'); setTimeout(() => el.scrollIntoView({ block: 'center', behavior: 'smooth' }), 50); }
+function vkHide() { if (!vk) return; vk.classList.add('hidden'); document.body.classList.remove('vk-open'); vkTarget = null; }
+if (MODE !== 'web') {
+  document.addEventListener('focusin', e => { const el = e.target; if ((el.tagName === 'INPUT' && /^(text|search|tel|email|url|)$/.test(el.type || '')) || el.tagName === 'TEXTAREA') { el.setAttribute('inputmode', 'none'); vkShow(el); } else if (!el.closest('#vk')) vkHide(); });
+  document.addEventListener('click', e => { if (vk && Date.now() - vkShownAt > 400 && !e.target.closest('#vk') && !e.target.closest('input,textarea')) vkHide(); });
+}
 
 // ---------------------------------------------------------------- misc
 function toast(msg, kind = '') { const el = $('#toast'); el.textContent = msg; el.className = 'toast ' + kind; clearTimeout(el._t); el._t = setTimeout(() => el.classList.add('hidden'), 2500); }

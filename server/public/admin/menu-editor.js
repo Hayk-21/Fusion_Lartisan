@@ -53,11 +53,20 @@
         <label class="check"><input type="checkbox" id="bestOn" ${best.enabled !== false ? 'checked' : ''}><span>${t('menu.bestShow')}</span></label>
         <div class="row"><label style="flex:1"><span>${t('menu.secName')}</span><input id="bestFr" value="${esc(best.name?.fr || '')}"></label><label style="flex:1"><span>${t('menu.secNameEn')}</span><input id="bestEn" value="${esc(best.name?.en || '')}"></label></div>
         <p class="help">${t('menu.bestHelp')}</p>
-        <div class="row" style="justify-content:flex-end"><button class="small primary" id="bestSave">💾 ${t('common.save')}</button></div>`;
+        <div class="row" style="justify-content:flex-end"><button class="small primary" id="bestSave">💾 ${t('common.save')}</button></div>
+        <label><span>${t('menu.bestDishes')}</span></label>
+        <div class="sec-cats" id="bestDishes">${menu.categories.map(c => { const items = menu.items.filter(i => i.category_id === c.id); if (!items.length) return '';
+          return `<div class="row-c" style="background:var(--soft);font-weight:700">${esc(c.icon || '')} ${esc(tx(c.name))}</div>` + items.map(i => `<label class="row-c" style="cursor:pointer;flex-direction:row;align-items:center;margin:0"><input type="checkbox" data-best="${i.id}" ${(i.tags || []).includes('popular') ? 'checked' : ''} style="width:18px;height:18px;margin:0"><span class="nm">${esc(tx(i.name))}</span><span class="muted" style="font-size:12px">${money(i.price)}</span></label>`).join(''); }).join('')}</div>
+        <p class="help">${t('menu.bestDishesHelp')}</p>`;
       $('#bestSave').onclick = async () => {
         best = { enabled: $('#bestOn').checked, name: { fr: $('#bestFr').value.trim() || 'Best-sellers', en: $('#bestEn').value.trim() || 'Best-sellers' } };
         try { await api('/admin/settings', { method: 'PUT', body: { best_sellers: best } }); toast(t('common.saved'), 'ok'); renderSecs(); } catch (e) { toast(e.message, 'err'); }
       };
+      $$('#bestDishes [data-best]').forEach(cb => cb.addEventListener('change', () => {
+        const it = menu.items.find(i => i.id === cb.dataset.best); if (!it) return;
+        it.tags = (it.tags || []).filter(x => x !== 'popular'); if (cb.checked) it.tags.push('popular');
+        setDirty(true);
+      }));
       return;
     }
     const sc = menu.sections.find(x => x.id === selSec);

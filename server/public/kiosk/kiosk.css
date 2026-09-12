@@ -232,3 +232,16 @@ body.on-welcome .lang,body.on-welcome #openBadge{display:none}
   .w-lang button{padding:10px 16px 10px 12px;font-size:15px;min-height:46px}
   .w-choices{gap:12px}.w-choices button{min-height:120px;font-size:17px}.w-choices button svg{width:46px;height:46px}
 }
+
+/* ------------------------------------------------------------ on-screen keyboard (counter / tablets) */
+.vk{position:fixed;left:0;right:0;bottom:0;z-index:95;background:#efe6d6;border-top:1px solid var(--line);padding:8px 8px calc(8px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:6px;box-shadow:0 -10px 30px rgba(60,30,10,.15);user-select:none}
+.vk-row{display:flex;gap:6px;justify-content:center}
+.vk button{flex:1;max-width:84px;min-width:0;height:54px;border:none;border-radius:10px;background:#fff;color:var(--ink);font-size:21px;font-weight:600;box-shadow:0 2px 0 rgba(0,0,0,.12);touch-action:manipulation}
+.vk button:active{background:var(--soft);transform:translateY(1px)}
+.vk button.space{max-width:380px;flex:4}
+.vk button.bk,.vk button.sh{background:#e2d6c2;font-size:20px}
+.vk.shift button.sh{background:var(--gold);color:#fff}
+.vk button.ok{background:var(--gold);color:#fff;max-width:120px;flex:1.5}
+body.vk-open .sheet{align-items:flex-start;padding-bottom:330px}
+body.vk-open .sheet-card{max-height:calc(100vh - 340px)}
+@media(max-width:940px){.vk button{height:46px;font-size:18px}body.vk-open .sheet{padding-bottom:290px}body.vk-open .sheet-card{max-height:calc(100vh - 290px)}}
