@@ -38,10 +38,10 @@ button{font:inherit;cursor:pointer}
 .app{height:calc(100vh - var(--top));display:grid;grid-template-columns:var(--side) minmax(0,1fr) var(--aside);gap:0}
 .side{display:flex;flex-direction:column;gap:14px;padding:16px 14px;background:var(--paper);border-right:1px solid var(--line);overflow-y:auto}
 .nav{display:flex;flex-direction:column;gap:8px}
-.nav button{display:flex;align-items:center;gap:12px;border:none;background:transparent;border-radius:14px;padding:11px 12px;font-weight:600;font-size:14.5px;line-height:1.2;color:var(--brown);text-align:left;min-height:58px;transition:.12s}
-.nav button .ic{width:38px;height:38px;border-radius:50%;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:19px;flex:0 0 auto}
-.nav button:hover{background:#fff}
-.nav button.on{background:linear-gradient(90deg,#d9bc7a,#c6a45a);color:#fff;box-shadow:0 6px 16px rgba(176,138,62,.3)}
+.nav button{display:flex;align-items:center;gap:12px;border:1.5px solid var(--line);background:#fff;border-radius:14px;padding:11px 12px;font-weight:600;font-size:14.5px;line-height:1.2;color:var(--brown);text-align:left;min-height:58px;transition:.12s;box-shadow:0 2px 6px rgba(60,30,10,.04)}
+.nav button .ic{width:38px;height:38px;border-radius:50%;background:var(--paper);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:19px;flex:0 0 auto}
+.nav button:hover{border-color:var(--gold)}
+.nav button.on{background:linear-gradient(90deg,#d9bc7a,#c6a45a);border-color:transparent;color:#fff;box-shadow:0 6px 16px rgba(176,138,62,.3)}
 .nav button.on .ic{background:rgba(255,255,255,.25);border-color:transparent;color:#fff}
 .promo{margin-top:auto;position:relative;border:none;padding:0;border-radius:18px;overflow:hidden;height:150px;background:#5a4632;color:#fff;text-align:left;box-shadow:0 8px 20px rgba(60,30,10,.18);flex:0 0 auto}
 .promo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.9}
