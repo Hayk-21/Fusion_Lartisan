@@ -386,7 +386,7 @@ async function applyStockPhotos({ force = false } = {}) {
   for (const it of menu.items) await apply(it, map.items?.[it.id]);
   kvSet('pexels_cache', cache);
   let version = menu.version;
-  if (n) { version = publishMenu(normalizeMenu(menu), 'photos').version; audit('menu.photos', `${n} photos, ${errors.length} errors`); }
+  if (n) { version = publishMenu(saveMenu(normalizeMenu(menu)), 'photos').version; audit('menu.photos', `${n} photos, ${errors.length} errors`); }
   return { updated: n, errors, version, photos_version: map.version || 1 };
 }
 admin.post('/images/apply-stock', wrap(async (req, res) => ok(res, await applyStockPhotos({ force: !!req.body?.force }))));
