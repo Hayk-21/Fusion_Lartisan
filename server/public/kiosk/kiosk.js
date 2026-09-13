@@ -298,8 +298,10 @@ function openItem(id) {
     }
     body.push(`<div class="grp"><h3>${t('qty')}</h3><div class="qty"><button data-qd="-1">−</button><span>${line.qty}</span><button data-qd="1">+</button></div></div><div class="grp"><input class="note-in" id="noteIn" maxlength="120" placeholder="${esc(t('note'))}" value="${esc(line.note)}"></div>`);
     const img = imgOf(it);
+    const keepScroll = $('#sheetCard .sheet-body')?.scrollTop || 0;   // re-drawing must not jump back to the top
     $('#sheetCard').innerHTML = `${img ? `<div class="sheet-hero"><img src="${esc(pic(img, 960))}" alt=""></div>` : ''}<div class="sheet-head"><div><h2>${esc(txt(it.name))}</h2><p>${esc(txt(it.description))}</p></div><button class="close" id="sheetClose">✕</button></div><div class="sheet-body">${body.join('')}</div>
       <div class="sheet-foot"><div class="total">${r.ok ? money(r.priced.line_total) : '-'}</div><button class="btn primary big" id="addBtn" ${r.ok ? '' : 'disabled'}>${r.ok ? '+ ' + t('add') : esc(r.error)}</button></div>`;
+    if (keepScroll) $('#sheetCard .sheet-body').scrollTop = keepScroll;
     $('#sheetClose').onclick = closeSheet;
     $('#addBtn').onclick = () => { line.note = $('#noteIn').value.trim(); closeSheet(); addLine(line, it); };
     $('#noteIn').oninput = e => { line.note = e.target.value; };
@@ -342,12 +344,14 @@ function openCart() {
       <div class="field"><label>${t('service')}</label><div class="seg" id="svcSeg"><button data-svc="dine_in" class="${form.service !== 'takeout' ? 'on' : ''}">🍽️ ${t('dineIn')}</button><button data-svc="takeout" class="${form.service === 'takeout' ? 'on' : ''}">🥡 ${t('takeout')}</button></div></div>`;
   const tipHtml = tips ? `<div class="field"><label>${t('tipLabel')}</label><div class="seg" id="tipSeg">${tips.map(x => `<button data-tip="${x}" class="${x === form.tip ? 'on' : ''}">${x === 0 ? t('noTip') : x + ' %'}</button>`).join('')}</div></div>` : '';
   const payHtml = web ? (webModes.length > 1 ? `<div class="field"><label>${t('payment')}</label><div class="seg" id="paySeg">${webModes.map(m => `<button data-pay="${m}" class="${m === form.payment ? 'on' : ''}">${m === 'stripe' ? '💳 ' + t('payStripe') : '🏪 ' + t('payCounter')}</button>`).join('')}</div></div>` : '') + `<div class="pay-note">${form.payment === 'stripe' ? t('payStripeNote') : t('payCounterNote')}</div>` : `<div class="pay-note">${t('payNote')}</div>`;
+  const keepScroll = $('#cartCard .sheet-body')?.scrollTop || 0;
   $('#cartCard').innerHTML = `<div class="sheet-head"><div><h2>${t('yourOrder')}</h2><p>${web ? t('coSub', { addr: esc(site.address) }) : ''}</p></div><div style="display:flex;gap:8px"><button class="btn ghost" id="cartClear">${t('clear')}</button><button class="close" id="cartClose">✕</button></div></div>
     <div class="sheet-body">${lines}${formHtml}${tipHtml}${payHtml}
       <div class="totals"><div><span>${t('subtotal')}</span><span>${money(p.subtotal)}</span></div><div><span>${t('gst', { r: rate(settings.tax_gst) })}</span><span>${money(p.tax_gst)}</span></div><div><span>${t('qst', { r: rate(settings.tax_qst) })}</span><span>${money(p.tax_qst)}</span></div>${tipAmt ? `<div><span>${t('tip')}</span><span>${money(tipAmt)}</span></div>` : ''}<div class="tot"><span>${t('total')}</span><span>${money(total)}</span></div></div>
     </div>
     <div class="sheet-foot"><button class="btn big" id="backBtn2">← ${t('back')}</button><button class="btn primary big" id="confirmBtn">${web && form.payment === 'stripe' ? '💳 ' + t('confirmPay', { t: money(total) }) : '✓ ' + t('sendOrder')}</button></div>`;
   const keep = () => { form.name = $('#fName')?.value ?? form.name; form.phone = $('#fPhone')?.value ?? form.phone; form.email = $('#fEmail')?.value ?? form.email; form.pickup = $('#fPickup')?.value ?? form.pickup; if (web) localStorage.setItem('web_customer', JSON.stringify({ name: form.name, phone: form.phone, email: form.email })); };
+  if (keepScroll) $('#cartCard .sheet-body').scrollTop = keepScroll;
   $('#cartClose').onclick = closeCart; $('#backBtn2').onclick = closeCart;
   $('#cartClear').onclick = () => { cart = []; saveCart(); closeCart(); render(); };
   $('#cartCard').classList.toggle('no-lines', asideVisible);
