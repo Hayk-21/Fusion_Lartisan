@@ -24,7 +24,7 @@ const STR = {
     closedBtn: 'Café fermé', lateBtn: "Trop tard pour aujourd'hui", localTitle: 'Mode comptoir', localHint: 'Entrez le code PIN pour ouvrir le menu du café.', wrongPin: 'Code PIN incorrect', counter: 'Comptoir', tablet: 'Tablette', tabletName: 'Nom de cette tablette', save: 'Enregistrer',
     menuUpdated: 'Le menu a été mis à jour', errNet: 'Connexion impossible, réessayez.', cancelled: 'Paiement annulé · votre panier est conservé.', max: 'Maximum {n}', orderOnline: 'Commander en ligne',
     best: 'Best-sellers', ourBest: 'Nos best-sellers', heroTitle: 'Des saveurs qui font la différence', heroSub: '{list} et plus encore…', seeAll: 'Voir tout', continue: 'Continuer', clearCart: 'Vider le panier', addShort: 'Ajouter',
-    dineInSub: 'Servi à votre table', takeoutSub: 'Prêt à emporter', promoSpecial: 'Spécial du jour', promoCoffee: 'Café de spécialité', promoCoffeeSub: 'Boissons chaudes', taxes: 'Taxes (TPS/TVQ)', choices: '{n} choix', howOrder: 'Comment souhaitez-vous commander ?', wDine: 'Sur place', wTake: 'Pour emporter' },
+    dineInSub: 'Servi à votre table', takeoutSub: 'Prêt à emporter', promoSpecial: 'Spécial du jour', promoCoffee: 'Café de spécialité', promoCoffeeSub: 'Boissons chaudes', taxes: 'Taxes (TPS/TVQ)', choices: '{n} choix', howOrder: 'Comment souhaitez-vous commander ?', wDine: 'Sur place', wTake: 'Pour emporter', siteHome: 'Accueil du site', atTime: 'à {t}', tomorrowAt: 'demain à {t}' },
   en: { back: 'Back', confirm: 'Confirm', confirmN: 'Confirm · {n} · {t}', yourOrder: 'Your order', clear: 'Clear', empty: 'Your order is empty.\nTap a dish to start.',
     from: 'from', add: 'Add', included: 'included', includedOf: '{c}/{n} included', extra: 'extra', required: 'Required', choose: 'Choose', qty: 'Quantity', note: 'Note for the kitchen (allergies, no onion…)',
     subtotal: 'Subtotal', gst: 'GST ({r}%)', qst: 'QST ({r}%)', tip: 'Tip', total: 'Total', items: '{n} item(s)', all: 'All', filters: 'Filters', special: "Today's special", specialStrip: "⭐ See today's special",
@@ -38,7 +38,7 @@ const STR = {
     closedBtn: 'Café closed', lateBtn: 'Too late for today', localTitle: 'Counter mode', localHint: 'Enter the PIN to open the café menu.', wrongPin: 'Wrong PIN', counter: 'Counter', tablet: 'Tablet', tabletName: 'Name of this tablet', save: 'Save',
     menuUpdated: 'The menu was updated', errNet: 'Cannot connect, please retry.', cancelled: 'Payment cancelled · your cart was kept.', max: 'Maximum {n}', orderOnline: 'Order online',
     best: 'Best-sellers', ourBest: 'Our best-sellers', heroTitle: 'Flavours that make the difference', heroSub: '{list} and more…', seeAll: 'See all', continue: 'Continue', clearCart: 'Clear cart', addShort: 'Add',
-    dineInSub: 'Served at your table', takeoutSub: 'Ready to go', promoSpecial: "Today's special", promoCoffee: 'Specialty coffee', promoCoffeeSub: 'Hot drinks', taxes: 'Taxes (GST/QST)', choices: '{n} choices', howOrder: 'How would you like to order?', wDine: 'Dine in', wTake: 'Take out' },
+    dineInSub: 'Served at your table', takeoutSub: 'Ready to go', promoSpecial: "Today's special", promoCoffee: 'Specialty coffee', promoCoffeeSub: 'Hot drinks', taxes: 'Taxes (GST/QST)', choices: '{n} choices', howOrder: 'How would you like to order?', wDine: 'Dine in', wTake: 'Take out', siteHome: 'Website home', atTime: 'at {t}', tomorrowAt: 'tomorrow at {t}' },
 };
 let lang = localStorage.getItem('site_lang') || ((navigator.language || 'fr').toLowerCase().startsWith('en') ? 'en' : 'fr');
 const t = (k, v = {}) => { let s = STR[lang][k] ?? STR.fr[k] ?? k; if (typeof s !== 'string') return s; for (const [a, b] of Object.entries(v)) s = s.replace('{' + a + '}', b); return s; };
@@ -115,7 +115,8 @@ function renderState() {
   const banner = $('#closedBanner');
   if (MODE === 'web' && !st.ordering) {
     banner.classList.remove('hidden');
-    banner.textContent = st.reason === 'temporarily_closed' ? (txt(site.closed_message) || t('bannerTemp')) : !st.open ? t('bannerClosed', { when: hint }) : (st.open && !st.slots.length ? t('bannerLate') : t('bannerOff'));
+    const when = st.next ? (st.next.today ? t('atTime', { t: fmtT(st.next.open) }) : t('tomorrowAt', { t: fmtT(st.next.open) })) : '';
+    banner.textContent = st.reason === 'temporarily_closed' ? (txt(site.closed_message) || t('bannerTemp')) : !st.open ? t('bannerClosed', { when }) : (st.open && !st.slots.length ? t('bannerLate') : t('bannerOff'));
   } else banner.classList.add('hidden');
   renderBar();
 }
