@@ -451,14 +451,15 @@ function fitWelcome() {
   const im = $('#wImg'), w = $('#welcome'); if (!im.naturalWidth) return;
   const ratio = im.naturalWidth / im.naturalHeight;
   const top = $('.top').offsetHeight, H = innerHeight - top, Wd = innerWidth;
-  if (Wd > 940 && Wd >= H) { const px = Math.max(Wd * 0.34, Math.min(Wd * 0.62, H * ratio)); w.style.setProperty('--w-photo', Math.round(px) + 'px'); }
+  if (Wd >= H) { const cap = H < 520 ? 0.5 : 0.62; const px = Math.max(Wd * 0.34, Math.min(Wd * cap, H * ratio)); w.style.setProperty('--w-photo', Math.round(px) + 'px'); }
   else { const px = Math.max(H * 0.22, Math.min(H * 0.5, Wd / ratio)); w.style.setProperty('--w-photo-h', Math.round(px) + 'px'); }
 }
 window.addEventListener('resize', fitWelcome);
-function showWelcome() { if (MODE === 'web') return; renderWelcome(); welcome.classList.remove('hidden'); document.body.classList.add('on-welcome'); }
+function showWelcome() { if (MODE === 'web') return; renderWelcome(); welcome.classList.remove('hidden'); document.body.classList.add('on-welcome'); window.scrollTo(0, 0); }
 $$('[data-wlang]').forEach(b => b.onclick = () => { lang = b.dataset.wlang; localStorage.setItem('site_lang', lang); applyLang(); renderWelcome(); });
 $$('[data-wsvc]').forEach(b => b.onclick = () => { form.service = b.dataset.wsvc; form.name = ''; form.tip = null; welcome.classList.add('hidden'); document.body.classList.remove('on-welcome'); goHome(); renderCart(); touch(); });
 if (MODE !== 'web') { welcome.classList.remove('hidden'); document.body.classList.add('on-welcome'); }
+if (window.LArtisanApp) document.body.classList.add('in-app');   // inside the Android app: already full screen
 
 // ---------------------------------------------------------------- on-screen keyboard (touch screens without a physical keyboard)
 // French layout keeps the accented letters; the English layout is a plain QWERTY

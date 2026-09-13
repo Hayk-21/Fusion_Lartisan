@@ -27,6 +27,9 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions { jvmTarget = "17" }
+    // Version 2.0 sources live in src/main/kt (flat folder); the old Compose code under src/main/java is no longer compiled
+    // and can be deleted.
+    sourceSets { getByName("main") { java.setSrcDirs(listOf("src/main/kt")) } }
     packaging { resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } }
 }
 
